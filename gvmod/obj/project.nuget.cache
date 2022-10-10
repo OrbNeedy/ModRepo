@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "evBSr45lWbvlCBsAH1WHI+3GCje5oMInSgzSrrp1PehKozTSS/1q5DlpekwX0ZWDQ+Ja1ZBU5JGu6wrue/HfKw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\USUARIO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\gvmod\\gvmod.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\USUARIO\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+  ],
+  "logs": []
+}

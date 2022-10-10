@@ -1,0 +1,6 @@
+displayName = Gunvolt Mod (Early)
+author = Reboot
+version = 0.6.1 
+hidecode = true
+hideresources = true
+includesource = true

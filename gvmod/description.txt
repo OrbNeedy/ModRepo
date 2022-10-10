@@ -1,0 +1,37 @@
+Gunvolt Mod aims to create an experience based on the Gunvolt series.
+
+Septimas
+A power every player has, you get a different one at random each time you load.
+You can get:
+Azure Striker: A septima that allows the usage of a flashfield, which will damage enemies constantly, but be careful, you will overheat underwater. Flashfield also allows the user to float down safely while it's in use. Azure striker comes with a powerful thunder attack that attacks enemies vertically.
+Azure Thunderclap: The same as Azure Striker, but stronger overall, and can also damage friendly NPCs, this one comes with the ability to shot electricity on both sides, which returns more powerful to it's origin, it has the same weakness to water, and when you overheat, your movement is reduced dramatically, so watch out.
+
+Every time you use a septima, you use up some sp, and if it reaches 0, you won't be able to use it until you cool down.
+Check mod controls, it's important.
+
+Absolutely not multiplayer friendly.
+
+v0.6.1
+Balanced leveling, it now doesn't require items to be collected.
+v0.6.0
+Specials and level system added, leveling is still very unbalanced.
+v0.5.1
+Minor UI changes.
+v0.5.0
+Added secondary abilities. Your septima gets saved now! Feel free to exit the game and re enter with the same septima.
+v0.4.2
+Added the ability for Azure Striker septima to slow their descent while using flashfield.
+v0.4.1
+Initial test release.
+Added a new septima, Azure Thunderclap, just a better version of the Azure Striker for now.
+Added weakness to water to both septimas.
+v0.3.2
+Added a hotkey to change the position of the bar, made the updates to SP more complex to account for overheating, increased SP regeneration while not overheating, and added a visual indicator when overheting.
+v0.3.1
+Fixed flashfield having the wrong radius, buffed it to be 11 tiles, and added a bar to see the EP.
+v0.2.1
+Buffed flashfield duration by increasing total SP.
+v0.2.0
+Added flashfield, dealing constant damage to enemies around the player.
+v0.1.0
+Added electric whip as a summoner weapon, it electrifies targets.

@@ -24,35 +24,37 @@ namespace gvmod.Common.Configs.CustomDataTypes
 
         public void InitializePositions()
         {
+            int vertical = 440;
+            int horizontal = 950;
             if (Main.rand.NextBool())
             {
                 if (Main.rand.NextBool())
                 {
-                    startingPosition = player.Center + new Vector2(1050, Main.rand.Next(-595, 595));
-                    endingPosition = player.Center + new Vector2(-1050, Main.rand.Next(-595, 595));
+                    startingPosition = player.Center + new Vector2(horizontal, Main.rand.Next(-vertical, vertical));
+                    endingPosition = player.Center + new Vector2(-horizontal, Main.rand.Next(-vertical, vertical));
                 } else
                 {
-                    startingPosition = player.Center + new Vector2(-1050, Main.rand.Next(-595, 595));
-                    endingPosition = player.Center + new Vector2(1050, Main.rand.Next(-595, 595));
+                    startingPosition = player.Center + new Vector2(-horizontal, Main.rand.Next(-vertical, vertical));
+                    endingPosition = player.Center + new Vector2(horizontal, Main.rand.Next(-vertical, vertical));
                 }
             } else
             {
                 if (Main.rand.NextBool())
                 {
-                    startingPosition = player.Center + new Vector2(Main.rand.Next(-1050, 1050), -595);
-                    endingPosition = player.Center + new Vector2(Main.rand.Next(-1050, 1050), 595);
+                    startingPosition = player.Center + new Vector2(Main.rand.Next(-horizontal, horizontal), -vertical);
+                    endingPosition = player.Center + new Vector2(Main.rand.Next(-horizontal, horizontal), vertical);
                 } else
                 {
-                    startingPosition = player.Center + new Vector2(Main.rand.Next(-1050, 1050), 595);
-                    endingPosition = player.Center + new Vector2(Main.rand.Next(-1050, 1050), -595);
+                    startingPosition = player.Center + new Vector2(Main.rand.Next(-horizontal, horizontal), vertical);
+                    endingPosition = player.Center + new Vector2(Main.rand.Next(-horizontal, horizontal), -vertical);
                 }
             }
         }
 
         public Vector2 GetVelocity()
         {
-            Vector2 velocity = (endingPosition - startingPosition)/16;
-            return velocity;
+            Vector2 distance = new Vector2((endingPosition.X - startingPosition.X), (endingPosition.Y - startingPosition.Y));
+            return distance/20f;
         }
     }
 }

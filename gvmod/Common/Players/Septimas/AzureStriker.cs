@@ -14,7 +14,7 @@ namespace gvmod.Common.Players.Septimas
     {
         private int secondaryDuration = 15;
         private bool isFalling = false;
-        private List<Mark> markedNPCs = new List<Mark>();
+        private List<Tag> markedNPCs = new List<Tag>();
         public AzureStriker(AdeptPlayer adept, Player player) : base(adept, player)
         {
             SpUsage = 1f;
@@ -71,10 +71,11 @@ namespace gvmod.Common.Players.Septimas
                 isFalling = false;
                 Player.slowFall = false;
             }
-            foreach (Mark mark in markedNPCs)
+            foreach (Tag tag in markedNPCs)
             {
-                float tagMultiplier = (float)((mark.level * 0.75)+0.25);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), mark.npc.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
+                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
+                float tagMultiplier = (float)((tag.level * 0.75)+0.25);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
             }
         }
 
@@ -174,15 +175,16 @@ namespace gvmod.Common.Players.Septimas
 
         public void AddMarkedNPC(NPC target)
         {
-            foreach (Mark mark in markedNPCs)
+            foreach (Tag mark in markedNPCs)
             {
-                if (target == mark.npc && mark.active)
+                NPC theNpcInQuestion = Main.npc[mark.npcIndex];
+                if (target == theNpcInQuestion && mark.active)
                 {
                     mark.IncreaseMark();
                     return;
                 }
             }
-            markedNPCs.Add(new Mark(target));
+            markedNPCs.Add(new Tag(target.whoAmI));
         }
     }
 }

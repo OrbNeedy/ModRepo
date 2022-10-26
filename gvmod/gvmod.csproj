@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Buttons\" />
+    <Folder Include="Common\GlobalProjectiles\" />
     <Folder Include="Content\Items\Armor\" />
   </ItemGroup>
 </Project>

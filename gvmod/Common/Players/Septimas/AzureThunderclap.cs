@@ -13,7 +13,7 @@ namespace gvmod.Common.Players.Septimas
     internal class AzureThunderclap : Septima
     {
         private int secondaryDuration = 5;
-        private List<Mark> markedNPCs = new List<Mark>();
+        private List<Tag> markedNPCs = new List<Tag>();
 
         public AzureThunderclap(AdeptPlayer adept, Player player) : base(adept, player)
         {
@@ -55,13 +55,11 @@ namespace gvmod.Common.Players.Septimas
                 npc.AddBuff(ModContent.BuffType<ThunderclapElectrifiedDebuff>(), 10);
             }
 
-            foreach (Mark mark in markedNPCs)
+            foreach (Tag tag in markedNPCs)
             {
-                //Make a projectile for this
-                for (int i = 0; i < mark.level; i++)
-                {
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), mark.npc.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult), 8, Player.whoAmI);
-                }
+                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
+                float tagMultiplier = (float)((tag.level * 0.75) + 0.25);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
             }
         }
 
@@ -157,15 +155,16 @@ namespace gvmod.Common.Players.Septimas
 
         public void AddMarkedNPC(NPC target)
         {
-            foreach (Mark mark in markedNPCs)
+            foreach (Tag mark in markedNPCs)
             {
-                if (target == mark.npc && target.active)
+                NPC theNpcInQuestion = Main.npc[mark.npcIndex];
+                if (target == theNpcInQuestion && mark.active)
                 {
                     mark.IncreaseMark();
                     return;
                 }
             }
-            markedNPCs.Add(new Mark(target));
+            markedNPCs.Add(new Tag(target.whoAmI));
         }
     }
 }

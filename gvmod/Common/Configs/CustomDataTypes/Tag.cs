@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria;
 
 namespace gvmod.Common.Configs.CustomDataTypes
 {
-    public class Mark
+    public class Tag
     {
-        public NPC npc;
+        public int npcIndex;
         public int level;
         public int timer;
         public bool active;
 
-        public Mark(NPC npc)
+        public Tag(int npcIndex)
         {
-            this.npc = npc;
+            this.npcIndex = npcIndex;
             level = 1;
             timer = 0;
             active = true;
@@ -27,7 +20,8 @@ namespace gvmod.Common.Configs.CustomDataTypes
         public void Update()
         {
             timer++;
-            if (!npc.active || npc.life <= 0 || timer >= 600)
+            NPC theNpcInQuestion = Main.npc[npcIndex];
+            if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || timer >= 600)
             {
                 active = false;
             }

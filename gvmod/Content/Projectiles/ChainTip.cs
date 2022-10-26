@@ -1,9 +1,12 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Common.Players.Septimas;
+using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -14,10 +17,11 @@ namespace gvmod.Content.Projectiles
 {
     public class ChainTip: ModProjectile
     {
-        // State 1: Movement, State 2: Waiting, State 3: Set it to electrify on death, set life to a reasonable low time
         public int aiState = 1;
         public bool electrify = false;
-        private Vector2 startingPosition = new Vector2();
+        private Vector2 startingPosition = new Vector2(0, 0);
+        private int desynchTime = Main.rand.Next(20, 60);
+        private List<int> trappedNPCs = new List<int>();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Voltaic chain");
@@ -26,6 +30,7 @@ namespace gvmod.Content.Projectiles
         public override void SetDefaults()
         {
             Projectile.light = 1f;
+            Projectile.ignoreWater = true;
             Projectile.damage = 50;
             Projectile.knockBack = 0;
             Projectile.Size = new Vector2(42);
@@ -37,62 +42,110 @@ namespace gvmod.Content.Projectiles
             Projectile.timeLeft = 600;
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.ownerHitCheck = false;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
             startingPosition = Projectile.Center;
+            if (Projectile.ai[1] == 1)
+            {
+                Projectile.timeLeft = 300;
+            }
+            base.OnSpawn(source);
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (Projectile.ai[1] == 1)
+            {
+                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft - 70);
+            } else
+            {
+                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft - 370);
+            }
+            trappedNPCs.Add(target.whoAmI);
+            base.OnHitNPC(target, damage, knockback, crit);
         }
 
         public override void AI()
         {
-            if (aiState == 2 || Projectile.timeLeft <= 590)
+            if (Projectile.ai[1] != 1)
             {
-                Projectile.velocity *= 0;
+
+                if (Projectile.timeLeft <= 580)
+                {
+                    Projectile.velocity *= 0.25f;
+                }
+                if (Main.projectile[(int)Projectile.ai[0]].timeLeft <= 70)
+                {
+                    aiState = 2;
+                }
+                if (aiState == 2 && !electrify)
+                {
+                    Projectile.timeLeft = desynchTime;
+                    electrify = true;
+                }
             }
-            if (aiState == 3)
+            if (Projectile.ai[1] == 1)
             {
-                electrify = true;
-                Projectile.timeLeft = Main.rand.Next(20, 50);
+                if (Projectile.timeLeft <= 280)
+                {
+                    Projectile.velocity *= 0.25f;
+                }
+                if (Projectile.timeLeft == 70)
+                {
+                    electrify = true;
+                    aiState = 2;
+                }
             }
-            if (Projectile.timeLeft <= 50 && electrify)
+            if (Projectile.timeLeft == 70 && electrify)
             {
-                // Put attack method here
+                foreach (int index in trappedNPCs)
+                {
+                    NPC theNpcInQuestion = Main.npc[index];
+                    if (theNpcInQuestion.active && theNpcInQuestion.life > 0)
+                    {
+                        theNpcInQuestion.AddBuff(ModContent.BuffType<StrikerElectrifiedDebuff>(), desynchTime);
+                    }
+                }
             }
-            base.AI();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            return base.PreDraw(ref lightColor);
         }
 
         public override bool PreDrawExtras()
         {
             Asset<Texture2D> chainTexture = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/ChainTipChain");
-            Rectangle? chainSourceRectangle = null;
-            float chainHeightAdjustment = 0f;
-            Vector2 chainDrawPosition = Projectile.Center;
-            Vector2 vector = startingPosition - Projectile.Center;
-            Vector2 unitVector = vector.SafeNormalize(Vector2.Zero);
-            float chainSegmentLength = (chainSourceRectangle.HasValue ? chainSourceRectangle.Value.Height : chainTexture.Height()) + chainHeightAdjustment;
-            if (chainSegmentLength == 0) chainSegmentLength = 10;
-            float chainRotation = unitVector.ToRotation() + MathHelper.PiOver2;
-            int chains = 0;
-            float chainLengthRemainingToDraw = vector.Length() + chainSegmentLength / 2f;
-            while (chainLengthRemainingToDraw > 0f)
+            Vector2 origin = startingPosition;
+            Vector2 center = Projectile.Center;
+            Vector2 directionToOrigin = origin - Projectile.Center;
+            float chainRotation = directionToOrigin.ToRotation() - MathHelper.PiOver2;
+            float distanceToOrigin = directionToOrigin.Length();
+
+            while (distanceToOrigin > 128f && !float.IsNaN(distanceToOrigin))
             {
-                Main.spriteBatch.Draw(chainTexture.Value, chainDrawPosition - Main.screenPosition, chainSourceRectangle, Color.White, chainRotation, startingPosition, 1f, SpriteEffects.None, 0f);
-                chainDrawPosition += unitVector * chainSegmentLength;
-                chains++;
-                chainLengthRemainingToDraw -= chainSegmentLength;
+                directionToOrigin /= distanceToOrigin;
+                directionToOrigin *= chainTexture.Height();
+
+                center += directionToOrigin;
+                directionToOrigin = origin - center;
+                distanceToOrigin = directionToOrigin.Length();
+
+                Color drawColor = Color.White;
+
+                Main.EntitySpriteDraw(chainTexture.Value, center - Main.screenPosition,
+                    chainTexture.Value.Bounds, drawColor, chainRotation,
+                    chainTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
             }
-            if (aiState >= 2)
-            {
-                Texture2D projectileTexture = TextureAssets.Projectile[Projectile.type].Value;
-                Vector2 drawOrigin = new Vector2(projectileTexture.Width * 0.5f, Projectile.height * 0.5f);
-                SpriteEffects spriteEffects = SpriteEffects.None;
-                if (Projectile.spriteDirection == -1)
-                    spriteEffects = SpriteEffects.FlipHorizontally;
-                for (int k = 0; k < Projectile.oldPos.Length; k++)
-                {
-                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                    Color color = Projectile.GetAlpha(Color.White) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                    Main.spriteBatch.Draw(projectileTexture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale - k / (float)Projectile.oldPos.Length / 3, spriteEffects, 0f);
-                }
-            }
-            return true;
+            return false;
         }
 
         public override void Kill(int timeLeft)
@@ -108,7 +161,17 @@ namespace gvmod.Content.Projectiles
                     Dust.NewDust((unitVector * magnitude) + new Vector2(Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-6, 6)), 10, 10, DustID.BlueTorch);
                 }
             }
-            base.Kill(timeLeft); 
+            base.Kill(timeLeft);
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.WriteVector2(startingPosition);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            startingPosition = reader.ReadVector2();
         }
     }
 }

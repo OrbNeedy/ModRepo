@@ -1,4 +1,5 @@
 .Mod Libraries
+.ModAssemblies
 ModSources.sln
 tModLoader.targets
 .vs

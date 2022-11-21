@@ -58,10 +58,10 @@ namespace gvmod.Content.Projectiles
         {
             if (Projectile.ai[1] == 1)
             {
-                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft - 70);
+                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft);
             } else
             {
-                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft - 370);
+                target.AddBuff(ModContent.BuffType<Chained>(), Main.projectile[(int)Projectile.ai[0]].timeLeft);
             }
             trappedNPCs.Add(target.whoAmI);
             base.OnHitNPC(target, damage, knockback, crit);
@@ -98,14 +98,14 @@ namespace gvmod.Content.Projectiles
                     aiState = 2;
                 }
             }
-            if (Projectile.timeLeft == 70 && electrify)
+            if (Projectile.timeLeft <= 70 && electrify)
             {
                 foreach (int index in trappedNPCs)
                 {
                     NPC theNpcInQuestion = Main.npc[index];
                     if (theNpcInQuestion.active && theNpcInQuestion.life > 0)
                     {
-                        theNpcInQuestion.AddBuff(ModContent.BuffType<StrikerElectrifiedDebuff>(), desynchTime);
+                        theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
                     }
                 }
             }

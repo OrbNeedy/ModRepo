@@ -8,6 +8,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
     public class Sparkcaliburg : Special
     {
         private int specialDuration = 60;
+        private Vector2 lastPlayerPos = new Vector2(0);
         public Sparkcaliburg(Player player, AdeptPlayer adept) : base(player, adept)
         {
             ApUsage = 2;
@@ -15,6 +16,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
+            lastPlayerPos = player.Center;
         }
 
         public override int UnlockLevel => 13;
@@ -38,10 +40,13 @@ namespace gvmod.Common.Players.Septimas.Abilities
             if (!BeingUsed)
             {
                 VelocityMultiplier = new Vector2(1f, 1f);
+                lastPlayerPos = Player.Center;
             }
             else
             {
                 VelocityMultiplier *= 0f;
+                Player.Center = lastPlayerPos;
+                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {

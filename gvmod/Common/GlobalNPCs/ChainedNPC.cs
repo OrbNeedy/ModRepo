@@ -9,13 +9,7 @@ namespace gvmod.Common.GlobalNPCs
     {
         public override bool PreAI(NPC npc)
         {
-            if (npc.HasBuff<Chained>())
-            {
-                return false;
-            } else
-            {
-                return base.PreAI(npc);
-            }
+            return !npc.HasBuff<Chained>();
         }
 
         public override void PostAI(NPC npc)
@@ -24,7 +18,6 @@ namespace gvmod.Common.GlobalNPCs
             {
                 npc.velocity *= 0.5f;
             }
-            base.PostAI(npc);
         }
     }
 }

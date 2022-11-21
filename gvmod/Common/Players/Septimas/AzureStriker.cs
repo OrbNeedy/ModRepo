@@ -14,7 +14,7 @@ namespace gvmod.Common.Players.Septimas
     {
         private int secondaryDuration = 15;
         private bool isFalling = false;
-        private List<Tag> markedNPCs = new List<Tag>();
+        private List<Tag> taggedNPCs = new List<Tag>();
         public AzureStriker(AdeptPlayer adept, Player player) : base(adept, player)
         {
             SpUsage = 1f;
@@ -71,11 +71,11 @@ namespace gvmod.Common.Players.Septimas
                 isFalling = false;
                 Player.slowFall = false;
             }
-            foreach (Tag tag in markedNPCs)
+            foreach (Tag tag in taggedNPCs)
             {
                 NPC theNpcInQuestion = Main.npc[tag.npcIndex];
                 float tagMultiplier = (float)((tag.level * 0.75)+0.25);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<Shock>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
             }
         }
 
@@ -94,6 +94,7 @@ namespace gvmod.Common.Players.Septimas
             if (SecondaryTimer <= 1 && Adept.secondaryInUse)
             {
                 Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.secondaryDamageLevelMult * Adept.secondaryDamageEquipMult), 8, Player.whoAmI);
+
             }
         }
 
@@ -163,19 +164,19 @@ namespace gvmod.Common.Players.Septimas
 
         public void UpdateMarkedNPCs()
         {
-            for (int i = 0; i < markedNPCs.Count; i++)
+            for (int i = 0; i < taggedNPCs.Count; i++)
             {
-                markedNPCs[i].Update();
-                if (!markedNPCs[i].active)
+                taggedNPCs[i].Update();
+                if (!taggedNPCs[i].active)
                 {
-                    markedNPCs.Remove(markedNPCs[i]);
+                    taggedNPCs.Remove(taggedNPCs[i]);
                 }
             }
         }
 
         public void AddMarkedNPC(NPC target)
         {
-            foreach (Tag mark in markedNPCs)
+            foreach (Tag mark in taggedNPCs)
             {
                 NPC theNpcInQuestion = Main.npc[mark.npcIndex];
                 if (target == theNpcInQuestion && mark.active)
@@ -184,7 +185,7 @@ namespace gvmod.Common.Players.Septimas
                     return;
                 }
             }
-            markedNPCs.Add(new Tag(target.whoAmI));
+            taggedNPCs.Add(new Tag(target.whoAmI));
         }
     }
 }

@@ -11,6 +11,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
     {
         private int specialDuration = 120;
         private Vector2 basePosition = new Vector2(128);
+        private Vector2 lastPlayerPos = new Vector2(0);
 
         public Astrasphere(Player player, AdeptPlayer adept) : base(player, adept)
         {
@@ -19,6 +20,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
+            lastPlayerPos = player.Center;
         }
 
         public override string Name => "Astrasphere";
@@ -48,10 +50,13 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             if (!BeingUsed)
             {
+                lastPlayerPos = Player.Center;
                 VelocityMultiplier = new Vector2(1f, 1f);
             } else
             {
                 VelocityMultiplier *= 0f;
+                Player.Center = lastPlayerPos;
+                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {
@@ -67,7 +72,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
                 CooldownTimer = 0;
                 BeingUsed = true;
             }
-            if(BeingUsed)
+            if (BeingUsed)
             {
                 Adept.isUsingSpecialAbility = true;
                 SpecialTimer++;

@@ -31,16 +31,21 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
-        public override void AI()
+        public override bool PreDraw(ref Color lightColor)
         {
-        }
-
-        public override void PostDraw(Color lightColor)
-        {
-            for (int i = 1; i <= 4; i++)
+            for (int i = 0; i <= 4; i++)
             {
-                Main.EntitySpriteDraw(thunder, new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), new Rectangle((int)(Projectile.position.X - Main.screenPosition.X), (int)(Projectile.position.Y - Main.screenPosition.Y + (250 * i)), 32, 250), Color.White, 0, new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), 1f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(thunder, 
+                    new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), 
+                    new Rectangle((int)(Projectile.position.X - Main.screenPosition.X), (int)(Projectile.position.Y - Main.screenPosition.Y + (250 * i)), 32, 250), 
+                    Color.White, 
+                    0, 
+                    new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), 
+                    1f, 
+                    SpriteEffects.None, 
+                    0);
             }
+            return false;
         }
     }
 }

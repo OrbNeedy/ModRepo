@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System;
 using Terraria.DataStructures;
 using gvmod.Content.Buffs;
+using Microsoft.Xna.Framework.Graphics;
+using gvmod.Content.Projectiles;
+using Microsoft.Xna.Framework;
 
 namespace gvmod.Common.Players
 {
@@ -44,6 +47,8 @@ namespace gvmod.Common.Players
         public bool hasBattlePod;
         public bool hasMusesPendant;
         public bool anthemState;
+        public Texture2D anthemAura = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Effects/Anthem",
+            ReLogic.Content.AssetRequestMode.ImmediateLoad);
 
         public bool isUsingPrimaryAbility;
         public bool isUsingSecondaryAbility;
@@ -241,9 +246,28 @@ namespace gvmod.Common.Players
             if (anthemState && (septima.Name == "Azure Striker"  || septima.Name == "Azure Thunderclap") && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)/4))
             {
                 Main.NewText("Prevasion");
+                Player.immune = true;
+                Player.AddImmuneTime(cooldownCounter, 60);
                 return false;
             }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
+        }
+
+        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        {
+            if (anthemState)
+            {
+                Main.EntitySpriteDraw(anthemAura,
+                    new Vector2(Player.Center.X, Player.Center.Y),
+                    new Rectangle((int)(Player.position.X), (int)(Player.position.Y), 32, 250),
+                    Color.White,
+                    0,
+                    new Vector2(Player.Center.X, Player.Center.Y),
+                    1f,
+                    SpriteEffects.None,
+                    0);
+            }
+            base.DrawEffects(drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
         }
 
         public void UpdateLevelMultipliers()

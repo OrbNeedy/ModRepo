@@ -14,6 +14,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         private int specialDuration = 300;
         private int firstChain;
         private bool isNotFirstChain = false;
+        private Vector2 lastPlayerPos = new Vector2(0);
         public VoltaicChains(Player player, AdeptPlayer adept) : base(player, adept)
         {
             ApUsage = 3;
@@ -59,10 +60,13 @@ namespace gvmod.Common.Players.Septimas.Abilities
             {
                 VelocityMultiplier = new Vector2(1f, 1f);
                 isNotFirstChain = false;
+                lastPlayerPos = Player.Center;
             }
             else
             {
                 VelocityMultiplier *= 0f;
+                Player.Center = lastPlayerPos;
+                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {

@@ -53,8 +53,6 @@ namespace gvmod.Common.Players
         public bool hasBattlePod;
         public bool hasMusesPendant;
         public bool anthemState;
-        public Texture2D anthemAura = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Effects/Anthem",
-            ReLogic.Content.AssetRequestMode.ImmediateLoad);
 
         public bool isUsingPrimaryAbility;
         public bool isUsingSecondaryAbility;
@@ -299,22 +297,6 @@ namespace gvmod.Common.Players
                 return false;
             }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
-        }
-
-        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
-        {
-            if (anthemState)
-            {
-                Main.EntitySpriteDraw(anthemAura,
-                    new Vector2(Player.Center.X, Player.Center.Y),
-                    new Rectangle((int)(Player.position.X), (int)(Player.position.Y), 32, 250),
-                    Color.White,
-                    0,
-                    new Vector2(Player.Center.X, Player.Center.Y),
-                    1f,
-                    SpriteEffects.None,
-                    0);
-            }
         }
 
         public void UpdateLevelMultipliers()

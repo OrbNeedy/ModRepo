@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 using gvmod.Content;
+using ReLogic.Content;
 
 namespace gvmod.Content.Projectiles
 {
     internal class Thunder : ModProjectile
     {
-        public Texture2D thunder = (Texture2D)ModContent.Request<Texture2D>("gvmod/Content/Projectiles/RightThunder",
-            ReLogic.Content.AssetRequestMode.ImmediateLoad);
+        public Asset<Texture2D> thunder = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/RightThunder");
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Thunder");
@@ -35,15 +35,18 @@ namespace gvmod.Content.Projectiles
         {
             for (int i = 0; i <= 4; i++)
             {
-                Main.EntitySpriteDraw(thunder, 
-                    new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), 
-                    new Rectangle((int)(Projectile.position.X - Main.screenPosition.X), (int)(Projectile.position.Y - Main.screenPosition.Y + (250 * i)), 32, 250), 
+                var position = Projectile.TopRight - Main.screenPosition + new Vector2(0f, 250 * i);
+                Main.EntitySpriteDraw(
+                    thunder.Value, 
+                    position, 
+                    null, 
                     Color.White, 
-                    0, 
-                    new Vector2(Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y + (250 * i)), 
+                    0f, 
+                    thunder.Size(), 
                     1f, 
                     SpriteEffects.None, 
-                    0);
+                    0
+                );
             }
             return false;
         }

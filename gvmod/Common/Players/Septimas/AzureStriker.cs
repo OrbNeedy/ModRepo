@@ -23,6 +23,8 @@ namespace gvmod.Common.Players.Septimas
 
         public override string Name => "Azure Striker";
 
+        public override bool CanRecharge => true;
+
         public override void InitializeAbilitiesList()
         {
             Abilities.Add(new Astrasphere(Player, Adept));

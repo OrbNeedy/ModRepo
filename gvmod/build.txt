@@ -1,6 +1,6 @@
-displayName = Gunvolt Mod (Early)
+displayName = GvMod
 author = Reboot
 version = 0.6.1 
-hidecode = true
-hideresources = true
+hidecode = false
+hideresources = false
 includesource = true

@@ -11,7 +11,6 @@ using System;
 using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework.Graphics;
-using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 
 namespace gvmod.Common.Players
@@ -28,6 +27,13 @@ namespace gvmod.Common.Players
         public int maxEXP;
         public int extraEXP;
         public List<string> activeSlot;
+
+        public int rechargeComboCount;
+        public const int rechargeCooldown = 60;
+        public const int rechargeDuration = 30;
+        public int rechargeDelay = 0;
+        public int rechargeTimer = 0;
+        public bool recharging = false;
 
         public float primaryDamageLevelMult;
         public float secondaryDamageLevelMult;
@@ -53,6 +59,7 @@ namespace gvmod.Common.Players
         public bool isUsingPrimaryAbility;
         public bool isUsingSecondaryAbility;
         public bool isUsingSpecialAbility;
+        public bool isRecharging;
 
         public bool secondaryInUse = false;
         public int timeSinceSecondary = 0;
@@ -155,6 +162,7 @@ namespace gvmod.Common.Players
                 }
             }
 
+            
         }
 
         public override void PostUpdateMiscEffects()
@@ -166,20 +174,52 @@ namespace gvmod.Common.Players
                     Dust.NewDust(Player.position, 10, 10, DustID.Electric, 0, 0);
                 }
             }
-            if (isUsingPrimaryAbility && !isOverheated && !isUsingSpecialAbility)
+            if (isUsingPrimaryAbility && !isOverheated && !isUsingSpecialAbility && !isRecharging)
             {
                 septima.FirstAbilityEffects();
             }
-            if (secondaryInUse && !isUsingSpecialAbility)
+            if (secondaryInUse && !isUsingSpecialAbility && !isRecharging)
             {
                 septima.SecondAbilityEffects();
             }
-            if (isUsingSpecialAbility)
+            if (isUsingSpecialAbility && !isRecharging)
             {
                 for (int i = 0; i < activeSlot.Count; i++)
                 {
                     GetSpecial(activeSlot[i])?.Effects();
                 }
+            }
+
+            if (septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !isOverheated)
+            {
+                rechargeDelay = rechargeCooldown;
+                rechargeTimer = rechargeDuration;
+                // Insert visual effect
+            }
+            if (rechargeDelay > 0)
+            {
+                rechargeDelay--;
+            }
+            if (rechargeTimer > 0)
+            {
+                rechargeTimer--;
+                SPRegenModifier = maxSeptimalPower / 60;
+                timeSincePrimary = 60;
+                isRecharging = true;
+            } else
+            {
+                isRecharging = false;
+            }
+        }
+
+        public override void SetControls()
+        {
+            if (isUsingSpecialAbility)
+            {
+                Player.controlJump = false;
+                Player.controlLeft = false;
+                Player.controlRight = false;
+                Player.controlDown = false;
             }
         }
 
@@ -225,6 +265,14 @@ namespace gvmod.Common.Players
             base.ResetEffects();
             ResetEquipMultipliers();
             ResetResources();
+            if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[0] < 15 && !isUsingSpecialAbility)
+            {
+                rechargeComboCount++;
+            }
+            else
+            {
+                rechargeComboCount = 0;
+            }
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -267,7 +315,6 @@ namespace gvmod.Common.Players
                     SpriteEffects.None,
                     0);
             }
-            base.DrawEffects(drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
         }
 
         public void UpdateLevelMultipliers()

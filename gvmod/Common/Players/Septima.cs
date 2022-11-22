@@ -27,6 +27,8 @@ namespace gvmod.Common.Players
 
         public Vector2 VelocityMultiplier { get => velocityMultiplier; set => velocityMultiplier = value; }
 
+        public abstract bool CanRecharge { get; }
+
         protected Septima(AdeptPlayer adept, Player player)
         {
             this.adept = adept;

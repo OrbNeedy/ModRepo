@@ -7,13 +7,16 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Abilities;
 using gvmod.Common.Configs.CustomDataTypes;
+using gvmod.Common.GlobalNPCs;
 
 namespace gvmod.Common.Players.Septimas
 {
     internal class AzureThunderclap : Septima
     {
         private int secondaryDuration = 5;
-        private List<Tag> markedNPCs = new List<Tag>();
+        private List<Tag> taggedNPCs = new List<Tag>();
+        private int flashfieldIndex;
+        private bool flashfieldExists = false;
 
         public AzureThunderclap(AdeptPlayer adept, Player player) : base(adept, player)
         {
@@ -28,40 +31,39 @@ namespace gvmod.Common.Players.Septimas
         public override void InitializeAbilitiesList()
         {
             Abilities.Add(new Astrasphere(Player, Adept));
+            Abilities.Add(new Sparkcaliburg(Player, Adept));
+            Abilities.Add(new VoltaicChains(Player, Adept));
+            Abilities.Add(new SeptimalSurge(Player, Adept));
         }
 
         public override void FirstAbilityEffects()
         {
             if (Player.wet)
             {
-                SpUsage = Adept.maxSeptimalPower;
+                SpUsage = Adept.MaxSeptimalPower;
                 return;
             }
             else
             {
                 SpUsage = 0.5f;
             }
-            Vector2 pos = new Vector2(128);
-            for (int i = 0; i < 360; i++)
-            {
-                pos = pos.RotatedBy(MathHelper.ToRadians(1));
-                if (i % 5 == 0) Dust.NewDustDirect(Player.Center + pos, 10, 10, DustID.MartianSaucerSpark, 0, 0, 0, Color.DeepSkyBlue);
-            }
         }
 
         public override void FirstAbility()
         {
-            List<NPC> closeNPCs = GetNPCsInRadius(176);
-            foreach (NPC npc in closeNPCs)
+            if (!flashfieldExists)
             {
-                npc.AddBuff(ModContent.BuffType<ThunderclapElectrifiedDebuff>(), 10);
+                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(2 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult), 0, Player.whoAmI, -1, 0);
             }
-
-            foreach (Tag tag in markedNPCs)
+            foreach (Tag tag in taggedNPCs)
             {
                 NPC theNpcInQuestion = Main.npc[tag.npcIndex];
                 float tagMultiplier = (float)((tag.level * 0.75) + 0.25);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<ElectricSphere>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
+                if (tag.shockIframes == 0)
+                {
+                    theNpcInQuestion.StrikeNPC((int)(20 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 10, -Player.direction);
+                    tag.shockIframes = 6;
+                }
             }
         }
 
@@ -112,6 +114,17 @@ namespace gvmod.Common.Players.Septimas
                     Adept.isUsingSecondaryAbility = false;
                 }
             }
+
+            Projectile flashfield = Main.projectile[flashfieldIndex];
+            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker)
+            {
+                flashfieldExists = true;
+            }
+            else
+            {
+                flashfieldExists = false;
+            }
+
             Player.velocity *= VelocityMultiplier;
         }
 
@@ -143,30 +156,42 @@ namespace gvmod.Common.Players.Septimas
 
         public void UpdateMarkedNPCs()
         {
-            for (int i = 0; i < markedNPCs.Count; i++)
+            for (int i = 0; i < taggedNPCs.Count; i++)
             {
-                markedNPCs[i].Update();
-                if (!markedNPCs[i].active)
+                Tag theTagInQuestion = taggedNPCs[i];
+                TaggedNPC globalTag = Main.npc[theTagInQuestion.npcIndex].GetGlobalNPC<TaggedNPC>();
+                theTagInQuestion.Update();
+
+                if (!theTagInQuestion.active)
                 {
-                    markedNPCs.Remove(markedNPCs[i]);
-                    continue;
+                    globalTag.shocked = false;
+                    taggedNPCs.Remove(theTagInQuestion);
                 }
-                markedNPCs[i].timer++;
+
+                if (theTagInQuestion.active && Adept.isUsingPrimaryAbility && !Adept.isOverheated && !Adept.isUsingSecondaryAbility && !Adept.isUsingSpecialAbility)
+                {
+                    globalTag.shocked = true;
+                }
+                else
+                {
+                    globalTag.shocked = false;
+                }
             }
         }
 
         public void AddMarkedNPC(NPC target)
         {
-            foreach (Tag mark in markedNPCs)
+            foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[mark.npcIndex];
-                if (target == theNpcInQuestion && mark.active)
+                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
+                if (target == theNpcInQuestion && tag.active)
                 {
-                    mark.IncreaseMark();
+                    tag.IncreaseMark();
                     return;
                 }
+                theNpcInQuestion.GetGlobalNPC<TaggedNPC>().tagLevel = tag.level;
             }
-            markedNPCs.Add(new Tag(target.whoAmI));
+            taggedNPCs.Add(new Tag(target.whoAmI));
         }
     }
 }

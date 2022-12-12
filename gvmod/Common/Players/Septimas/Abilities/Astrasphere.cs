@@ -9,9 +9,16 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     internal class Astrasphere : Special
     {
-        private int specialDuration = 120;
         private Vector2 basePosition = new Vector2(128);
         private Vector2 lastPlayerPos = new Vector2(0);
+        private int flashfieldIndex;
+        private bool flashfieldExists = false;
+        private int sphere1Index;
+        private bool sphere1Exists = false;
+        private int sphere2Index;
+        private bool sphere2Exists = false;
+        private int sphere3Index;
+        private bool sphere3Exists = false;
 
         public Astrasphere(Player player, AdeptPlayer adept) : base(player, adept)
         {
@@ -21,11 +28,14 @@ namespace gvmod.Common.Players.Septimas.Abilities
             BeingUsed = false;
             SpecialTimer = 1;
             lastPlayerPos = player.Center;
+            SpecialDuration = 120;
         }
 
-        public override string Name => "Astrasphere";
+        public override int UnlockLevel => 1;
 
-        public override int UnlockLevel { get => 1; }
+        public override bool IsOffensive => true;
+
+        public override string Name => "Astrasphere";
 
         public override void Effects()
         {
@@ -39,15 +49,17 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             if (BeingUsed)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(60 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(60 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(60 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI);
+                if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
                 basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
             }
         }
 
         public override void Update()
         {
+            ProjectileUpdate();
             if (!BeingUsed)
             {
                 lastPlayerPos = Player.Center;
@@ -76,13 +88,56 @@ namespace gvmod.Common.Players.Septimas.Abilities
             {
                 Adept.isUsingSpecialAbility = true;
                 SpecialTimer++;
-                if (SpecialTimer >= specialDuration)
+                if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
                     Adept.isUsingSpecialAbility = false;
                 }
             }
             Player.velocity *= VelocityMultiplier;
+        }
+
+        public void ProjectileUpdate()
+        {
+            Projectile flashfield = Main.projectile[flashfieldIndex];
+            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker)
+            {
+                flashfieldExists = true;
+            }
+            else
+            {
+                flashfieldExists = false;
+            }
+
+            Projectile sphere1 = Main.projectile[sphere1Index];
+            if (sphere1.active && sphere1.ModProjectile is ElectricSphere)
+            {
+                sphere1Exists = true;
+            }
+            else
+            {
+                sphere1Exists = false;
+            }
+
+            Projectile sphere2 = Main.projectile[sphere2Index];
+            if (sphere2.active && sphere2.ModProjectile is ElectricSphere)
+            {
+                sphere2Exists = true;
+            }
+            else
+            {
+                sphere2Exists = false;
+            }
+
+            Projectile sphere3 = Main.projectile[sphere3Index];
+            if (sphere3.active && sphere3.ModProjectile is ElectricSphere)
+            {
+                sphere3Exists = true;
+            }
+            else
+            {
+                sphere3Exists = false;
+            }
         }
     }
 }

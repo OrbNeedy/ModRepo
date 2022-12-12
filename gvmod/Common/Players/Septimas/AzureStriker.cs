@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Abilities;
 using gvmod.Common.Configs.CustomDataTypes;
+using gvmod.Common.GlobalNPCs;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -15,6 +16,8 @@ namespace gvmod.Common.Players.Septimas
         private int secondaryDuration = 15;
         private bool isFalling = false;
         private List<Tag> taggedNPCs = new List<Tag>();
+        private int flashfieldIndex;
+        private bool flashfieldExists = false;
         public AzureStriker(AdeptPlayer adept, Player player) : base(adept, player)
         {
             SpUsage = 1f;
@@ -30,39 +33,27 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new Astrasphere(Player, Adept));
             Abilities.Add(new Sparkcaliburg(Player, Adept));
             Abilities.Add(new VoltaicChains(Player, Adept));
+            Abilities.Add(new SeptimalSurge(Player, Adept));
         }
 
         public override void FirstAbilityEffects()
         {
             if (Player.wet)
             {
-                SpUsage = Adept.maxSeptimalPower;
+                SpUsage = Adept.MaxSeptimalPower;
                 return;
             }
             else
             {
                 SpUsage = 1f;
             }
-            Vector2 pos = new Vector2(128);
-            pos = pos.RotatedByRandom(360);
-            for (int i = 0; i < 360; i++)
-            {
-                pos = pos.RotatedBy(MathHelper.ToRadians(1));
-                if (i % 5 == 0) Dust.NewDustDirect(Player.Center + pos, 10, 10, DustID.MartianSaucerSpark, 0, 0, 0, Color.DeepSkyBlue);
-            }
         }
 
         public override void FirstAbility()
         {
-            //TODO: Figure out a way of making this without having to change collision to be circular
-            //Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, new Vector2(0), ModContent.ProjectileType<FlashfieldStriker>(), 4, 0, player.whoAmI);
-            List<NPC> closeNPCs = GetNPCsInRadius(176);
-            foreach (NPC npc in closeNPCs)
+            if (!flashfieldExists)
             {
-                if (!npc.friendly)
-                {
-                    npc.AddBuff(ModContent.BuffType<StrikerElectrifiedDebuff>(), 10);
-                }
+                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(2 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult), 0, Player.whoAmI, -1, 0);
             }
             if (Player.velocity.Y > 0)
             {
@@ -73,11 +64,16 @@ namespace gvmod.Common.Players.Septimas
                 isFalling = false;
                 Player.slowFall = false;
             }
+
             foreach (Tag tag in taggedNPCs)
             {
                 NPC theNpcInQuestion = Main.npc[tag.npcIndex];
-                float tagMultiplier = (float)((tag.level * 0.75)+0.25);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), theNpcInQuestion.Center, new Vector2(0), ModContent.ProjectileType<Shock>(), (int)(10 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.whoAmI);
+                float tagMultiplier = (float)((tag.level * 0.75));
+                if (tag.shockIframes == 0)
+                {
+                    theNpcInQuestion.StrikeNPC((int)(15 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 10, Player.direction);
+                    tag.shockIframes = 6;
+                }
             }
         }
 
@@ -96,7 +92,6 @@ namespace gvmod.Common.Players.Septimas
             if (SecondaryTimer <= 1 && Adept.secondaryInUse)
             {
                 Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.secondaryDamageLevelMult * Adept.secondaryDamageEquipMult), 8, Player.whoAmI);
-
             }
         }
 
@@ -123,7 +118,7 @@ namespace gvmod.Common.Players.Septimas
 
         public override void Updates()
         {
-            UpdateMarkedNPCs();
+            UpdateTaggedNPCs();
             if (Adept.isUsingSecondaryAbility && Adept.timeSinceSecondary >= SecondaryCooldownTime)
             {
                 SecondaryTimer++;
@@ -136,6 +131,16 @@ namespace gvmod.Common.Players.Septimas
                     Adept.isUsingSecondaryAbility = false;
                 }
             }
+
+            Projectile flashfield = Main.projectile[flashfieldIndex];
+            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker)
+            {
+                flashfieldExists = true;
+            } else
+            {
+                flashfieldExists = false;
+            }
+
             Player.velocity *= VelocityMultiplier;
         }
 
@@ -164,28 +169,41 @@ namespace gvmod.Common.Players.Septimas
             return closeNPCs;
         }
 
-        public void UpdateMarkedNPCs()
+        public void UpdateTaggedNPCs()
         {
             for (int i = 0; i < taggedNPCs.Count; i++)
             {
-                taggedNPCs[i].Update();
-                if (!taggedNPCs[i].active)
+                Tag theTagInQuestion = taggedNPCs[i];
+                TaggedNPC globalTag = Main.npc[theTagInQuestion.npcIndex].GetGlobalNPC<TaggedNPC>();
+                theTagInQuestion.Update();
+
+                if (!theTagInQuestion.active)
                 {
-                    taggedNPCs.Remove(taggedNPCs[i]);
+                    globalTag.shocked = false;
+                    taggedNPCs.Remove(theTagInQuestion);
+                }
+
+                if (theTagInQuestion.active && Adept.isUsingPrimaryAbility && Adept.canUsePrimary)
+                {
+                    globalTag.shocked = true;
+                } else
+                {
+                    globalTag.shocked = false;
                 }
             }
         }
 
-        public void AddMarkedNPC(NPC target)
+        public void AddTaggedNPC(NPC target)
         {
-            foreach (Tag mark in taggedNPCs)
+            foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[mark.npcIndex];
-                if (target == theNpcInQuestion && mark.active)
+                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
+                if (target == theNpcInQuestion && tag.active)
                 {
-                    mark.IncreaseMark();
+                    tag.IncreaseMark();
                     return;
                 }
+                theNpcInQuestion.GetGlobalNPC<TaggedNPC>().tagLevel = tag.level;
             }
             taggedNPCs.Add(new Tag(target.whoAmI));
         }

@@ -9,6 +9,7 @@ namespace gvmod.Content.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
+			DisplayName.SetDefault("Sunglasses of lightning");
 			Tooltip.SetDefault("25% reduced septimal damage\n"
 							 + "50% reduced SP usage\n"
 							 + "90% chance not to consume AP when using a special ability\n"
@@ -31,11 +32,10 @@ namespace gvmod.Content.Items.Accessories
 			adept.primaryDamageEquipMult *= 0.75f;
 			adept.secondaryDamageEquipMult *= 0.75f;
 			adept.specialDamageEquipMult *= 0.75f;
-			adept.SPUsageModifier *= 0.5f;
-			if (!Main.rand.NextBool(10))
-            {
-				adept.APUsageModifier = 0;
-			}
+			// For developing purposes, it negates SP and AP usage, normally it just makes it so
+			// the SP usage is halved and makes it so 90% of the time you don't use any AP
+			adept.SPUsageModifier *= 0f;
+			adept.APUsageModifier *= 0f;
         }
     }
 }

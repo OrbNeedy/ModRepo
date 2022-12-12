@@ -1,4 +1,5 @@
-﻿using gvmod.Common.Players;
+﻿using gvmod.Common.GlobalNPCs;
+using gvmod.Common.Players;
 using gvmod.Common.Players.Septimas;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
@@ -17,11 +18,11 @@ namespace gvmod.Content.Projectiles
 {
     public class ChainTip: ModProjectile
     {
-        public int aiState = 1;
-        public bool electrify = false;
+        private int aiState = 1;
+        private bool electrify = false;
         private Vector2 startingPosition = new Vector2(0, 0);
         private int desynchTime = Main.rand.Next(20, 60);
-        private List<int> trappedNPCs = new List<int>();
+        private Dictionary<int, int> trappedNPCs = new Dictionary<int, int>();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Voltaic chain");
@@ -61,14 +62,15 @@ namespace gvmod.Content.Projectiles
                 target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft);
             } else
             {
-                target.AddBuff(ModContent.BuffType<Chained>(), Main.projectile[(int)Projectile.ai[0]].timeLeft);
+                target.GetGlobalNPC<ChainedNPC>().ChainedTime = Main.projectile[(int)Projectile.ai[0]].timeLeft;
             }
-            trappedNPCs.Add(target.whoAmI);
+            trappedNPCs.Add(target.whoAmI, 0);
             base.OnHitNPC(target, damage, knockback, crit);
         }
 
         public override void AI()
         {
+            AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
             if (Projectile.ai[1] != 1)
             {
 
@@ -100,14 +102,23 @@ namespace gvmod.Content.Projectiles
             }
             if (Projectile.timeLeft <= 70 && electrify)
             {
-                foreach (int index in trappedNPCs)
+                foreach (int index in trappedNPCs.Keys)
                 {
                     NPC theNpcInQuestion = Main.npc[index];
                     if (theNpcInQuestion.active && theNpcInQuestion.life > 0)
                     {
                         theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
+                        if (trappedNPCs[index] <= 0)
+                        {
+                            theNpcInQuestion.StrikeNPC((int)(100 * adept.specialDamageLevelMult * adept.specialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5))), 0, 0);
+                            trappedNPCs[index] = 6;
+                        }
                     }
                 }
+            }
+            foreach (int index in trappedNPCs.Keys)
+            {
+                trappedNPCs[index]--;
             }
         }
 
@@ -150,7 +161,6 @@ namespace gvmod.Content.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            // TODO: Make custom dust
             Vector2 vector = startingPosition - Projectile.Center;
             int magnitude = (int)Math.Sqrt(Math.Pow(startingPosition.X - Projectile.Center.X, 2) + Math.Pow(startingPosition.Y - Projectile.Center.Y, 2));
             for (int i = 1; i <= magnitude + 1; i++)

@@ -6,20 +6,16 @@ namespace gvmod.Common.GlobalNPCs
 {
     public class NPCExpLoot : GlobalNPC
     {
-        // TODO: Make it multiplayer compatible
-
-        public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
+        public override void HitEffect(NPC npc, int hitDirection, double damage)
         {
-            if (target.GetModPlayer<AdeptPlayer>().isUsingSpecialAbility) return false;
-            return base.CanHitPlayer(npc, target, ref cooldownSlot);
-        }
-
-        public override bool PreKill(NPC npc)
-        {
-            if (!npc.friendly)
+            if (!npc.friendly && !npc.immortal)
             {
                 AdeptPlayer lastplayer = Main.player[npc.lastInteraction]?.GetModPlayer<AdeptPlayer>();
                 float amount = (float)((npc.lifeMax * 0.10f + 0.16f * npc.damage) * (1 + npc.defense * 0.15f));
+                if (damage < npc.lifeMax)
+                {
+                    amount *= (float)(damage / npc.lifeMax);
+                }
                 if (npc.boss) amount *= 3f;
                 if (Main.expertMode) amount *= 1.2f;
                 if (Main.masterMode) amount *= 1.5f;
@@ -29,7 +25,6 @@ namespace gvmod.Common.GlobalNPCs
                     lastplayer.experience += (int)amount;
                 }
             }
-            return base.PreKill(npc);
         }
     }
 }

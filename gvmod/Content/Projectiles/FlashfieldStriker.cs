@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using gvmod.Common.Players.Septimas;
+using gvmod.Common.Players;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -6,7 +8,6 @@ namespace gvmod.Content.Projectiles
 {
     public class FlashfieldStriker : ModProjectile
     {
-        float collisionWidth => 50f * Projectile.scale;
 
         public override void SetStaticDefaults()
         {
@@ -17,35 +18,87 @@ namespace gvmod.Content.Projectiles
         {
             Projectile.damage = 1;
             Projectile.knockBack = 0;
-            Projectile.Size = new Vector2(176);
+            Projectile.Size = new Vector2(352);
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 2;
             Projectile.tileCollide = false;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 4;
+            Projectile.light = 1f;
+            Projectile.timeLeft = 2;
             Projectile.DamageType = DamageClass.Generic;
             Projectile.ownerHitCheck = false;
+            Projectile.alpha = 128;
         }
 
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             Projectile.Center = player.Center;
+            if (Projectile.ai[0] == -1)
+            {
+                Projectile.penetrate = 2;
+            }
+
+            switch (Projectile.ai[1]) {
+                case 1:
+                    if (adept.isUsingSpecialAbility)
+                    {
+                        Projectile.timeLeft = 2;
+                    }
+                    break;
+                default:
+                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    {
+                        Projectile.timeLeft = 2;
+                    }
+                    break;
+            }
+
+            if (Projectile.ai[1] == 1)
+            {
+                if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                {
+                    Projectile.timeLeft = 2;
+                }
+            }
+            if (Projectile.ai[1] == 1)
+            {
+                if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                {
+                    Projectile.timeLeft = 2;
+                }
+            }
         }
 
-        public override bool ShouldUpdatePosition()
-        {
-            return false;
-        }
-
+        //Thanks for the code, Blushiemagic
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            Vector2 start = Projectile.Center;
-            Vector2 end = start * Projectile.width;
-
-            float collisionPoint = 0f;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, collisionWidth, ref collisionPoint);
+            Vector2 ellipsePosition = new Vector2(projHitbox.Left, projHitbox.Top);
+            Vector2 ellipseDimentions = new Vector2(projHitbox.Width, projHitbox.Height);
+            Vector2 ellipseCenter = ellipsePosition + 0.5f * ellipseDimentions;
+            float x = 0f;
+            float y = 0f;
+            if (targetHitbox.Left > ellipseCenter.X)
+            {
+                x = targetHitbox.Left - ellipseCenter.X;
+            }
+            else if (targetHitbox.Left + targetHitbox.Width < ellipseCenter.X)
+            {
+                x = targetHitbox.Left + targetHitbox.Width - ellipseCenter.X;
+            }
+            if (targetHitbox.Top > ellipseCenter.Y)
+            {
+                y = targetHitbox.Top - ellipseCenter.Y;
+            }
+            else if (targetHitbox.Top + targetHitbox.Height < ellipseCenter.Y)
+            {
+                y = targetHitbox.Top + targetHitbox.Height - ellipseCenter.Y;
+            }
+            float a = ellipseDimentions.X / 2f;
+            float b = ellipseDimentions.Y / 2f;
+            return (x * x) / (a * a) + (y * y) / (b * b) <= 1;
         }
     }
 }

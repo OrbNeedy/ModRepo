@@ -1,6 +1,5 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Common.Players.Septimas.Abilities;
-using gvmod.Common.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -13,24 +12,22 @@ namespace gvmod.UI.Menus
 {
     internal class AbilityMenu : UIState
     {
-        public int x = Main.screenWidth - 160;
-        public int y = (int)(Main.screenHeight * 0.4);
-        public AbilityMenuBack abilityMenuBack;
-        public AbilitySlot[] abilitySlots;
-        public SelectionMenu selectionMenu;
-        public SelectionOption selectionOption;
-        public UIImageButton selectionRight;
-        public UIImageButton selectionLeft;
-        public UIText level;
-        //TODO: implement cooldownFill
-        //public UIImage cooldownFill;
-        //public Texture2D cooldownFilling = ModContent.Request<Texture2D>("gvmod/Assets/Bars/APBarFilling", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-        public Texture2D expFilling = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Bars/EXPBarFilling",
+        private int x = Main.screenWidth - 160;
+        private int y = (int)(Main.screenHeight * 0.4);
+        private AbilityMenuBack abilityMenuBack;
+        private AbilitySlot[] abilitySlots;
+        private SelectionMenu selectionMenu;
+        private SelectionOption selectionOption;
+        private UIImageButton selectionRight;
+        private UIImageButton selectionLeft;
+        private UIText level;
+        //private UIImage cooldownFill;
+        //private Texture2D cooldownFilling = ModContent.Request<Texture2D>("gvmod/Assets/Bars/APBarFilling", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        private Texture2D expFilling = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Bars/EXPBarFilling",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
-        public bool barReposition = false;
-        public int editingSlot = 0;
-        public bool selecting = false;
-        public int specialIndex = 0;
+        private int editingSlot = 0;
+        private bool selecting = false;
+        private int specialIndex = 0;
 
         public override void OnInitialize()
         {
@@ -83,13 +80,14 @@ namespace gvmod.UI.Menus
             {
                 Append(abilitySlots[i]);
             }
+            Deactivate();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            if (adept.septima.Name == "Human") Deactivate();
+            if (adept.Septima.Name == "Human") Deactivate();
             spriteBatch.Draw(expFilling, new Rectangle((int)(abilityMenuBack.Left.Pixels + 92), (int)(abilityMenuBack.Top.Pixels + 128), (int)(adept.ExperienceToFraction() * 46), 4), Color.White);
         }
 
@@ -114,8 +112,8 @@ namespace gvmod.UI.Menus
         private void OnClickRightArrow(UIMouseEvent evt, UIElement listeningElement)
         {
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            List<Special> posibleList = adept.septima.AvaliableSpecials();
-            if (specialIndex < posibleList.Count -1)
+            List<Special> posibleList = adept.Septima.AvaliableSpecials();
+            if (specialIndex < posibleList.Count - 1)
             {
                 specialIndex++;
             } else
@@ -127,7 +125,7 @@ namespace gvmod.UI.Menus
         private void OnClickLeftArrow(UIMouseEvent evt, UIElement listeningElement)
         {
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            List<Special> posibleList = adept.septima.AvaliableSpecials();
+            List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex > 0)
             {
                 specialIndex--;
@@ -140,7 +138,7 @@ namespace gvmod.UI.Menus
         public override void Update(GameTime gameTime)
         {
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            List<Special> posibleList = adept.septima.AvaliableSpecials();
+            List<Special> posibleList = adept.Septima.AvaliableSpecials();
             base.Update(gameTime);
             level.SetText(adept.level.ToString());
             selectionOption.assignedSpecial = posibleList[specialIndex];
@@ -150,7 +148,7 @@ namespace gvmod.UI.Menus
             }
             if (IsMouseHovering)
             {
-                Main.hoverItemName = adept.septimalPower.ToString();
+                Main.hoverItemName = adept.SeptimalPower.ToString();
             }
             UpdatePositions();
             if (!selectionMenu.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)

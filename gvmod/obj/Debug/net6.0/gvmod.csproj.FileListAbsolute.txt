@@ -3,3 +3,8 @@ C:\Users\USER\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\
 C:\Users\USER\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.AssemblyInfoInputs.cache
 C:\Users\USER\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.AssemblyInfo.cs
 C:\Users\USER\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.csproj.CoreCompileInputs.cache
+C:\Users\USUARIO\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.csproj.AssemblyReference.cache
+C:\Users\USUARIO\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USUARIO\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.AssemblyInfoInputs.cache
+C:\Users\USUARIO\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.AssemblyInfo.cs
+C:\Users\USUARIO\Documents\My Games\Terraria\tModLoader\ModSources\gvmod\obj\Debug\net6.0\gvmod.csproj.CoreCompileInputs.cache

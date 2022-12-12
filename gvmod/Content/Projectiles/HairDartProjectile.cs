@@ -36,14 +36,24 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            return base.PreDraw(ref lightColor);
+        }
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             base.OnHitNPC(target, damage, knockback, crit);
-            Septima septima = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>().septima;
+            Septima septima = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>().Septima;
             if (septima is AzureStriker)
             {
                 AzureStriker azureStriker = (AzureStriker)septima;
-                azureStriker.AddMarkedNPC(target);
+                azureStriker.AddTaggedNPC(target);
                 return;
             }
             if (septima is AzureThunderclap)

@@ -11,8 +11,8 @@ namespace gvmod.UI.Menus
 {
     internal class AbilitySlot : UIImageButton
     {
-        public Special assignedSpecial;
-        public int assignedSlot;
+        public Special assignedSpecial { get; set; }
+        private int assignedSlot;
 
         public AbilitySlot(Asset<Texture2D> texture, Special asignedSpecial, int assignedSlot) : base(texture)
         {

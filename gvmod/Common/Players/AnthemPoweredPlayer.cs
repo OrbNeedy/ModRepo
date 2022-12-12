@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using gvmod.Content;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace gvmod.Common.Players
@@ -8,10 +9,15 @@ namespace gvmod.Common.Players
         public bool anthemBuff;
         public int anthemBuffLevel;
 
+        public override void Initialize()
+        {
+            anthemBuff = false;
+            anthemBuffLevel = 1;
+        }
+
         public override void ResetEffects()
         {
             anthemBuff = false;
-            anthemBuffLevel = 0;
             Player.GetModPlayer<AdeptPlayer>().anthemState = false;
         }
 
@@ -35,10 +41,11 @@ namespace gvmod.Common.Players
                 {
                     adept.SPUsageModifier *= 0;
                 }
-                adept.SPRegenModifier += (float)(5.5 * anthemBuffLevel);
-                adept.SPRegenOverheatModifier += 2;
-                adept.specialDamageLevelMult += (float)(1.01 * anthemBuffLevel);
-                adept.secondaryDamageLevelMult += (float)(1.01 * anthemBuffLevel);
+                adept.SPRegenModifier *= (float)(5.5 * anthemBuffLevel);
+                adept.SPRegenOverheatModifier *= 2;
+                adept.specialDamageLevelMult *= (float)(1.01 * anthemBuffLevel);
+                adept.secondaryDamageLevelMult *= (float)(1.01 * anthemBuffLevel);
+                Player.GetDamage<SeptimaDamageClass>() *= (float)(1.01 * anthemBuffLevel);
             }
             base.PostUpdateBuffs();
         }

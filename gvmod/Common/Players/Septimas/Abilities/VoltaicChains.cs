@@ -11,7 +11,6 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     public class VoltaicChains : Special
     {
-        private int specialDuration = 300;
         private int firstChain;
         private bool isNotFirstChain = false;
         private Vector2 lastPlayerPos = new Vector2(0);
@@ -22,9 +21,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
+            SpecialDuration = 300;
         }
 
         public override int UnlockLevel => 40;
+
+        public override bool IsOffensive => true;
 
         public override string Name => "Voltaic Chains";
 
@@ -86,7 +88,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             {
                 Adept.isUsingSpecialAbility = true;
                 SpecialTimer++;
-                if (SpecialTimer >= specialDuration)
+                if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
                     Adept.isUsingSpecialAbility = false;

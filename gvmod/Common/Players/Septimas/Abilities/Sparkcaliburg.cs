@@ -7,8 +7,9 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     public class Sparkcaliburg : Special
     {
-        private int specialDuration = 60;
         private Vector2 lastPlayerPos = new Vector2(0);
+        private int sparkcaliburgIndex;
+        private bool sparkcaliburgExists = false;
         public Sparkcaliburg(Player player, AdeptPlayer adept) : base(player, adept)
         {
             ApUsage = 2;
@@ -17,17 +18,21 @@ namespace gvmod.Common.Players.Septimas.Abilities
             BeingUsed = false;
             SpecialTimer = 1;
             lastPlayerPos = player.Center;
+            SpecialDuration = 60;
         }
 
         public override int UnlockLevel => 13;
+
+        public override bool IsOffensive => true;
 
         public override string Name => "Sparkcaliburg";
 
         public override void Attack()
         {
-            if (BeingUsed)
+            if (BeingUsed && !sparkcaliburgExists)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(150 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 10, Player.whoAmI);
+                sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(150 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 10, Player.whoAmI, -1, 1);
+                Main.NewText(sparkcaliburgExists);
             }
         }
 
@@ -66,13 +71,29 @@ namespace gvmod.Common.Players.Septimas.Abilities
             {
                 Adept.isUsingSpecialAbility = true;
                 SpecialTimer++;
-                if (SpecialTimer >= specialDuration)
+                if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
                     Adept.isUsingSpecialAbility = false;
                 }
             }
+
+            ProjectileUpdate();
+            
             Player.velocity *= VelocityMultiplier;
+        }
+
+        public void ProjectileUpdate()
+        {
+            Projectile sparkcaliburg = Main.projectile[sparkcaliburgIndex];
+            if (sparkcaliburg.active && sparkcaliburg.ModProjectile is ElectricSword)
+            {
+                sparkcaliburgExists = true;
+            }
+            else
+            {
+                sparkcaliburgExists = false;
+            }
         }
     }
 }

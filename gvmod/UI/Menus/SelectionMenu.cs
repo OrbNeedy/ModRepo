@@ -9,10 +9,10 @@ namespace gvmod.UI.Menus
 {
     public class SelectionMenu : UIPanel
     {
-        public Color color = Color.White;
-        public Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Menus/SelectionMenuBack",
+        private Color color = Color.White;
+        private Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Menus/SelectionMenuBack",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
-        public List<Special> posibleSpecials = new List<Special>();
+        private List<Special> posibleSpecials = new List<Special>();
 
         public override void Update(GameTime gameTime)
         {

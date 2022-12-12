@@ -25,27 +25,34 @@ namespace gvmod.Content.Projectiles
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 1;
+            Projectile.timeLeft = 2;
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.ownerHitCheck = false;
+            Projectile.light = 1f;
         }
 
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-            switch (aiForm)
+            AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
+            if (Projectile.ai[0] == -1)
             {
-                case 0:
-                    Projectile.timeLeft = 150;
-                    aiForm = -1;
-                    break;
+                Projectile.penetrate = 2;
+            }
+
+            switch (Projectile.ai[1])
+            {
                 case 1:
-                    Projectile.timeLeft = 2;
-                    aiForm = -1;
+                    if (adept.isUsingSpecialAbility)
+                    {
+                        Projectile.timeLeft = 2;
+                        Projectile.Center = Projectile.Center.RotatedBy(MathHelper.ToRadians(3.5f), Main.player[Projectile.owner].Center);
+                    }
                     break;
-                case 2:
-                    Projectile.timeLeft = 2;
-                    aiForm = -1;
+                default:
+                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    {
+                        Projectile.timeLeft = 2;
+                    }
                     break;
             }
         }
@@ -57,7 +64,7 @@ namespace gvmod.Content.Projectiles
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             if (source == player.GetSource_FromThis())
             {
-                if (adept.septima is AzureStriker || adept.septima is AzureThunderclap)
+                if (adept.Septima is AzureStriker || adept.Septima is AzureThunderclap)
                 {
                     if (!adept.isUsingSpecialAbility)
                     {
@@ -71,6 +78,11 @@ namespace gvmod.Content.Projectiles
                     aiForm = 0;
                 }
             }
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            base.Kill(timeLeft);
         }
     }
 }

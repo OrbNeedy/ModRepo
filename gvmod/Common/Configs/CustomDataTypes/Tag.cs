@@ -4,16 +4,18 @@ namespace gvmod.Common.Configs.CustomDataTypes
 {
     public class Tag
     {
-        public int npcIndex;
-        public int level;
-        public int timer;
-        public bool active;
+        public int npcIndex { get; set; }
+        public int level { get; set; }
+        public int timer { get; set; }
+        public bool active { get; set; }
+        public int shockIframes { get; set; }
 
         public Tag(int npcIndex)
         {
             this.npcIndex = npcIndex;
             level = 1;
             timer = 0;
+            shockIframes = 0;
             active = true;
         }
 
@@ -24,6 +26,10 @@ namespace gvmod.Common.Configs.CustomDataTypes
             if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || timer >= 600)
             {
                 active = false;
+            }
+            if (shockIframes > 0)
+            {
+                shockIframes--;
             }
         }
 

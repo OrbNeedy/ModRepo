@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Common.Players.Septimas;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -10,7 +11,6 @@ namespace gvmod.Content.Projectiles
 {
     public class ElectricSword : ModProjectile
     {
-        private int aiForm = 1;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Luxcaliburg");
@@ -27,47 +27,33 @@ namespace gvmod.Content.Projectiles
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 1;
+            Projectile.timeLeft = 2;
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.ownerHitCheck = false;
         }
 
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-            switch (aiForm)
+            AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
+            if (Projectile.ai[0] == -1)
             {
-                case 0:
-                    Projectile.timeLeft = 150;
-                    aiForm = -1;
-                    break;
-                case 1:
-                    Projectile.direction = player.direction;
-                    Projectile.spriteDirection = player.direction;
-                    Projectile.timeLeft = 2;
-                    aiForm = -1;
-                    break;
+                Projectile.penetrate = 2;
             }
-        }
 
-        public override void PostDraw(Color lightColor)
-        {
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-            base.OnSpawn(source);
-            Player player = Main.player[Projectile.owner];
-            if (source == player.GetSource_FromThis())
+            switch (Projectile.ai[1])
             {
-                if (player.GetModPlayer<AdeptPlayer>().septima.Name == "Azure Striker" || player.GetModPlayer<AdeptPlayer>().septima.Name == "Azure Thunderclap")
-                {
-                    aiForm = 1;
-                }
-                else
-                {
-                    aiForm = 0;
-                }
+                case 1:
+                    if (adept.isUsingSpecialAbility)
+                    {
+                        Projectile.timeLeft = 2;
+                    }
+                    break;
+                default:
+                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    {
+                        Projectile.timeLeft = 2;
+                    }
+                    break;
             }
         }
     }

@@ -8,7 +8,7 @@ namespace gvmod.Content.Projectiles
 {
     internal class LightningCreeper : ModProjectile
     {
-        public Texture2D big = (Texture2D)ModContent.Request<Texture2D>("gvmod/Content/Projectiles/LightningCreeper_Big",
+        private Texture2D big = (Texture2D)ModContent.Request<Texture2D>("gvmod/Content/Projectiles/LightningCreeper_Big",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
         public override void SetStaticDefaults()
         {

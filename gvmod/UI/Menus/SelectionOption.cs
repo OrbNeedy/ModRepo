@@ -9,7 +9,7 @@ namespace gvmod.UI.Menus
 {
     internal class SelectionOption : UIImageButton
     {
-        public Special assignedSpecial;
+        public Special assignedSpecial { get; set; }
 
         public SelectionOption(Asset<Texture2D> texture, Special asignedSpecial) : base(texture)
         {

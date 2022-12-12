@@ -7,17 +7,26 @@ namespace gvmod.Common.GlobalNPCs
 {
     internal class ChainedNPC: GlobalNPC
     {
+        public int ChainedTime { get; set; }
+        public override bool InstancePerEntity => true;
+
         public override bool PreAI(NPC npc)
         {
-            return !npc.HasBuff<Chained>();
+            if (ChainedTime > 0) return false;
+            return true;
         }
 
         public override void PostAI(NPC npc)
         {
-            if (npc.HasBuff<Chained>())
+            ChainedTime--;
+            if (ChainedTime > 0)
             {
                 npc.velocity *= 0.5f;
             }
+        }
+
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        {
         }
     }
 }

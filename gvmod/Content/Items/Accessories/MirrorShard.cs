@@ -10,7 +10,7 @@ namespace gvmod.Content.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("You will be resurrected upon death with the buff \"Anthem\".\n"
+			Tooltip.SetDefault("You will be resurrected upon death with an Anthem.\n"
 							 + "You can feel latent power in this.\n");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;

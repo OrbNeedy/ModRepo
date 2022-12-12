@@ -10,11 +10,11 @@ namespace gvmod.UI.Menus
 {
     internal class AbilityMenuBack : UIPanel
     {
-        public Color color = Color.White;
-        public Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityMenuBack",
+        private Color color = Color.White;
+        private Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityMenuBack",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
         private Vector2 offset;
-        public bool dragging;
+        private bool dragging;
 
         public override void Update(GameTime gameTime)
         {

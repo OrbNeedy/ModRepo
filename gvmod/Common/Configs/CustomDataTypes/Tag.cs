@@ -31,9 +31,13 @@ namespace gvmod.Common.Configs.CustomDataTypes
             {
                 shockIframes--;
             }
+            if (!active)
+            {
+                level = 0;
+            }
         }
 
-        public void IncreaseMark()
+        public void IncreaseTag()
         {
             if (level < 3) level++;
             timer = 0;

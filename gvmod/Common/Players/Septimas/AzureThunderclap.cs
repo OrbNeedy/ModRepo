@@ -167,12 +167,12 @@ namespace gvmod.Common.Players.Septimas
                     globalTag.shocked = false;
                     taggedNPCs.Remove(theTagInQuestion);
                 }
+                globalTag.tagLevel = theTagInQuestion.level;
 
-                if (theTagInQuestion.active && Adept.isUsingPrimaryAbility && !Adept.isOverheated && !Adept.isUsingSecondaryAbility && !Adept.isUsingSpecialAbility)
+                if (theTagInQuestion.active && Adept.isUsingPrimaryAbility && Adept.canUsePrimary)
                 {
                     globalTag.shocked = true;
-                }
-                else
+                } else
                 {
                     globalTag.shocked = false;
                 }
@@ -186,10 +186,9 @@ namespace gvmod.Common.Players.Septimas
                 NPC theNpcInQuestion = Main.npc[tag.npcIndex];
                 if (target == theNpcInQuestion && tag.active)
                 {
-                    tag.IncreaseMark();
+                    tag.IncreaseTag();
                     return;
                 }
-                theNpcInQuestion.GetGlobalNPC<TaggedNPC>().tagLevel = tag.level;
             }
             taggedNPCs.Add(new Tag(target.whoAmI));
         }

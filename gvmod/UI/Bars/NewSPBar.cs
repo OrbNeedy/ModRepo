@@ -119,7 +119,7 @@ namespace gvmod.UI.Bars
         public override void MouseDown(UIMouseEvent evt)
         {
             base.MouseDown(evt);
-            if (area.ContainsPoint(evt.MousePosition))
+            if (barFrame.ContainsPoint(evt.MousePosition))
             {
                 DragStart(evt);
             }
@@ -128,7 +128,7 @@ namespace gvmod.UI.Bars
         public override void MouseUp(UIMouseEvent evt)
         {
             base.MouseUp(evt);
-            if (area.ContainsPoint(evt.MousePosition))
+            if (barFrame.ContainsPoint(evt.MousePosition))
             {
                 DragEnd(evt);
             }

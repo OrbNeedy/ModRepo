@@ -26,6 +26,7 @@ namespace gvmod.UI.Menus
         private UIText level;
         private int editingSlot = 0;
         private bool selecting = false;
+        private bool canMove = true;
         private int specialIndex = 0;
 
         public override void OnInitialize()
@@ -93,6 +94,7 @@ namespace gvmod.UI.Menus
             specialOption.Width.Set(26, 0f);
             specialOption.Height.Set(22, 0f);
             specialOption.OnMouseDown += OnOptionClick;
+            specialOption.OnMouseUp += OnOptionRelease;
 
             // Level text
             level = new UIText("1", 1.2f);
@@ -123,6 +125,7 @@ namespace gvmod.UI.Menus
 
         private void OnSlotClick(UIMouseEvent evt, UIElement listeningElement, int i)
         {
+            canMove = false;
             if (!selecting)
             {
                 selecting = true;
@@ -132,12 +135,18 @@ namespace gvmod.UI.Menus
 
         private void OnOptionClick(UIMouseEvent evt, UIElement listeningElement)
         {
+            canMove = false;
             if (selecting)
             {
                 selecting = false;
                 abilityDisplays[editingSlot].specialIndex = specialOption.specialIndex;
             }
             specialOption.specialIndex = 0;
+        }
+
+        private void OnOptionRelease(UIMouseEvent evt, UIElement listeningElement)
+        {
+            canMove = true;
         }
 
         private void OnClickRightArrow(UIMouseEvent evt, UIElement listeningElement)
@@ -190,6 +199,8 @@ namespace gvmod.UI.Menus
             {
                 selecting = false;
             }
+
+            abilityMenuBack.CanMove = canMove;
 
             if (!selecting)
             {

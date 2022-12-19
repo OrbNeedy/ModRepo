@@ -16,6 +16,7 @@ namespace gvmod.UI.Menus
         private Color gradientA;
         private Color gradientB;
         private float quotient;
+        public bool CanMove { get; set; }
 
         public AbilityMenuPanel(Asset<Texture2D> texture) : base(texture)
         {
@@ -46,19 +47,28 @@ namespace gvmod.UI.Menus
         public override void MouseDown(UIMouseEvent evt)
         {
             base.MouseDown(evt);
-            DragStart(evt);
+            if (ContainsPoint(evt.MousePosition) && CanMove)
+            {
+                DragStart(evt);
+            }
         }
 
         public override void MouseUp(UIMouseEvent evt)
         {
             base.MouseUp(evt);
-            DragEnd(evt);
+            if (ContainsPoint(evt.MousePosition) && CanMove)
+            {
+                DragEnd(evt);
+            }
         }
 
         private void DragStart(UIMouseEvent evt)
         {
-            offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
-            dragging = true;
+            if (CanMove)
+            {
+                offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
+                dragging = true;
+            }
         }
 
         private void DragEnd(UIMouseEvent evt)

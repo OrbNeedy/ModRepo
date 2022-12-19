@@ -120,8 +120,6 @@ namespace gvmod.Common.Players
             if (KeybindSystem.primaryAbility.JustPressed)
             {
                 isUsingPrimaryAbility = true;
-                Main.NewText("Septima: " + Septima.Name);
-                Main.NewText("Anthem state: " + anthemState);
             }
             if (KeybindSystem.primaryAbility.JustReleased)
             {

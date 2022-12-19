@@ -42,7 +42,7 @@ namespace gvmod.UI.Bars
             label = new UIText("", 0.8f);
             label.Width.Set(120, 0f);
             label.Height.Set(30, 0f);
-            label.Top.Set(0, 0f);
+            label.Top.Set(8, 0f);
             label.Left.Set(0, 0f);
 
             gradientA = new Color(12, 179, 173); // The color on the left
@@ -50,6 +50,7 @@ namespace gvmod.UI.Bars
 
             area.Append(percentage);
             area.Append(barFrame);
+            area.Append(label);
             Append(area);
         }
 

@@ -24,13 +24,15 @@ namespace gvmod.Common.Players
         public int experience { get; set; }
         public int maxEXP { get; set; }
         public int extraEXP { get; set; }
-        public List<string> activeSlot { get; set; }
+        public List<int> activeSlot { get; set; }
 
         private int rechargeComboCount;
         private const int rechargeCooldown = 60;
         private const int rechargeDuration = 30;
         private int rechargeDelay;
         private int rechargeTimer;
+
+        private int slotToUse;
 
         public float primaryDamageLevelMult { get; set; }
         public float secondaryDamageLevelMult { get; set; }
@@ -63,6 +65,7 @@ namespace gvmod.Common.Players
         public bool isOverheated { get; set; }
         public int timeSincePrimary { get; set; }
         private bool cantMove;
+        public bool specialInvincibility { get; private set; }
 
         public override void Initialize()
         {
@@ -80,7 +83,8 @@ namespace gvmod.Common.Players
             primaryDamageLevelMult = 1;
             secondaryDamageLevelMult = 1;
             specialDamageLevelMult = 1;
-            activeSlot = new List<string>() { "", "", "", ""};
+            activeSlot = new List<int>() { 0, 0, 0, 0};
+            slotToUse = 0;
         }
 
         public override void LoadData(TagCompound tag)
@@ -108,7 +112,7 @@ namespace gvmod.Common.Players
 
         public override void OnEnterWorld(Player player)
         {
-            activeSlot = new List<string>() { "", "", "", "" };
+            activeSlot = new List<int>() { 0, 0, 0, 0};
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
@@ -130,53 +134,73 @@ namespace gvmod.Common.Players
             }
             if (KeybindSystem.special1.JustPressed)
             {
-                Special special1 = GetSpecial(activeSlot[0]);
-                if (special1 != null && !special1.BeingUsed && abilityPower >= special1.ApUsage && !special1.InCooldown && (special1 != null || special1.Name != "") && !isUsingSpecialAbility)
+                Special special = Septima.Abilities[activeSlot[0]];
+                if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special1.ApUsage * APUsageModifier);
-                    special1.SpecialTimer = 0;
-                    if (special1.IsOffensive)
+                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    special.SpecialTimer = 0;
+                    slotToUse = 0;
+                    if (special.IsOffensive)
                     {
                         cantMove = true;
+                    }
+                    if (special.GivesIFrames)
+                    {
+                        specialInvincibility = true;
                     }
                 }
             }
             if (KeybindSystem.special2.JustPressed)
             {
-                Special special2 = GetSpecial(activeSlot[1]);
-                if (special2 != null && !special2.BeingUsed && abilityPower >= special2.ApUsage && !special2.InCooldown && (special2 != null || special2.Name != "") && !isUsingSpecialAbility)
+                Special special = Septima.Abilities[activeSlot[1]];
+                if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special2.ApUsage * APUsageModifier);
-                    special2.SpecialTimer = 0;
-                    if (special2.IsOffensive)
+                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    special.SpecialTimer = 0;
+                    slotToUse = 1;
+                    if (special.IsOffensive)
                     {
                         cantMove = true;
+                    }
+                    if (special.GivesIFrames)
+                    {
+                        specialInvincibility = true;
                     }
                 }
             }
             if (KeybindSystem.special3.JustPressed)
             {
-                Special special3 = GetSpecial(activeSlot[2]);
-                if (special3 != null && !special3.BeingUsed && abilityPower >= special3.ApUsage && !special3.InCooldown && (special3 != null || special3.Name != "") && !isUsingSpecialAbility)
+                Special special = Septima.Abilities[activeSlot[2]];
+                if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special3.ApUsage * APUsageModifier);
-                    special3.SpecialTimer = 0;
-                    if (special3.IsOffensive)
+                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    special.SpecialTimer = 0;
+                    slotToUse = 2;
+                    if (special.IsOffensive)
                     {
                         cantMove = true;
+                    }
+                    if (special.GivesIFrames)
+                    {
+                        specialInvincibility = true;
                     }
                 }
             }
             if (KeybindSystem.special4.JustPressed)
             {
-                Special special4 = GetSpecial(activeSlot[3]);
-                if (special4 != null && !special4.BeingUsed && abilityPower >= special4.ApUsage && !special4.InCooldown && (special4 != null || special4.Name != "") && !isUsingSpecialAbility)
+                Special special = Septima.Abilities[activeSlot[3]];
+                if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special4.ApUsage * APUsageModifier);
-                    special4.SpecialTimer = 0;
-                    if (special4.IsOffensive)
+                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    special.SpecialTimer = 0;
+                    slotToUse = 3;
+                    if (special.IsOffensive)
                     {
                         cantMove = true;
+                    }
+                    if (special.GivesIFrames)
+                    {
+                        specialInvincibility = true;
                     }
                 }
             }
@@ -203,10 +227,7 @@ namespace gvmod.Common.Players
             }
             if (isUsingSpecialAbility)
             {
-                for (int i = 0; i < activeSlot.Count; i++)
-                {
-                    GetSpecial(activeSlot[i])?.Effects();
-                }
+                Septima.Abilities[activeSlot[slotToUse]]?.Effects();
             }
 
             if (Septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !isOverheated && !isUsingPrimaryAbility)
@@ -262,13 +283,11 @@ namespace gvmod.Common.Players
             }
             if (isUsingSpecialAbility)
             {
-                for (int i = 0; i < activeSlot.Count; i++)
-                {
-                    GetSpecial(activeSlot[i])?.Attack();
-                }
+                Septima.Abilities[activeSlot[slotToUse]]?.Attack();
             } else
             {
                 cantMove = false;
+                specialInvincibility = false;
             }
             UpdateSeptimalPower();
             maxEXP = (int)Math.Pow(level * 80, 1.47f);
@@ -294,7 +313,7 @@ namespace gvmod.Common.Players
         {
             if (!isRecharging)
             {
-                if (!isOverheated && (!secondaryInUse || secondaryInCooldown) && !isUsingSpecialAbility)
+                if (!isOverheated && (!secondaryInUse || secondaryInCooldown) && !isUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
                 {
                     canUsePrimary = true;
                 } else
@@ -302,7 +321,7 @@ namespace gvmod.Common.Players
                     canUsePrimary = false;
                 }
 
-                if (!isUsingSpecialAbility && !secondaryInCooldown)
+                if (!isUsingSpecialAbility && !secondaryInCooldown && !Player.HasBuff(BuffID.Stoned))
                 {
                     canUseSecondary = true;
                 }
@@ -314,6 +333,17 @@ namespace gvmod.Common.Players
             {
                 canUsePrimary = false;
                 canUseSecondary = false;
+            }
+        }
+
+        private bool FigureSpecialAvailability(Special special)
+        {
+            if (special != null && !special.BeingUsed && abilityPower >= special.ApUsage && !special.InCooldown && (special != null || special.Name != "") && !isUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
+            {
+                return true;
+            } else
+            {
+                return false;
             }
         }
 
@@ -356,6 +386,11 @@ namespace gvmod.Common.Players
                 rechargeTimer = 0;
                 Player.immune = true;
                 Player.AddImmuneTime(cooldownCounter, 60);
+                return false;
+            }
+            if (isUsingSpecialAbility && Septima.Abilities[activeSlot[slotToUse]].GivesIFrames)
+            {
+                Player.immune = true;
                 return false;
             }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
@@ -470,10 +505,6 @@ namespace gvmod.Common.Players
             foreach (Special special in Septima.Abilities)
             {
                 special.Update();
-            }
-            if (isUsingSpecialAbility)
-            {
-                Player.immune = true;
             }
         }
 

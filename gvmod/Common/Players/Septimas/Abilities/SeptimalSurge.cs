@@ -24,6 +24,8 @@ namespace gvmod.Common.Players.Septimas.Abilities
 
         public override bool IsOffensive => false;
 
+        public override bool GivesIFrames => true;
+
         public override string Name => "Septimal Surge";
 
         public override void Effects()

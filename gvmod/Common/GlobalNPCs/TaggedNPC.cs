@@ -59,7 +59,19 @@ namespace gvmod.Common.GlobalNPCs
                     SpriteEffects.None,
                     0
                 );
-                Lighting.AddLight(position, 255, 255, 255);
+                Asset<Texture2D> mark = ModContent.Request<Texture2D>("gvmod/Assets/Effects/TagMark" + tagLevel);
+                position = new Vector2((int)position.X, (int)position.Y);
+                spriteBatch.Draw(
+                    mark.Value,
+                    position,
+                    null,
+                    Color.White * 0.5f,
+                    0f,
+                    tag.Size() * 0.5f,
+                    1f,
+                    SpriteEffects.None,
+                    0
+                );
             }
         }
 

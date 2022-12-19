@@ -1,7 +1,10 @@
-﻿using gvmod.Common.Players;
+﻿
+
+using gvmod.Common.Players;
 using gvmod.Common.Players.Septimas.Abilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -12,75 +15,110 @@ namespace gvmod.UI.Menus
 {
     internal class AbilityMenu : UIState
     {
-        private int x = Main.screenWidth - 160;
-        private int y = (int)(Main.screenHeight * 0.4);
-        private AbilityMenuBack abilityMenuBack;
-        private AbilitySlot[] abilitySlots;
-        private SelectionMenu selectionMenu;
-        private SelectionOption selectionOption;
+        private UIElement area;
+        private AbilityDisplay[] abilityDisplays;
+        private UIImage abilityMenuBack;
+        private UIImage selectionBack;
         private UIImageButton selectionRight;
         private UIImageButton selectionLeft;
+        private SpecialOption specialOption;
         private UIText level;
-        //private UIImage cooldownFill;
-        //private Texture2D cooldownFilling = ModContent.Request<Texture2D>("gvmod/Assets/Bars/APBarFilling", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-        private Texture2D expFilling = (Texture2D)ModContent.Request<Texture2D>("gvmod/Assets/Bars/EXPBarFilling",
-            ReLogic.Content.AssetRequestMode.ImmediateLoad);
         private int editingSlot = 0;
         private bool selecting = false;
         private int specialIndex = 0;
+        private Vector2 offset;
+        private bool dragging;
 
         public override void OnInitialize()
         {
-            abilityMenuBack = new AbilityMenuBack();
-            abilityMenuBack.Left.Set(x, 0f);
-            abilityMenuBack.Top.Set(y, 0f);
+            area = new UIElement();
+            area.Left.Set(-area.Width.Pixels - 200, 1f);
+            area.Top.Set(-area.Height.Pixels - 300, 1f);
+            area.Width.Set(150, 0f);
+            area.Height.Set(140, 0f);
+
+            // Background
+            Asset<Texture2D> backTexture = ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityMenuBack");
+            abilityMenuBack = new AbilityMenuPanel(backTexture);
+            abilityMenuBack.Left.Set(0, 0f);
+            abilityMenuBack.Top.Set(0, 0f);
             abilityMenuBack.Width.Set(150, 0f);
             abilityMenuBack.Height.Set(140, 0f);
 
-            abilitySlots = new AbilitySlot[4];
+            // Ability slots
+            abilityDisplays = new AbilityDisplay[4];
             for (int i = 0; i < 4; i++)
             {
-                abilitySlots[i] = new AbilitySlot(ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityEmpty" + (i + 1), ReLogic.Content.AssetRequestMode.ImmediateLoad), i);
-                abilitySlots[i].Width.Set(58, 0f);
-                abilitySlots[i].Height.Set(48, 0f);
+                Asset<Texture2D> display = ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityEmpty" + (i + 1));
                 int currentI = i;
-                abilitySlots[i].OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
+                abilityDisplays[i] = new AbilityDisplay(display, i);
+                abilityDisplays[i].Width.Set(58, 0f);
+                abilityDisplays[i].Height.Set(48, 0f);
+                abilityDisplays[i].OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
             }
+            abilityDisplays[0].Left.Set(12, 0);
+            abilityDisplays[0].Top.Set(8, 0);
+            abilityDisplays[1].Left.Set(76, 0);
+            abilityDisplays[1].Top.Set(8, 0);
+            abilityDisplays[2].Left.Set(8, 0);
+            abilityDisplays[2].Top.Set(68, 0);
+            abilityDisplays[3].Left.Set(70, 0);
+            abilityDisplays[3].Top.Set(68, 0);
 
-            selectionMenu = new SelectionMenu();
-            selectionMenu.Width.Set(150, 0f);
-            selectionMenu.Height.Set(60, 0f);
+            // Selection mode back panel
+            Asset<Texture2D> selectionBackTexture = ModContent.Request<Texture2D>("gvmod/Assets/Menus/SelectionMenuBack");
+            selectionBack = new SelectionPanel(selectionBackTexture);
+            selectionBack.Left.Set(0, 0f);
+            selectionBack.Top.Set(40, 0f);
+            selectionBack.Width.Set(150, 0f);
+            selectionBack.Height.Set(60, 0f);
 
-            selectionRight = new UIImageButton(ModContent.Request<Texture2D>("gvmod/Assets/Icons/ArrowRight", ReLogic.Content.AssetRequestMode.ImmediateLoad));
+            // Right arrow for selecting
+            Asset<Texture2D> rightArrow = ModContent.Request<Texture2D>("gvmod/Assets/Icons/ArrowRight");
+            selectionRight = new UIImageButton(rightArrow);
+            selectionRight.Left.Set(96, 0f);
+            selectionRight.Top.Set(54, 0f);
             selectionRight.Width.Set(20, 0f);
             selectionRight.Height.Set(48, 0f);
             selectionRight.OnMouseDown += OnClickRightArrow;
 
-            selectionLeft = new UIImageButton(ModContent.Request<Texture2D>("gvmod/Assets/Icons/ArrowLeft", ReLogic.Content.AssetRequestMode.ImmediateLoad));
+            // Left arrow for selecting
+            Asset<Texture2D> leftArrow = ModContent.Request<Texture2D>("gvmod/Assets/Icons/ArrowLeft");
+            selectionLeft = new UIImageButton(leftArrow);
+            selectionLeft.Left.Set(36, 0f);
+            selectionLeft.Top.Set(54, 0f);
             selectionLeft.Width.Set(20, 0f);
             selectionLeft.Height.Set(48, 0f);
             selectionLeft.OnMouseDown += OnClickLeftArrow;
 
-            selectionOption = new SelectionOption(ModContent.Request<Texture2D>("gvmod/Assets/Icons/None", ReLogic.Content.AssetRequestMode.ImmediateLoad), null);
-            selectionOption.Width.Set(26, 0f);
-            selectionOption.Height.Set(22, 0f);
-            selectionOption.OnMouseDown += OnOptionClick;
+            // Selection option
+            Asset<Texture2D> none = ModContent.Request<Texture2D>("gvmod/Assets/Icons/NoneIcon");
+            specialOption = new SpecialOption(none, 0);
+            specialOption.Left.Set(62, 0f);
+            specialOption.Top.Set(59, 0f);
+            specialOption.Width.Set(26, 0f);
+            specialOption.Height.Set(22, 0f);
+            specialOption.OnMouseDown += OnOptionClick;
 
+            // Level text
             level = new UIText("1", 1.2f);
+            level.Left.Set(38, 0f);
+            level.Top.Set(116, 0f);
             level.Width.Set(12, 0f);
             level.Height.Set(16, 0f);
 
-            Append(abilityMenuBack);
-            Append(selectionMenu);
-            Append(selectionLeft);
-            Append(selectionRight);
-            Append(selectionOption);
-            Append(level);
+            // Append all to the background
+            area.Append(abilityMenuBack);
             for (int i = 0; i < 4; i++)
             {
-                Append(abilitySlots[i]);
+                abilityMenuBack.Append(abilityDisplays[i]);
             }
-            Deactivate();
+            abilityMenuBack.Append(level);
+            abilityMenuBack.Append(selectionBack);
+            abilityMenuBack.Append(specialOption);
+            abilityMenuBack.Append(selectionLeft);
+            abilityMenuBack.Append(selectionRight);
+            Append(area);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -88,7 +126,6 @@ namespace gvmod.UI.Menus
             base.Draw(spriteBatch);
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             if (adept.Septima.Name == "Human") Deactivate();
-            spriteBatch.Draw(expFilling, new Rectangle((int)(abilityMenuBack.Left.Pixels + 92), (int)(abilityMenuBack.Top.Pixels + 128), (int)(adept.ExperienceToFraction() * 46), 4), Color.White);
         }
 
         private void OnSlotClick(UIMouseEvent evt, UIElement listeningElement, int i)
@@ -105,18 +142,20 @@ namespace gvmod.UI.Menus
             if (selecting)
             {
                 selecting = false;
-                abilitySlots[editingSlot].assignedSpecial = selectionOption.assignedSpecial;
+                abilityDisplays[editingSlot].specialIndex = specialOption.specialIndex;
             }
+            specialOption.specialIndex = 0;
         }
 
         private void OnClickRightArrow(UIMouseEvent evt, UIElement listeningElement)
         {
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex < posibleList.Count - 1)
             {
                 specialIndex++;
-            } else
+            }
+            else
             {
                 specialIndex = 0;
             }
@@ -124,12 +163,13 @@ namespace gvmod.UI.Menus
 
         private void OnClickLeftArrow(UIMouseEvent evt, UIElement listeningElement)
         {
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex > 0)
             {
                 specialIndex--;
-            } else
+            }
+            else
             {
                 specialIndex = posibleList.Count - 1;
             }
@@ -137,65 +177,130 @@ namespace gvmod.UI.Menus
 
         public override void Update(GameTime gameTime)
         {
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            List<Special> posibleList = adept.Septima.AvaliableSpecials();
             base.Update(gameTime);
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            if (!CheckPlayerAbilities(adept) || Main.dedServ)
+            {
+                specialOption.specialIndex = 0;
+                specialIndex = 0;
+                for (int i = 0; i < adept.activeSlot.Count; i++)
+                {
+                    adept.activeSlot[i] = 0;
+                    abilityDisplays[i].specialIndex = 0;
+                }
+            }
+            List<int> posibleList = adept.Septima.AvaliableSpecialsIndex(); // Gets the index of all abilities if the avalible level is less or equal than the player's level
             level.SetText(adept.level.ToString());
-            selectionOption.assignedSpecial = posibleList[specialIndex];
-            for (int i = 0; i < adept.activeSlot.Count; i++)
-            {
-                abilitySlots[i].assignedSpecial = adept.GetSpecial(adept.activeSlot[i]);
-            }
-            if (IsMouseHovering)
-            {
-                Main.hoverItemName = adept.SeptimalPower.ToString();
-            }
+            specialOption.specialIndex = posibleList[specialIndex];
+
             UpdatePositions();
-            if (!selectionMenu.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)
+            if (!selectionBack.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)
             {
                 selecting = false;
             }
+
             if (!selecting)
             {
-                adept.activeSlot[editingSlot] = selectionOption.assignedSpecial.Name;
-                selectionMenu.Remove();
-                selectionOption.Remove();
+                // This gives the player's slot the selected special
+                for (int i = 0; i < adept.activeSlot.Count; i++)
+                {
+                    adept.activeSlot[i] = abilityDisplays[i].specialIndex;
+                }
+                selectionBack.Remove();
+                specialOption.Remove();
                 selectionLeft.Remove();
                 selectionRight.Remove();
-            } else
+            }
+            else
             {
-                Append(selectionMenu);
-                Append(selectionOption);
-                Append(selectionLeft);
-                Append(selectionRight);
+                dragging = false;
+                abilityMenuBack.Append(selectionBack);
+                abilityMenuBack.Append(specialOption);
+                abilityMenuBack.Append(selectionLeft);
+                abilityMenuBack.Append(selectionRight);
+            }
+        }
+
+        public override void MouseDown(UIMouseEvent evt)
+        {
+            base.MouseDown(evt);
+            if (abilityMenuBack.ContainsPoint(evt.MousePosition))
+            {
+                DragStart(evt);
+            }
+        }
+
+        public override void MouseUp(UIMouseEvent evt)
+        {
+            base.MouseUp(evt);
+            if (abilityMenuBack.ContainsPoint(evt.MousePosition))
+            {
+                DragEnd(evt);
             }
         }
 
         public void UpdatePositions()
         {
-            abilitySlots[0].Left.Set(abilityMenuBack.Left.Pixels + 12, 0);
-            abilitySlots[0].Top.Set(abilityMenuBack.Top.Pixels + 8, 0);
-            abilitySlots[1].Left.Set(abilityMenuBack.Left.Pixels + 76, 0);
-            abilitySlots[1].Top.Set(abilityMenuBack.Top.Pixels + 8, 0);
-            abilitySlots[2].Left.Set(abilityMenuBack.Left.Pixels + 8, 0);
-            abilitySlots[2].Top.Set(abilityMenuBack.Top.Pixels + 68, 0);
-            abilitySlots[3].Left.Set(abilityMenuBack.Left.Pixels + 70, 0);
-            abilitySlots[3].Top.Set(abilityMenuBack.Top.Pixels + 68, 0);
+            if (abilityMenuBack.ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
 
-            selectionMenu.Left.Set(abilityMenuBack.Left.Pixels, 0f);
-            selectionMenu.Top.Set(abilityMenuBack.Top.Pixels + 40, 0f);
+            if (dragging)
+            {
+                Left.Set(Main.mouseX - offset.X, 0f); // Main.MouseScreen.X and Main.mouseX are the same
+                Top.Set(Main.mouseY - offset.Y, 0f);
+                Recalculate();
+            }
+        }
 
-            selectionOption.Left.Set(abilityMenuBack.Left.Pixels + 62, 0f);
-            selectionOption.Top.Set(abilityMenuBack.Top.Pixels + 59, 0f);
+        private void DragStart(UIMouseEvent evt)
+        {
+            offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
+            dragging = true;
+        }
 
-            selectionLeft.Left.Set(abilityMenuBack.Left.Pixels + 36, 0f);
-            selectionLeft.Top.Set(abilityMenuBack.Top.Pixels + 54, 0f);
+        private void DragEnd(UIMouseEvent evt)
+        {
+            Vector2 end = evt.MousePosition;
+            dragging = false;
 
-            selectionRight.Left.Set(abilityMenuBack.Left.Pixels + 96, 0f);
-            selectionRight.Top.Set(abilityMenuBack.Top.Pixels + 54, 0f);
+            Left.Set(end.X - offset.X, 0f);
+            Top.Set(end.Y - offset.Y, 0f);
 
-            level.Left.Set(abilityMenuBack.Left.Pixels + 38, 0f);
-            level.Top.Set(abilityMenuBack.Top.Pixels + 116, 0f);
+            Recalculate();
+        }
+
+        // Return false if any of the slots have an ability the player shouldn't have
+        private bool CheckPlayerAbilities(AdeptPlayer adept)
+        {
+            for (int i = 0; i < abilityDisplays.Length; i++)
+            {
+                bool containsValidSpecial = false;
+                foreach (Special special in adept.Septima.Abilities)
+                {
+                    if (special == abilityDisplays[i].assignedSpecial && special.UnlockLevel <= adept.level)
+                    {
+                        containsValidSpecial = true;
+                    }
+                }
+                if (!containsValidSpecial)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void ResetDisplays()
+        {
+            specialOption.specialIndex = 0;
+            specialIndex = 0;
+            for (int i = 0; i < abilityDisplays.Length; i++)
+            {
+                abilityDisplays[i].specialIndex = 0;
+            }
         }
     }
 }
+

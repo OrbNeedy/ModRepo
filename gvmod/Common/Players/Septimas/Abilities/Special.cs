@@ -30,6 +30,8 @@ namespace gvmod.Common.Players.Septimas.Abilities
 
         public abstract bool IsOffensive { get; }
 
+        public abstract bool GivesIFrames { get; }
+
         public int SpecialCooldownTime { get; set; }
 
         public bool InCooldown { get; set; }

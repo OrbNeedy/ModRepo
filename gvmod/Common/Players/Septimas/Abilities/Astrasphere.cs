@@ -35,6 +35,8 @@ namespace gvmod.Common.Players.Septimas.Abilities
 
         public override bool IsOffensive => true;
 
+        public override bool GivesIFrames => true;
+
         public override string Name => "Astrasphere";
 
         public override void Effects()

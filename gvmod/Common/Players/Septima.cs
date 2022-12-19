@@ -37,6 +37,8 @@ namespace gvmod.Common.Players
             InitializeAbilitiesList();
         }
 
+        // Add methods to make custom prevation and miscelaneous effects for different septimas
+
         public abstract void InitializeAbilitiesList();
 
         public abstract void FirstAbilityEffects();
@@ -56,10 +58,40 @@ namespace gvmod.Common.Players
             List<Special> specials = new List<Special>();
             for (int i = 0; i < abilities.Count; i++)
             {
-                if (adept.level >= abilities[i].UnlockLevel)
+                if (abilities[i] == null)
                 {
-                    specials.Add(abilities[i]);
+                    specials.Add(new None(Player, Adept));
                 }
+                else
+                {
+                    if (adept.level >= abilities[i].UnlockLevel)
+                    {
+                        specials.Add(abilities[i]);
+                    }
+                }
+            }
+            return specials;
+        }
+
+        public List<int> AvaliableSpecialsIndex()
+        {
+            List<int> specials = new List<int>();
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                if (abilities[i] == null)
+                {
+                    specials.Add(0);
+                } else
+                {
+                    if (adept.level >= abilities[i].UnlockLevel)
+                    {
+                        specials.Add(i);
+                    }
+                }
+            }
+            if (specials.Count == 0)
+            {
+                specials.Add(0);
             }
             return specials;
         }

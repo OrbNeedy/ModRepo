@@ -30,6 +30,7 @@ namespace gvmod.Common.Players.Septimas
 
         public override void InitializeAbilitiesList()
         {
+            Abilities.Add(new None(Player, Adept));
             Abilities.Add(new Astrasphere(Player, Adept));
             Abilities.Add(new Sparkcaliburg(Player, Adept));
             Abilities.Add(new VoltaicChains(Player, Adept));
@@ -61,7 +62,7 @@ namespace gvmod.Common.Players.Septimas
                 float tagMultiplier = (float)((tag.level * 0.75) + 0.25);
                 if (tag.shockIframes == 0)
                 {
-                    theNpcInQuestion.StrikeNPC((int)(20 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 10, -Player.direction);
+                    theNpcInQuestion.StrikeNPC((int)(20 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.direction);
                     tag.shockIframes = 6;
                 }
             }

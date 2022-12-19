@@ -15,43 +15,41 @@ namespace gvmod.Common.Systems
         public override void Load()
         {
             abilityMenu = new AbilityMenu();
-            abilityMenu.Activate();
             _abilityMenu = new UserInterface();
+            abilityMenu.Activate();
             _abilityMenu.SetState(abilityMenu);
+        }
+
+        public override void OnWorldUnload()
+        {
+            abilityMenu.ResetDisplays();
         }
 
         public override void UpdateUI(GameTime gameTime)
         {
-            _abilityMenu?.Update(gameTime);
-            if (KeybindSystem.abilityMenu.JustPressed)
+            if (_abilityMenu?.CurrentState != null)
             {
-                if (_abilityMenu.IsVisible)
-                {
-                    HideUI();
-                } else
-                {
-                    ShowUI();
-                }
+                _abilityMenu?.Update(gameTime);
             }
         }
 
         internal void ShowUI()
         {
-            _abilityMenu.SetState(abilityMenu);
+            _abilityMenu?.SetState(abilityMenu);
         }
 
         internal void HideUI()
         {
-            _abilityMenu.SetState(null);
+            _abilityMenu?.SetState(null);
         }
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int mouseTextIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Mouse Text");
+            int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Resource Bars"));
             if (mouseTextIndex != -1)
             {
                 layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-                    "gvmod: menus",
+                    "GvMod: Menus",
                     delegate
                     {
                         _abilityMenu.Draw(Main.spriteBatch, new GameTime());

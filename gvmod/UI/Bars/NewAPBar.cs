@@ -6,7 +6,6 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using gvmod.Common.Players;
 using Terraria.GameContent;
-using SteelSeries.GameSense;
 
 namespace gvmod.UI.Bars
 {
@@ -24,6 +23,7 @@ namespace gvmod.UI.Bars
         {
             area = new UIElement();
             area.Left.Set(-area.Width.Pixels - 1200, 1f);
+            area.Top.Set(area.Height.Pixels - 50, 1f);
             area.Width.Set(60, 0f);
             area.Height.Set(28, 0f);
 

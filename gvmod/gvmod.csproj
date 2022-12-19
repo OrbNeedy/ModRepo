@@ -8,10 +8,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Assets\Buttons\**" />
+    <EmbeddedResource Remove="Assets\Buttons\**" />
+    <None Remove="Assets\Buttons\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Buttons\" />
     <Folder Include="Assets\Effects\" />
     <Folder Include="Common\GlobalProjectiles\" />
     <Folder Include="Content\Items\Armor\" />

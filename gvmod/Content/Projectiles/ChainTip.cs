@@ -23,6 +23,7 @@ namespace gvmod.Content.Projectiles
         private Vector2 startingPosition = new Vector2(0, 0);
         private int desynchTime = Main.rand.Next(20, 60);
         private Dictionary<int, int> trappedNPCs = new Dictionary<int, int>();
+        private Dictionary<int, int> entrapmentPotency = new Dictionary<int, int>();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Voltaic chain");
@@ -64,7 +65,16 @@ namespace gvmod.Content.Projectiles
             {
                 target.GetGlobalNPC<ChainedNPC>().ChainedTime = Main.projectile[(int)Projectile.ai[0]].timeLeft;
             }
+            foreach (int index in trappedNPCs.Keys)
+            {
+                if (index == target.whoAmI)
+                {
+                    entrapmentPotency[index]++;
+                    return;
+                }
+            }
             trappedNPCs.Add(target.whoAmI, 0);
+            entrapmentPotency.Add(target.whoAmI, 0);
             base.OnHitNPC(target, damage, knockback, crit);
         }
 
@@ -110,7 +120,7 @@ namespace gvmod.Content.Projectiles
                         theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
                         if (trappedNPCs[index] <= 0)
                         {
-                            theNpcInQuestion.StrikeNPC((int)(100 * adept.specialDamageLevelMult * adept.specialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5))), 0, 0);
+                            theNpcInQuestion.StrikeNPC((int)(100 * adept.specialDamageLevelMult * adept.specialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0);
                             trappedNPCs[index] = 6;
                         }
                     }

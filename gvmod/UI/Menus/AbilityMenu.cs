@@ -5,8 +5,10 @@ using gvmod.Common.Players.Septimas.Abilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SteelSeries.GameSense;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -15,9 +17,8 @@ namespace gvmod.UI.Menus
 {
     internal class AbilityMenu : UIState
     {
-        private UIElement area;
         private AbilityDisplay[] abilityDisplays;
-        private UIImage abilityMenuBack;
+        private AbilityMenuPanel abilityMenuBack;
         private UIImage selectionBack;
         private UIImageButton selectionRight;
         private UIImageButton selectionLeft;
@@ -26,22 +27,15 @@ namespace gvmod.UI.Menus
         private int editingSlot = 0;
         private bool selecting = false;
         private int specialIndex = 0;
-        private Vector2 offset;
-        private bool dragging;
 
         public override void OnInitialize()
         {
-            area = new UIElement();
-            area.Left.Set(-area.Width.Pixels - 200, 1f);
-            area.Top.Set(-area.Height.Pixels - 300, 1f);
-            area.Width.Set(150, 0f);
-            area.Height.Set(140, 0f);
-
             // Background
             Asset<Texture2D> backTexture = ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityMenuBack");
             abilityMenuBack = new AbilityMenuPanel(backTexture);
-            abilityMenuBack.Left.Set(0, 0f);
-            abilityMenuBack.Top.Set(0, 0f);
+            abilityMenuBack.SetPadding(0);
+            abilityMenuBack.Left.Set((int)(Main.ScreenSize.X * 0.85), 0f);
+            abilityMenuBack.Top.Set((int)(Main.ScreenSize.Y * 0.4), 0f);
             abilityMenuBack.Width.Set(150, 0f);
             abilityMenuBack.Height.Set(140, 0f);
 
@@ -108,7 +102,6 @@ namespace gvmod.UI.Menus
             level.Height.Set(16, 0f);
 
             // Append all to the background
-            area.Append(abilityMenuBack);
             for (int i = 0; i < 4; i++)
             {
                 abilityMenuBack.Append(abilityDisplays[i]);
@@ -118,13 +111,13 @@ namespace gvmod.UI.Menus
             abilityMenuBack.Append(specialOption);
             abilityMenuBack.Append(selectionLeft);
             abilityMenuBack.Append(selectionRight);
-            Append(area);
+            Append(abilityMenuBack);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             if (adept.Septima.Name == "Human") Deactivate();
         }
 
@@ -193,7 +186,6 @@ namespace gvmod.UI.Menus
             level.SetText(adept.level.ToString());
             specialOption.specialIndex = posibleList[specialIndex];
 
-            UpdatePositions();
             if (!selectionBack.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)
             {
                 selecting = false;
@@ -213,62 +205,11 @@ namespace gvmod.UI.Menus
             }
             else
             {
-                dragging = false;
                 abilityMenuBack.Append(selectionBack);
                 abilityMenuBack.Append(specialOption);
                 abilityMenuBack.Append(selectionLeft);
                 abilityMenuBack.Append(selectionRight);
             }
-        }
-
-        public override void MouseDown(UIMouseEvent evt)
-        {
-            base.MouseDown(evt);
-            if (abilityMenuBack.ContainsPoint(evt.MousePosition))
-            {
-                DragStart(evt);
-            }
-        }
-
-        public override void MouseUp(UIMouseEvent evt)
-        {
-            base.MouseUp(evt);
-            if (abilityMenuBack.ContainsPoint(evt.MousePosition))
-            {
-                DragEnd(evt);
-            }
-        }
-
-        public void UpdatePositions()
-        {
-            if (abilityMenuBack.ContainsPoint(Main.MouseScreen))
-            {
-                Main.LocalPlayer.mouseInterface = true;
-            }
-
-            if (dragging)
-            {
-                Left.Set(Main.mouseX - offset.X, 0f); // Main.MouseScreen.X and Main.mouseX are the same
-                Top.Set(Main.mouseY - offset.Y, 0f);
-                Recalculate();
-            }
-        }
-
-        private void DragStart(UIMouseEvent evt)
-        {
-            offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
-            dragging = true;
-        }
-
-        private void DragEnd(UIMouseEvent evt)
-        {
-            Vector2 end = evt.MousePosition;
-            dragging = false;
-
-            Left.Set(end.X - offset.X, 0f);
-            Top.Set(end.Y - offset.Y, 0f);
-
-            Recalculate();
         }
 
         // Return false if any of the slots have an ability the player shouldn't have

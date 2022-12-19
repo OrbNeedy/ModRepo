@@ -11,7 +11,8 @@ namespace gvmod.UI.Bars
 {
     public class NewSPBar : UIState
     {
-        private UIText text;
+        private UIText percentage;
+        private UIText label;
         private UIElement area;
         private UIImage barFrame;
         private Color gradientA;
@@ -32,23 +33,29 @@ namespace gvmod.UI.Bars
             barFrame.Width.Set(120, 0f);
             barFrame.Height.Set(30, 0f);
 
-            text = new UIText("0%", 0.8f);
-            text.Width.Set(120, 0f);
-            text.Height.Set(30, 0f);
-            text.Top.Set(40, 0f);
-            text.Left.Set(0, 0f);
+            percentage = new UIText("0%", 0.8f);
+            percentage.Width.Set(120, 0f);
+            percentage.Height.Set(30, 0f);
+            percentage.Top.Set(40, 0f);
+            percentage.Left.Set(0, 0f);
+
+            label = new UIText("", 0.8f);
+            label.Width.Set(120, 0f);
+            label.Height.Set(30, 0f);
+            label.Top.Set(0, 0f);
+            label.Left.Set(0, 0f);
 
             gradientA = new Color(12, 179, 173); // The color on the left
             gradientB = new Color(77, 232, 227); // The color on the right
 
-            area.Append(text);
+            area.Append(percentage);
             area.Append(barFrame);
             Append(area);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             if (adept.Septima.Name == "Human") return;
 
             if (adept.isOverheated)
@@ -68,7 +75,7 @@ namespace gvmod.UI.Bars
         {
             base.DrawSelf(spriteBatch);
 
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             float quotient = adept.SeptimalPower / adept.MaxSeptimalPower;
             quotient = Utils.Clamp(quotient, 0f, 1f);
 
@@ -92,7 +99,7 @@ namespace gvmod.UI.Bars
         {
             if (area.ContainsPoint(Main.MouseScreen))
             {
-                Main.LocalPlayer.mouseInterface = true;
+                Main.CurrentPlayer.mouseInterface = true;
             }
 
             if (dragging)
@@ -102,9 +109,10 @@ namespace gvmod.UI.Bars
                 Recalculate();
             }
 
-            var modPlayer = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            int percentage = (int)(modPlayer.SeptimalPower / modPlayer.MaxSeptimalPower * 100);
-            text.SetText(percentage + "%");
+            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            int percentage = (int)(adept.SeptimalPower / adept.MaxSeptimalPower * 100);
+            label.SetText(adept.Septima.Name);
+            this.percentage.SetText(percentage + "%");
             base.Update(gameTime);
         }
 

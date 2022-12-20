@@ -32,7 +32,9 @@ namespace gvmod.Common.Players.Septimas
         {
             Abilities.Add(new None(Player, Adept));
             Abilities.Add(new Astrasphere(Player, Adept));
+            Abilities.Add(new GalvanicPatch(Player, Adept));
             Abilities.Add(new Sparkcaliburg(Player, Adept));
+            Abilities.Add(new GalvanicRenewal(Player, Adept));
             Abilities.Add(new VoltaicChains(Player, Adept));
             Abilities.Add(new SeptimalSurge(Player, Adept));
         }

@@ -32,6 +32,17 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+            return base.PreDraw(ref lightColor);
+        }
+
         public override void AI()
         {
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
@@ -46,6 +57,7 @@ namespace gvmod.Content.Projectiles
                     if (adept.isUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
+                        Projectile.velocity *= 0.8f;
                     }
                     break;
                 default:

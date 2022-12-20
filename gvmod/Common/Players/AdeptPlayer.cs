@@ -263,7 +263,6 @@ namespace gvmod.Common.Players
                 Player.controlUseItem = false;
                 Player.controlUseTile = false;
                 Player.controlMount = false;
-                Player.direction = Player.oldDirection;
             }
         }
 
@@ -425,6 +424,7 @@ namespace gvmod.Common.Players
             if (SeptimalPower <= 0)
             {
                 isOverheated = true;
+                SeptimalPower = 0;
             }
             if (SeptimalPower >= MaxSeptimalPower)
             {

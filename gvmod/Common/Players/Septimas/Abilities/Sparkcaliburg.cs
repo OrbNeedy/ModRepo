@@ -33,7 +33,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             if (BeingUsed && !sparkcaliburgExists)
             {
-                sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(1f * Player.direction, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(150 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 10, Player.whoAmI, -1, 1);
+                sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(1f * Player.direction, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(150 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, -1, 1);
             }
         }
 
@@ -70,12 +70,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
             if (BeingUsed)
             {
-                Adept.isUsingSpecialAbility = true;
+                Adept.IsUsingSpecialAbility = true;
                 SpecialTimer++;
                 if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
-                    Adept.isUsingSpecialAbility = false;
+                    Adept.IsUsingSpecialAbility = false;
                 }
             }
 

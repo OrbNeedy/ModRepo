@@ -42,14 +42,14 @@ namespace gvmod.Content.Projectiles
             switch (Projectile.ai[1])
             {
                 case 1:
-                    if (adept.isUsingSpecialAbility)
+                    if (adept.IsUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
                         Projectile.Center = Projectile.Center.RotatedBy(MathHelper.ToRadians(3.5f), Main.player[Projectile.owner].Center);
                     }
                     break;
                 default:
-                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         Projectile.timeLeft = 2;
                     }
@@ -66,7 +66,7 @@ namespace gvmod.Content.Projectiles
             {
                 if (adept.Septima is AzureStriker || adept.Septima is AzureThunderclap)
                 {
-                    if (!adept.isUsingSpecialAbility)
+                    if (!adept.IsUsingSpecialAbility)
                     {
                         aiForm = 1;
                     } else 

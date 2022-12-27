@@ -1,36 +1,35 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using gvmod.Common.Players.Septimas;
+﻿using gvmod.Common.Players.Septimas;
 using gvmod.Common.Players;
-using Terraria.DataStructures;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ModLoader;
 using System.Collections.Generic;
+using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
+using Terraria.DataStructures;
 
 namespace gvmod.Content.Projectiles
 {
-    public class HairDartProjectile : ModProjectile
+    internal class DullahanProjectile : ModProjectile
     {
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
-        private int limiter;
+        private float speedLimit;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bolt");
+            DisplayName.SetDefault("Dullahan bolt");
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 14;
+            Projectile.height = 14;
             Projectile.scale = 1f;
-            Projectile.light = 0.1f;
+            Projectile.light = 0.25f;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
-            Projectile.damage = 1;
-            Projectile.knockBack = 0;
+            Projectile.damage = 30;
+            Projectile.knockBack = 2;
 
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
@@ -43,10 +42,9 @@ namespace gvmod.Content.Projectiles
         public override void OnSpawn(IEntitySource source)
         {
             npcsTaggedByThis = new List<int>();
-            
+
             if (Projectile.ai[0] % 2 == 1)
             {
-                limiter = 16;
                 if (Projectile.ai[1] == 1 || Projectile.ai[1] == 3)
                 {
                     Projectile.penetrate = 5;
@@ -55,9 +53,6 @@ namespace gvmod.Content.Projectiles
                 {
                     Projectile.penetrate = -1;
                 }
-            } else
-            {
-                limiter = 10;
             }
 
             // For color
@@ -77,7 +72,6 @@ namespace gvmod.Content.Projectiles
         public override void AI()
         {
             NPC target = FindClosestNPC(200);
-            limiter++;
             switch (Projectile.ai[1])
             {
                 case 1:
@@ -104,7 +98,7 @@ namespace gvmod.Content.Projectiles
                     break;
                 case 3:
                     // Improved Mizuchi homing and vasuki effect
-                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly && target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
+                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly && !target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
                     {
                         if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
                         {
@@ -125,7 +119,6 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 default:
-                    // Nothing here actually
                     break;
             }
             base.AI();
@@ -198,8 +191,7 @@ namespace gvmod.Content.Projectiles
                 if (closestNPC == null)
                 {
                     closestNPC = npc;
-                }
-                else if (Vector2.Distance(Projectile.Center, Main.npc[i].Center) < Vector2.Distance(Projectile.Center, closestNPC.Center))
+                } else if (Vector2.Distance(Projectile.Center, Main.npc[i].Center) < Vector2.Distance(Projectile.Center, closestNPC.Center))
                 {
                     closestNPC = npc;
                 }
@@ -207,8 +199,7 @@ namespace gvmod.Content.Projectiles
             if (Vector2.Distance(Projectile.Center, closestNPC.Center) < range)
             {
                 return closestNPC;
-            }
-            else
+            } else
             {
                 return null;
             }

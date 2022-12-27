@@ -53,7 +53,7 @@ namespace gvmod.UI.Menus
             {
                 if (!assignedSpecial.InCooldown)
                 {
-                    if (adept.abilityPower < assignedSpecial.ApUsage)
+                    if (adept.AbilityPower < assignedSpecial.ApUsage)
                     {
                         spriteBatch.Draw(ModContent.Request<Texture2D>("gvmod/Assets/Menus/AbilityActive" + (assignedSlot + 1)).Value, new Vector2(GetInnerDimensions().X, GetInnerDimensions().Y), color);
                         spriteBatch.Draw(ModContent.Request<Texture2D>("gvmod/Assets/Icons/APCost" + assignedSpecial.ApUsage).Value, new Vector2(GetInnerDimensions().X, GetInnerDimensions().Y), color);
@@ -91,7 +91,7 @@ namespace gvmod.UI.Menus
                     apCost[i] = ModContent.Request<Texture2D>("gvmod/Assets/Icons/APCost" + i).Value;
                 }
 
-                if (adept.abilityPower < assignedSpecial.ApUsage)
+                if (adept.AbilityPower < assignedSpecial.ApUsage)
                 {
                     color = Color.Red;
                 }

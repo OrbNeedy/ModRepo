@@ -1,27 +1,26 @@
 ﻿using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Projectiles
 {
-    internal class Shock : ModProjectile
+    internal class GloriousSword : ModProjectile
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shock");
+            DisplayName.SetDefault("Glorious Strizer");
         }
 
         public override void SetDefaults()
         {
-            Projectile.damage = 20;
-            Projectile.knockBack = 10;
-            Projectile.Size = new Vector2(42);
+            Projectile.light = 1f;
+            Projectile.damage = 150;
+            Projectile.knockBack = 12;
+            Projectile.Size = new Vector2(280, 130);
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
-            Projectile.penetrate = 2;
+            Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.scale = 1f;
             Projectile.timeLeft = 2;
@@ -29,12 +28,34 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+            return base.PreDraw(ref lightColor);
+        }
+
         public override void AI()
         {
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
-            if (Projectile.ai[0] == -1)
+            switch (Projectile.ai[0])
             {
-                Projectile.penetrate = 2;
+                case -1:
+                    if (adept.IsUsingSpecialAbility)
+                    {
+                        Projectile.penetrate = 2;
+                    }
+                    break;
+                default:
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        Projectile.penetrate = -1;
+                    }
+                    break;
             }
 
             switch (Projectile.ai[1])
@@ -43,6 +64,7 @@ namespace gvmod.Content.Projectiles
                     if (adept.IsUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
+                        Projectile.velocity *= 0.8f;
                     }
                     break;
                 default:
@@ -51,14 +73,6 @@ namespace gvmod.Content.Projectiles
                         Projectile.timeLeft = 2;
                     }
                     break;
-            }
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-            if (Projectile.ai[0] == 10)
-            {
-                Projectile.timeLeft = 10;
             }
         }
     }

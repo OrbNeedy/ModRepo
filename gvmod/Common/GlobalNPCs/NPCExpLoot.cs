@@ -11,7 +11,7 @@ namespace gvmod.Common.GlobalNPCs
             if (!npc.friendly && !npc.immortal)
             {
                 AdeptPlayer lastplayer = Main.player[npc.lastInteraction]?.GetModPlayer<AdeptPlayer>();
-                float amount = (float)((npc.lifeMax * 0.10f + 0.16f * npc.damage) * (1 + npc.defense * 0.15f));
+                float amount = (npc.lifeMax * 0.1f + 0.16f * npc.damage) * (1 + npc.defense * 0.15f);
                 if (damage < npc.lifeMax)
                 {
                     amount *= (float)(damage / npc.lifeMax);
@@ -22,7 +22,7 @@ namespace gvmod.Common.GlobalNPCs
                 if (Main.hardMode) amount *= 2f;
                 if (lastplayer != null)
                 {
-                    lastplayer.experience += (int)amount;
+                    lastplayer.Experience += (int)amount;
                 }
             }
         }

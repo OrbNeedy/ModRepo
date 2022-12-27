@@ -16,6 +16,7 @@ namespace gvmod.UI.Bars
         private UIImage fullBar1;
         private UIImage fullBar2;
         private UIImage fullBar3;
+        private UIText temporaryKudosIndicator;
         private Vector2 offset;
         private bool dragging;
 
@@ -51,10 +52,17 @@ namespace gvmod.UI.Bars
             fullBar3.Width.Set(16, 0f);
             fullBar3.Height.Set(28, 0f);
 
+            temporaryKudosIndicator = new UIText("Kudos: 0", 1f);
+            temporaryKudosIndicator.Left.Set(0, 0f);
+            temporaryKudosIndicator.Top.Set(-20, 0f);
+            temporaryKudosIndicator.Width.Set(16, 0f);
+            temporaryKudosIndicator.Height.Set(28, 0f);
+
             area.Append(barFrame);
             area.Append(fullBar1);
             area.Append(fullBar2);
             area.Append(fullBar3);
+            area.Append(temporaryKudosIndicator);
             Append(area);
         }
 
@@ -77,31 +85,31 @@ namespace gvmod.UI.Bars
 
             int left = hitbox.Left;
             float[] bars = new float[3];
-            if (adept.abilityPower <= 1)
+            if (adept.AbilityPower <= 1)
             {
                 fullBar1.Remove();
                 fullBar2.Remove();
                 fullBar3.Remove();
                 bars[2] = 0;
                 bars[1] = 0;
-                bars[0] = adept.abilityPower;
+                bars[0] = adept.AbilityPower;
             }
-            else if (adept.abilityPower <= 2)
+            else if (adept.AbilityPower <= 2)
             {
                 area.Append(fullBar1);
                 bars[2] = 0;
                 fullBar2.Remove();
-                bars[1] = adept.abilityPower - 1;
+                bars[1] = adept.AbilityPower - 1;
                 fullBar3.Remove();
             }
-            else if (adept.abilityPower < 3)
+            else if (adept.AbilityPower < 3)
             {
                 area.Append(fullBar1);
                 area.Append(fullBar2);
-                bars[2] = adept.abilityPower - 2;
+                bars[2] = adept.AbilityPower - 2;
                 fullBar3.Remove();
             }
-            if (adept.abilityPower >= 3)
+            if (adept.AbilityPower >= 3)
             {
                 area.Append(fullBar1);
                 area.Append(fullBar2);
@@ -115,10 +123,13 @@ namespace gvmod.UI.Bars
 
         public override void Update(GameTime gameTime)
         {
+            Player player = Main.CurrentPlayer;
             if (area.ContainsPoint(Main.MouseScreen))
             {
-                Main.LocalPlayer.mouseInterface = true;
+                player.mouseInterface = true;
             }
+
+            temporaryKudosIndicator.SetText("Kudos: " + player.GetModPlayer<AdeptPlayer>().Kudos);
 
             if (dragging)
             {

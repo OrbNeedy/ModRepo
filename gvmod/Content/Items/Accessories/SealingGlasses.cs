@@ -29,9 +29,9 @@ namespace gvmod.Content.Items.Accessories
         {
 			var adept = player.GetModPlayer<AdeptPlayer>();
 			player.GetDamage(ModContent.GetInstance<SeptimaDamageClass>()) *= 0.75f;
-			adept.primaryDamageEquipMult *= 0.75f;
-			adept.secondaryDamageEquipMult *= 0.75f;
-			adept.specialDamageEquipMult *= 0.75f;
+			adept.PrimaryDamageEquipMult *= 0.75f;
+			adept.SecondaryDamageEquipMult *= 0.75f;
+			adept.SpecialDamageEquipMult *= 0.75f;
 			// For developing purposes, it negates SP and AP usage, normally it just makes it so
 			// the SP usage is halved and makes it so 90% of the time you don't use any AP
 			adept.SPUsageModifier *= 0f;

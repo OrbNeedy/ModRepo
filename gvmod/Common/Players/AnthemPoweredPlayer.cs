@@ -7,45 +7,44 @@ namespace gvmod.Common.Players
     internal class AnthemPoweredPlayer: ModPlayer
     {
         public bool anthemBuff;
-        public int anthemBuffLevel;
 
         public override void Initialize()
         {
             anthemBuff = false;
-            anthemBuffLevel = 1;
         }
 
         public override void ResetEffects()
         {
             anthemBuff = false;
-            Player.GetModPlayer<AdeptPlayer>().anthemState = false;
+            Player.GetModPlayer<AdeptPlayer>().AnthemLevel = 0;
         }
 
         public override void PostUpdateBuffs()
         {
             AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
-            if (adept.hasMusesPendant)
-            {
-                anthemBuffLevel = 5;
-            } else if (adept.hasBattlePod)
-            {
-                anthemBuffLevel = 3;
-            } else
-            {
-                anthemBuffLevel = 1;
-            }
             if (anthemBuff)
             {
-                adept.anthemState = true;
-                if (anthemBuffLevel > 1)
+                if (adept.HasDjinnLamp)
+                {
+                    adept.AnthemLevel = 5;
+                }
+                else if (adept.HasWholeMirror)
+                {
+                    adept.AnthemLevel = 3;
+                }
+                else
+                {
+                    adept.AnthemLevel = 1;
+                }
+                if (adept.AnthemLevel > 1)
                 {
                     adept.SPUsageModifier *= 0;
                 }
-                adept.SPRegenModifier *= (float)(5.5 * anthemBuffLevel);
+                adept.SPRegenModifier *= (float)(5.5 * adept.AnthemLevel);
                 adept.SPRegenOverheatModifier *= 2;
-                adept.specialDamageLevelMult *= (float)(1.01 * anthemBuffLevel);
-                adept.secondaryDamageLevelMult *= (float)(1.01 * anthemBuffLevel);
-                Player.GetDamage<SeptimaDamageClass>() *= (float)(1.01 * anthemBuffLevel);
+                adept.SpecialDamageLevelMult *= (float)(1.01 * adept.AnthemLevel);
+                adept.SecondaryDamageLevelMult *= (float)(1.01 * adept.AnthemLevel);
+                Player.GetDamage<SeptimaDamageClass>() *= (float)(1.01 * adept.AnthemLevel);
             }
             base.PostUpdateBuffs();
         }

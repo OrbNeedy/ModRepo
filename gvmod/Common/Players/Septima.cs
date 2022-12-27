@@ -64,7 +64,7 @@ namespace gvmod.Common.Players
                 }
                 else
                 {
-                    if (adept.level >= abilities[i].UnlockLevel)
+                    if (adept.Level >= abilities[i].UnlockLevel)
                     {
                         specials.Add(abilities[i]);
                     }
@@ -83,7 +83,7 @@ namespace gvmod.Common.Players
                     specials.Add(0);
                 } else
                 {
-                    if (adept.level >= abilities[i].UnlockLevel)
+                    if (adept.Level >= abilities[i].UnlockLevel)
                     {
                         specials.Add(i);
                     }

@@ -15,7 +15,7 @@ namespace gvmod.Common.GlobalNPCs
 
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
-            return !(target.GetModPlayer<AdeptPlayer>().isUsingSpecialAbility && target.GetModPlayer<AdeptPlayer>().specialInvincibility);
+            return !(target.GetModPlayer<AdeptPlayer>().IsUsingSpecialAbility && target.GetModPlayer<AdeptPlayer>().SpecialInvincibility);
         }
 
         // For a later release, have a chance for bosses to resurrect, and each time that happens, the boss will 

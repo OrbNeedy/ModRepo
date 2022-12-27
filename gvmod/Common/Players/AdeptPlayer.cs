@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System;
 using Terraria.DataStructures;
 using gvmod.Content.Buffs;
+using Microsoft.Xna.Framework;
 
 namespace gvmod.Common.Players
 {
@@ -18,13 +19,17 @@ namespace gvmod.Common.Players
         public Septima Septima { get; set; }
         public float MaxSeptimalPower { get; set; }
         public float SeptimalPower { get; set; }
-        public float maxAbilityPower { get; set; }
-        public float abilityPower { get; set; }
-        public int level { get; set; }
-        public int experience { get; set; }
-        public int maxEXP { get; set; }
-        public int extraEXP { get; set; }
-        public List<int> activeSlot { get; set; }
+        public float MaxAbilityPower { get; set; }
+        public float AbilityPower { get; set; }
+        public int Level { get; set; }
+        public int Experience { get; set; }
+        public int MaxEXP { get; set; }
+        public int ExtraEXP { get; set; }
+        public int Kudos { get; set; }
+        public int KudosTimer { get; set; }
+        public int BossKudosGainTimer { get; set; }
+        public int SpecificallyBossTimer { get; set; }
+        public List<int> ActiveSlots { get; set; }
 
         private int rechargeComboCount;
         private const int rechargeCooldown = 60;
@@ -34,12 +39,12 @@ namespace gvmod.Common.Players
 
         private int slotToUse;
 
-        public float primaryDamageLevelMult { get; set; }
-        public float secondaryDamageLevelMult { get; set; }
-        public float specialDamageLevelMult { get; set; }
-        public float primaryDamageEquipMult { get; set; }
-        public float secondaryDamageEquipMult { get; set; }
-        public float specialDamageEquipMult { get; set; }
+        public float PrimaryDamageLevelMult { get; set; }
+        public float SecondaryDamageLevelMult { get; set; }
+        public float SpecialDamageLevelMult { get; set; }
+        public float PrimaryDamageEquipMult { get; set; }
+        public float SecondaryDamageEquipMult { get; set; }
+        public float SpecialDamageEquipMult { get; set; }
 
         public float APUsageModifier { get; set; }
         public float SPUsageModifier { get; set; }
@@ -47,43 +52,46 @@ namespace gvmod.Common.Players
         public float SPRegenModifier { get; set; }
         public float SPRegenOverheatModifier { get; set; }
 
-        public bool hasMirrorShard { get; set; }
-        public bool hasBattlePod { get; set; }
-        public bool hasMusesPendant { get; set; }
-        public bool anthemState { get; set; }
+        public bool HasMirrorShard { get; set; }
+        public bool HasWholeMirror { get; set; }
+        public bool HasDjinnLamp { get; set; }
+        public int AnthemLevel { get; set; }
 
-        public bool isUsingPrimaryAbility { get; set; }
-        public bool canUsePrimary { get; set; }
-        public bool isUsingSecondaryAbility { get; set; }
-        public bool canUseSecondary { get; set; }
-        public bool isUsingSpecialAbility { get; set; }
-        public bool isRecharging { get; set; }
+        public bool IsUsingPrimaryAbility { get; set; }
+        public bool CanUsePrimary { get; set; }
+        public bool IsUsingSecondaryAbility { get; set; }
+        public bool CanUseSecondary { get; set; }
+        public bool IsUsingSpecialAbility { get; set; }
+        public bool IsRecharging { get; set; }
 
-        public bool secondaryInUse { get; set; }
-        public int timeSinceSecondary { get; set; }
-        public bool secondaryInCooldown { get; set; }
-        public bool isOverheated { get; set; }
-        public int timeSincePrimary { get; set; }
+        public bool SecondaryInUse { get; set; }
+        public int TimeSinceSecondary { get; set; }
+        public bool SecondaryInCooldown { get; set; }
+        public bool IsOverheated { get; set; }
+        public int TimeSincePrimary { get; set; }
         private bool cantMove;
-        public bool specialInvincibility { get; private set; }
+        public bool SpecialInvincibility { get; private set; }
 
         public override void Initialize()
         {
             base.Initialize();
             MaxSeptimalPower = 300;
             SeptimalPower = MaxSeptimalPower;
-            maxAbilityPower = 3;
-            abilityPower = maxAbilityPower;
+            MaxAbilityPower = 3;
+            AbilityPower = MaxAbilityPower;
             Septima = GetSeptima(Main.rand.Next(2));
             cantMove = false;
-            level = 1;
-            experience = 0;
-            extraEXP = 0;
-            maxEXP = 1999999999;
-            primaryDamageLevelMult = 1;
-            secondaryDamageLevelMult = 1;
-            specialDamageLevelMult = 1;
-            activeSlot = new List<int>() { 0, 0, 0, 0};
+            Level = 1;
+            Experience = 0;
+            ExtraEXP = 0;
+            MaxEXP = 1999999999;
+            Kudos = 0;
+            KudosTimer = 0;
+            BossKudosGainTimer = -1;
+            PrimaryDamageLevelMult = 1;
+            SecondaryDamageLevelMult = 1;
+            SpecialDamageLevelMult = 1;
+            ActiveSlots = new List<int>() { 0, 0, 0, 0};
             slotToUse = 0;
         }
 
@@ -91,11 +99,11 @@ namespace gvmod.Common.Players
         {
             if (tag.ContainsKey("Level"))
             {
-                level = tag.GetInt("Level");
+                Level = tag.GetInt("Level");
             }
             if (tag.ContainsKey("Experience"))
             {
-                experience = tag.GetInt("Experience");
+                Experience = tag.GetInt("Experience");
             }
             if (tag.ContainsKey("Septima"))
             {
@@ -105,37 +113,37 @@ namespace gvmod.Common.Players
 
         public override void SaveData(TagCompound tag)
         {
-            tag["Level"] = level;
-            tag["Experience"] = experience;
+            tag["Level"] = Level;
+            tag["Experience"] = Experience;
             tag["Septima"] = Septima.Name;
         }
 
         public override void OnEnterWorld(Player player)
         {
-            activeSlot = new List<int>() { 0, 0, 0, 0};
+            ActiveSlots = new List<int>() { 0, 0, 0, 0};
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             if (KeybindSystem.primaryAbility.JustPressed)
             {
-                isUsingPrimaryAbility = true;
+                IsUsingPrimaryAbility = true;
             }
             if (KeybindSystem.primaryAbility.JustReleased)
             {
-                isUsingPrimaryAbility = false;
+                IsUsingPrimaryAbility = false;
             }
             if (KeybindSystem.secondaryAbility.JustPressed)
             {
-                isUsingSecondaryAbility = true;
-                Main.NewText("Cooldown: " + timeSinceSecondary);
+                IsUsingSecondaryAbility = true;
+                Main.NewText("Cooldown: " + TimeSinceSecondary);
             }
             if (KeybindSystem.special1.JustPressed)
             {
-                Special special = Septima.Abilities[activeSlot[0]];
+                Special special = Septima.Abilities[ActiveSlots[0]];
                 if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 0;
                     if (special.IsOffensive)
@@ -144,16 +152,18 @@ namespace gvmod.Common.Players
                     }
                     if (special.GivesIFrames)
                     {
-                        specialInvincibility = true;
+                        SpecialInvincibility = true;
                     }
+                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
+                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special2.JustPressed)
             {
-                Special special = Septima.Abilities[activeSlot[1]];
+                Special special = Septima.Abilities[ActiveSlots[1]];
                 if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 1;
                     if (special.IsOffensive)
@@ -162,16 +172,18 @@ namespace gvmod.Common.Players
                     }
                     if (special.GivesIFrames)
                     {
-                        specialInvincibility = true;
+                        SpecialInvincibility = true;
                     }
+                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
+                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special3.JustPressed)
             {
-                Special special = Septima.Abilities[activeSlot[2]];
+                Special special = Septima.Abilities[ActiveSlots[2]];
                 if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 2;
                     if (special.IsOffensive)
@@ -180,16 +192,18 @@ namespace gvmod.Common.Players
                     }
                     if (special.GivesIFrames)
                     {
-                        specialInvincibility = true;
+                        SpecialInvincibility = true;
                     }
+                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
+                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special4.JustPressed)
             {
-                Special special = Septima.Abilities[activeSlot[3]];
+                Special special = Septima.Abilities[ActiveSlots[3]];
                 if (FigureSpecialAvailability(special))
                 {
-                    abilityPower -= (special.ApUsage * APUsageModifier);
+                    AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 3;
                     if (special.IsOffensive)
@@ -198,8 +212,10 @@ namespace gvmod.Common.Players
                     }
                     if (special.GivesIFrames)
                     {
-                        specialInvincibility = true;
+                        SpecialInvincibility = true;
                     }
+                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
+                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
 
@@ -208,27 +224,27 @@ namespace gvmod.Common.Players
 
         public override void PostUpdateMiscEffects()
         {
-            if (SeptimalPower <= 0 && timeSincePrimary <= 10)
+            if (SeptimalPower <= 0 && TimeSincePrimary <= 10)
             {
                 for (int i = 0; i < 10; i++)
                 {
                     Dust.NewDust(Player.position, 10, 10, DustID.Electric, 0, 0);
                 }
             }
-            if (isUsingPrimaryAbility && canUsePrimary)
+            if (IsUsingPrimaryAbility && CanUsePrimary)
             {
                 Septima.FirstAbilityEffects();
             }
-            if (secondaryInUse && canUseSecondary)
+            if (SecondaryInUse && CanUseSecondary)
             {
                 Septima.SecondAbilityEffects();
             }
-            if (isUsingSpecialAbility)
+            if (IsUsingSpecialAbility)
             {
-                Septima.Abilities[activeSlot[slotToUse]]?.Effects();
+                Septima.Abilities[ActiveSlots[slotToUse]]?.Effects();
             }
 
-            if (Septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !isOverheated && !isUsingPrimaryAbility)
+            if (Septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !IsOverheated && !IsUsingPrimaryAbility)
             {
                 rechargeDelay = rechargeCooldown;
                 rechargeTimer = rechargeDuration;
@@ -242,11 +258,11 @@ namespace gvmod.Common.Players
             {
                 rechargeTimer--;
                 SPRegenModifier = MaxSeptimalPower / 60;
-                timeSincePrimary = 60;
-                isRecharging = true;
+                TimeSincePrimary = 60;
+                IsRecharging = true;
             } else
             {
-                isRecharging = false;
+                IsRecharging = false;
             }
         }
 
@@ -269,37 +285,38 @@ namespace gvmod.Common.Players
         public override void PostUpdate()
         {
             FigureAvailability();
+            UpdateKudos();
             UpdateLevelMultipliers();
-            if (isUsingPrimaryAbility && canUsePrimary)
+            if (IsUsingPrimaryAbility && CanUsePrimary)
             {
                 Septima.FirstAbility();
             }
-            if (secondaryInUse && canUseSecondary)
+            if (SecondaryInUse && CanUseSecondary)
             {
                 Septima.SecondAbility();
             }
-            if (isUsingSpecialAbility)
+            if (IsUsingSpecialAbility)
             {
-                Septima.Abilities[activeSlot[slotToUse]]?.Attack();
+                Septima.Abilities[ActiveSlots[slotToUse]]?.Attack();
             } else
             {
                 cantMove = false;
-                specialInvincibility = false;
+                SpecialInvincibility = false;
             }
             UpdateSeptimalPower();
-            maxEXP = (int)Math.Pow(level * 80, 1.47f);
-            if (experience >= maxEXP)
+            MaxEXP = (int)Math.Pow(Level * 80, 1.47f);
+            if (Experience >= MaxEXP)
             {
-                level++;
-                if (experience > maxEXP)
+                Level++;
+                if (Experience > MaxEXP)
                 {
-                    extraEXP = experience - maxEXP;
+                    ExtraEXP = Experience - MaxEXP;
                 } 
-                experience = 0;
+                Experience = 0;
             } else
             {
-                experience += extraEXP;
-                extraEXP = 0;
+                Experience += ExtraEXP;
+                ExtraEXP = 0;
             }
             Septima.Updates();
             Septima.MiscEffects();
@@ -308,34 +325,34 @@ namespace gvmod.Common.Players
 
         private void FigureAvailability()
         {
-            if (!isRecharging)
+            if (!IsRecharging)
             {
-                if (!isOverheated && (!secondaryInUse || secondaryInCooldown) && !isUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
+                if (!IsOverheated && (!SecondaryInUse || SecondaryInCooldown) && !IsUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
                 {
-                    canUsePrimary = true;
+                    CanUsePrimary = true;
                 } else
                 {
-                    canUsePrimary = false;
+                    CanUsePrimary = false;
                 }
 
-                if (!isUsingSpecialAbility && !secondaryInCooldown && !Player.HasBuff(BuffID.Stoned))
+                if (!IsUsingSpecialAbility && !SecondaryInCooldown && !Player.HasBuff(BuffID.Stoned))
                 {
-                    canUseSecondary = true;
+                    CanUseSecondary = true;
                 }
                 else
                 {
-                    canUseSecondary = false;
+                    CanUseSecondary = false;
                 }
             } else
             {
-                canUsePrimary = false;
-                canUseSecondary = false;
+                CanUsePrimary = false;
+                CanUseSecondary = false;
             }
         }
 
         private bool FigureSpecialAvailability(Special special)
         {
-            if (special != null && !special.BeingUsed && abilityPower >= special.ApUsage && !special.InCooldown && (special != null || special.Name != "") && !isUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
+            if (special != null && !special.BeingUsed && AbilityPower >= special.ApUsage && !special.InCooldown && (special != null || special.Name != "") && !IsUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
             {
                 return true;
             } else
@@ -349,7 +366,7 @@ namespace gvmod.Common.Players
             base.ResetEffects();
             ResetEquipMultipliers();
             ResetResources();
-            if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[0] < 15 && !isUsingSpecialAbility)
+            if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[0] < 15 && !IsUsingSpecialAbility)
             {
                 rechargeComboCount++;
             }
@@ -361,13 +378,12 @@ namespace gvmod.Common.Players
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if ((hasMirrorShard || hasBattlePod || hasMusesPendant) && !anthemState)
+            if ((HasMirrorShard || HasWholeMirror || HasDjinnLamp) && AnthemLevel <= 0)
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
                 Player.statLife += fullHealth;
                 Player.HealEffect(fullHealth);
                 Player.AddBuff(ModContent.BuffType<AnthemBuff>(), 7200);
-                anthemState = true;
                 return false;
             }
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
@@ -375,17 +391,17 @@ namespace gvmod.Common.Players
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
-            if (anthemState && (Septima.Name == "Azure Striker"  || Septima.Name == "Azure Thunderclap") && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)/4))
+            if (AnthemLevel >= 1 && (Septima is AzureStriker  || Septima is AzureThunderclap) && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)/4))
             {
                 Main.NewText("Prevasion");
-                timeSincePrimary = 0;
-                isRecharging = false;
+                TimeSincePrimary = 0;
+                IsRecharging = false;
                 rechargeTimer = 0;
                 Player.immune = true;
                 Player.AddImmuneTime(cooldownCounter, 60);
                 return false;
             }
-            if (isUsingSpecialAbility && Septima.Abilities[activeSlot[slotToUse]].GivesIFrames)
+            if (IsUsingSpecialAbility && Septima.Abilities[ActiveSlots[slotToUse]].GivesIFrames)
             {
                 Player.immune = true;
                 return false;
@@ -393,18 +409,65 @@ namespace gvmod.Common.Players
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
         }
 
+        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        {
+            base.OnHitByNPC(npc, damage, crit);
+            Kudos = 0;
+        }
+
+        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        {
+            base.OnHitByProjectile(proj, damage, crit);
+            Kudos = 0;
+        }
+
         public void UpdateLevelMultipliers()
         {
-            primaryDamageLevelMult = (1 + level * 0.012f);
-            secondaryDamageLevelMult = (1 + level * 0.01f);
-            specialDamageLevelMult = (1 + level * 0.011f);
+            PrimaryDamageLevelMult = (1 + Level * 0.012f);
+            SecondaryDamageLevelMult = (1 + Level * 0.01f);
+            SpecialDamageLevelMult = (1 + Level * 0.011f);
         }
 
         public void ResetEquipMultipliers()
         {
-            primaryDamageEquipMult = 1;
-            secondaryDamageEquipMult = 1;
-            specialDamageEquipMult = 1;
+            PrimaryDamageEquipMult = 1;
+            SecondaryDamageEquipMult = 1;
+            SpecialDamageEquipMult = 1;
+        }
+
+        public void UpdateKudos()
+        {
+            List<NPC> npcs = GetNPCsInRadius(1600);
+            int initialBossTimer = BossKudosGainTimer;
+            KudosTimer++;
+            foreach (NPC npc in npcs)
+            {
+                if (!npc.friendly && !npc.immortal)
+                {
+                    KudosTimer = 0;
+                }
+                if (npc.boss)
+                {
+                    BossKudosGainTimer++;
+                    if (BossKudosGainTimer >= 6)
+                    {
+                        Kudos++;
+                        BossKudosGainTimer = 0;
+                    }
+                    break;
+                }
+            }
+
+            if (initialBossTimer <= -1 && BossKudosGainTimer >= 0)
+            {
+                Kudos = 0;
+            }
+
+            if (AnthemLevel > 0 || KudosTimer >= 960)
+            {
+                BossKudosGainTimer = -1;
+                Kudos = 0;
+            }
         }
 
         public float SeptimalPowerToFraction()
@@ -414,8 +477,8 @@ namespace gvmod.Common.Players
 
         public float ExperienceToFraction()
         {
-            float exp = experience;
-            float maxExp = maxEXP;
+            float exp = Experience;
+            float maxExp = MaxEXP;
             return exp / maxExp;
         }
 
@@ -423,25 +486,25 @@ namespace gvmod.Common.Players
         {
             if (SeptimalPower <= 0)
             {
-                isOverheated = true;
+                IsOverheated = true;
                 SeptimalPower = 0;
             }
             if (SeptimalPower >= MaxSeptimalPower)
             {
-                isOverheated = false;
+                IsOverheated = false;
             }
-            if (timeSinceSecondary < Septima.SecondaryCooldownTime)
+            if (TimeSinceSecondary < Septima.SecondaryCooldownTime)
             {
-                timeSinceSecondary++;
-                secondaryInCooldown = true;
+                TimeSinceSecondary++;
+                SecondaryInCooldown = true;
             }
-            if (timeSinceSecondary >= Septima.SecondaryCooldownTime)
+            if (TimeSinceSecondary >= Septima.SecondaryCooldownTime)
             {
-                secondaryInCooldown = false;
+                SecondaryInCooldown = false;
             }
-            if (abilityPower < maxAbilityPower)
+            if (AbilityPower < MaxAbilityPower)
             {
-                abilityPower += (1f/4020f) * APRegenModifier;
+                AbilityPower += (1f/4020f) * APRegenModifier;
             }
             UpdateSeptimaForFirst();
             UpdateSeptimaForSecond();
@@ -459,15 +522,15 @@ namespace gvmod.Common.Players
 
         public void UpdateSeptimaForFirst()
         {
-            if (isUsingPrimaryAbility && !isOverheated && !(isUsingSecondaryAbility || isUsingSpecialAbility))
+            if (IsUsingPrimaryAbility && !IsOverheated && !(IsUsingSecondaryAbility || IsUsingSpecialAbility))
             {
                 if (SeptimalPower > 0) SeptimalPower -= (Septima.SpUsage * SPUsageModifier);
-                timeSincePrimary = 0;
+                TimeSincePrimary = 0;
             }
-            if (!isUsingPrimaryAbility || isOverheated || isUsingSecondaryAbility || isUsingSpecialAbility) timeSincePrimary++;
-            if (timeSincePrimary >= 60)
+            if (!IsUsingPrimaryAbility || IsOverheated || IsUsingSecondaryAbility || IsUsingSpecialAbility) TimeSincePrimary++;
+            if (TimeSincePrimary >= 60)
             {
-                if (!isOverheated)
+                if (!IsOverheated)
                 {
                     SeptimalPower += (2 * SPRegenModifier);
                 }
@@ -476,25 +539,25 @@ namespace gvmod.Common.Players
                     SeptimalPower += (1 * SPRegenOverheatModifier);
                 }
                 if (SeptimalPower > MaxSeptimalPower) SeptimalPower = MaxSeptimalPower;
-                timeSincePrimary = 60;
+                TimeSincePrimary = 60;
             }
         }
 
         public void UpdateSeptimaForSecond()
         {
-            if (isUsingSecondaryAbility)
+            if (IsUsingSecondaryAbility)
             {
-                if (!secondaryInCooldown)
+                if (!SecondaryInCooldown)
                 {
-                    secondaryInUse = true;
+                    SecondaryInUse = true;
                 } else
                 {
-                    if (timeSinceSecondary > Septima.SecondaryCooldownTime) timeSinceSecondary = Septima.SecondaryCooldownTime;
-                    isUsingSecondaryAbility = false;
+                    if (TimeSinceSecondary > Septima.SecondaryCooldownTime) TimeSinceSecondary = Septima.SecondaryCooldownTime;
+                    IsUsingSecondaryAbility = false;
                 }
             } else
             {
-                if (timeSinceSecondary > Septima.SecondaryCooldownTime) timeSinceSecondary = Septima.SecondaryCooldownTime;
+                if (TimeSinceSecondary > Septima.SecondaryCooldownTime) TimeSinceSecondary = Septima.SecondaryCooldownTime;
             }
         }
 
@@ -504,6 +567,26 @@ namespace gvmod.Common.Players
             {
                 special.Update();
             }
+        }
+
+        public List<NPC> GetNPCsInRadius(int radius)
+        {
+            var closeNPCs = new List<NPC>();
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                var npc = Main.npc[i];
+                if (!npc.active && npc.life <= 0) continue;
+                if (Vector2.Distance(npc.Center, Player.Center) > radius)
+                {
+                    continue;
+                }
+                else
+                {
+                    closeNPCs.Add(Main.npc[i]);
+                    break;
+                };
+            }
+            return closeNPCs;
         }
 
         public Septima GetSeptima(int choice)

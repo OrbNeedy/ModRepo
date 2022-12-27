@@ -185,14 +185,14 @@ namespace gvmod.UI.Menus
             {
                 specialOption.specialIndex = 0;
                 specialIndex = 0;
-                for (int i = 0; i < adept.activeSlot.Count; i++)
+                for (int i = 0; i < adept.ActiveSlots.Count; i++)
                 {
-                    adept.activeSlot[i] = 0;
+                    adept.ActiveSlots[i] = 0;
                     abilityDisplays[i].specialIndex = 0;
                 }
             }
             List<int> posibleList = adept.Septima.AvaliableSpecialsIndex(); // Gets the index of all abilities if the avalible level is less or equal than the player's level
-            level.SetText(adept.level.ToString());
+            level.SetText(adept.Level.ToString());
             specialOption.specialIndex = posibleList[specialIndex];
 
             if (!selectionBack.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)
@@ -205,9 +205,9 @@ namespace gvmod.UI.Menus
             if (!selecting)
             {
                 // This gives the player's slot the selected special
-                for (int i = 0; i < adept.activeSlot.Count; i++)
+                for (int i = 0; i < adept.ActiveSlots.Count; i++)
                 {
-                    adept.activeSlot[i] = abilityDisplays[i].specialIndex;
+                    adept.ActiveSlots[i] = abilityDisplays[i].specialIndex;
                 }
                 selectionBack.Remove();
                 specialOption.Remove();
@@ -231,7 +231,7 @@ namespace gvmod.UI.Menus
                 bool containsValidSpecial = false;
                 foreach (Special special in adept.Septima.Abilities)
                 {
-                    if (special == abilityDisplays[i].assignedSpecial && special.UnlockLevel <= adept.level)
+                    if (special == abilityDisplays[i].assignedSpecial && special.UnlockLevel <= adept.Level)
                     {
                         containsValidSpecial = true;
                     }

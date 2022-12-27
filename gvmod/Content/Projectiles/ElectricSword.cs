@@ -1,10 +1,6 @@
 ﻿using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Projectiles
@@ -46,22 +42,33 @@ namespace gvmod.Content.Projectiles
         public override void AI()
         {
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
-            if (Projectile.ai[0] == -1)
+            switch (Projectile.ai[0])
             {
-                Projectile.penetrate = 2;
+                case -1:
+                    if (adept.IsUsingSpecialAbility)
+                    {
+                        Projectile.penetrate = 2;
+                    }
+                    break;
+                default:
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        Projectile.penetrate = -1;
+                    }
+                    break;
             }
 
             switch (Projectile.ai[1])
             {
                 case 1:
-                    if (adept.isUsingSpecialAbility)
+                    if (adept.IsUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
                         Projectile.velocity *= 0.8f;
                     }
                     break;
                 default:
-                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         Projectile.timeLeft = 2;
                     }

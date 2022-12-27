@@ -87,8 +87,8 @@ namespace gvmod.UI.Menus
             base.Update(gameTime);
 
             var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
-            float currentExp = adept.experience;
-            float maxEXP = adept.maxEXP;
+            float currentExp = adept.Experience;
+            float maxEXP = adept.MaxEXP;
 
             quotient = currentExp / maxEXP;
             quotient = Utils.Clamp(quotient, 0f, 1f);

@@ -23,7 +23,7 @@ namespace gvmod.Content.Items.Ammo
             Item.damage = 1;
             Item.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
 
-            Item.maxStack = 999;
+            Item.maxStack = 9999;
             Item.consumable = true;
             Item.knockBack = 2f;
             Item.value = Item.sellPrice(0, 0, 0, 10);

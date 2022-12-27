@@ -59,12 +59,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
             if (BeingUsed)
             {
-                Adept.isUsingSpecialAbility = true;
+                Adept.IsUsingSpecialAbility = true;
                 SpecialTimer++;
                 if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
-                    Adept.isUsingSpecialAbility = false;
+                    Adept.IsUsingSpecialAbility = false;
                 }
             }
         }

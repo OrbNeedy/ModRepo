@@ -1,7 +1,6 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using gvmod.Content.Buffs;
 using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -36,6 +35,7 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new Sparkcaliburg(Player, Adept));
             Abilities.Add(new GalvanicRenewal(Player, Adept));
             Abilities.Add(new VoltaicChains(Player, Adept));
+            Abilities.Add(new GloriousStrizer(Player, Adept));
             Abilities.Add(new SeptimalSurge(Player, Adept));
         }
 
@@ -56,7 +56,7 @@ namespace gvmod.Common.Players.Septimas
         {
             if (!flashfieldExists)
             {
-                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(2 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult), 0, Player.whoAmI, -1, 0);
+                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult), 0, Player.whoAmI, -1, 0);
             }
             if (Player.velocity.Y > 0)
             {
@@ -70,12 +70,12 @@ namespace gvmod.Common.Players.Septimas
 
             foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
-                float tagMultiplier = (float)((tag.level * 0.75));
-                if (tag.shockIframes == 0)
+                NPC theNpcInQuestion = Main.npc[tag.NpcIndex];
+                float tagMultiplier = (float)((tag.Level * 0.75));
+                if (tag.ShockIframes == 0)
                 {
-                    theNpcInQuestion.StrikeNPC((int)(15 * Adept.primaryDamageLevelMult * Adept.primaryDamageEquipMult * tagMultiplier), 0, Player.direction);
-                    tag.shockIframes = 6;
+                    theNpcInQuestion.StrikeNPC((int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction);
+                    tag.ShockIframes = 6;
                 }
             }
         }
@@ -92,22 +92,22 @@ namespace gvmod.Common.Players.Septimas
 
         public override void SecondAbility()
         {
-            if (SecondaryTimer <= 1 && Adept.secondaryInUse)
+            if (SecondaryTimer <= 1 && Adept.SecondaryInUse)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.secondaryDamageLevelMult * Adept.secondaryDamageEquipMult), 8, Player.whoAmI);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 8, Player.whoAmI);
             }
         }
 
         public override void MiscEffects()
         {
-            if (isFalling && Adept.isUsingPrimaryAbility && !Adept.isOverheated)
+            if (isFalling && Adept.IsUsingPrimaryAbility && !Adept.IsOverheated)
             {
                 VelocityMultiplier = new Vector2(1f, 0.7f);
                 Player.slowFall = true;
             }
             else
             {
-                if (Adept.secondaryInUse)
+                if (Adept.SecondaryInUse)
                 {
                     Player.slowFall = true;
                     VelocityMultiplier *= 0f;
@@ -122,16 +122,16 @@ namespace gvmod.Common.Players.Septimas
         public override void Updates()
         {
             UpdateTaggedNPCs();
-            if (Adept.isUsingSecondaryAbility && Adept.timeSinceSecondary >= SecondaryCooldownTime)
+            if (Adept.IsUsingSecondaryAbility && Adept.TimeSinceSecondary >= SecondaryCooldownTime)
             {
                 SecondaryTimer++;
                 if (SecondaryTimer >= secondaryDuration)
                 {
-                    Adept.secondaryInUse = false;
+                    Adept.SecondaryInUse = false;
                     SecondaryTimer = 0;
-                    Adept.secondaryInCooldown = true;
-                    Adept.timeSinceSecondary = 0;
-                    Adept.isUsingSecondaryAbility = false;
+                    Adept.SecondaryInCooldown = true;
+                    Adept.TimeSinceSecondary = 0;
+                    Adept.IsUsingSecondaryAbility = false;
                 }
             }
 
@@ -147,52 +147,27 @@ namespace gvmod.Common.Players.Septimas
             Player.velocity *= VelocityMultiplier;
         }
 
-        public List<NPC> GetNPCsInRadius(int radius)
-        {
-            var closeNPCs = new List<NPC>();
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                var npc = Main.npc[i];
-                List<Vector2> points = new List<Vector2>{npc.TopLeft, npc.Top, npc.TopRight, 
-                    npc.Left, npc.Center, npc.Right, 
-                    npc.BottomLeft, npc.Bottom, npc.BottomRight};
-                if (!npc.active && npc.life <= 0) continue;
-                for (int j = 0; j < points.Count; j++)
-                {
-                    if (Vector2.Distance(points[j], Player.Center) > radius)
-                    {
-                        continue;
-                    } else
-                    {
-                        closeNPCs.Add(Main.npc[i]);
-                        break;
-                    };
-                }
-            }
-            return closeNPCs;
-        }
-
         public void UpdateTaggedNPCs()
         {
             for (int i = 0; i < taggedNPCs.Count; i++)
             {
                 Tag theTagInQuestion = taggedNPCs[i];
-                TaggedNPC globalTag = Main.npc[theTagInQuestion.npcIndex].GetGlobalNPC<TaggedNPC>();
+                TaggedNPC globalTag = Main.npc[theTagInQuestion.NpcIndex].GetGlobalNPC<TaggedNPC>();
                 theTagInQuestion.Update();
 
-                if (!theTagInQuestion.active)
+                if (!theTagInQuestion.Active)
                 {
-                    globalTag.shocked = false;
+                    globalTag.Shocked = false;
                     taggedNPCs.Remove(theTagInQuestion);
                 }
-                globalTag.tagLevel = theTagInQuestion.level;
+                globalTag.TagLevel = theTagInQuestion.Level;
 
-                if (theTagInQuestion.active && Adept.isUsingPrimaryAbility && Adept.canUsePrimary)
+                if (theTagInQuestion.Active && Adept.IsUsingPrimaryAbility && Adept.CanUsePrimary)
                 {
-                    globalTag.shocked = true;
+                    globalTag.Shocked = true;
                 } else
                 {
-                    globalTag.shocked = false;
+                    globalTag.Shocked = false;
                 }
             }
         }
@@ -201,8 +176,8 @@ namespace gvmod.Common.Players.Septimas
         {
             foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[tag.npcIndex];
-                if (target == theNpcInQuestion && tag.active)
+                NPC theNpcInQuestion = Main.npc[tag.NpcIndex];
+                if (target == theNpcInQuestion && tag.Active)
                 {
                     tag.IncreaseTag();
                     return;

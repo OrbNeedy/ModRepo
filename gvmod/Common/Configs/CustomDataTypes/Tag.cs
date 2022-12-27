@@ -4,43 +4,45 @@ namespace gvmod.Common.Configs.CustomDataTypes
 {
     public class Tag
     {
-        public int npcIndex { get; set; }
-        public int level { get; set; }
-        public int timer { get; set; }
-        public bool active { get; set; }
-        public int shockIframes { get; set; }
+        public int NpcIndex { get; set; }
+        public int Level { get; set; }
+        public int Timer { get; set; }
+        public bool Active { get; set; }
+        public int ShockIframes { get; set; }
 
         public Tag(int npcIndex)
         {
-            this.npcIndex = npcIndex;
-            level = 1;
-            timer = 0;
-            shockIframes = 0;
-            active = true;
+            NpcIndex = npcIndex;
+            Level = 1;
+            Timer = 0;
+            ShockIframes = 0;
+            Active = true;
         }
 
         public void Update()
         {
-            timer++;
-            NPC theNpcInQuestion = Main.npc[npcIndex];
-            if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || timer >= 600)
+            Timer++;
+            NPC theNpcInQuestion = Main.npc[NpcIndex];
+            if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || Timer >= 600)
             {
-                active = false;
+                Active = false;
             }
-            if (shockIframes > 0)
+            
+            if (ShockIframes > 0)
             {
-                shockIframes--;
+                ShockIframes--;
             }
-            if (!active)
+            
+            if (!Active)
             {
-                level = 0;
+                Level = 0;
             }
         }
 
         public void IncreaseTag()
         {
-            if (level < 3) level++;
-            timer = 0;
+            if (Level < 3) Level++;
+            Timer = 0;
         }
     }
 }

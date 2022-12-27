@@ -1,56 +1,40 @@
-﻿using gvmod.Common.Configs.CustomDataTypes;
-using gvmod.Content.Projectiles;
+﻿using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-
 namespace gvmod.Common.Players.Septimas.Abilities
 {
-    public class VoltaicChains : Special
+    internal class GloriousStrizer : Special
     {
-        private int firstChain;
-        private bool isNotFirstChain = false;
         private Vector2 lastPlayerPos = new Vector2(0);
-        public VoltaicChains(Player player, AdeptPlayer adept) : base(player, adept)
+        private float kudosMultiplier = 1;
+        private int strizerIndex;
+        private bool strizerExists = false;
+        public GloriousStrizer(Player player, AdeptPlayer adept) : base(player, adept)
         {
             ApUsage = 3;
             SpecialCooldownTime = 600;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 300;
+            lastPlayerPos = player.Center;
+            SpecialDuration = 60;
         }
 
-        public override int UnlockLevel => 40;
+        public override int UnlockLevel => 60;
 
         public override bool IsOffensive => true;
 
         public override bool GivesIFrames => true;
 
-        public override string Name => "Voltaic Chains";
+        public override string Name => "Glorious Strizer";
 
         public override void Attack()
         {
-            if (BeingUsed)
+            if (BeingUsed && !strizerExists)
             {
-                if (SpecialTimer%20 == 0 && SpecialTimer <= 210)
-                {
-                    ChainPositions positions = new ChainPositions(Player);
-                    if (isNotFirstChain)
-                    {
-                        // Pass the IEntitySource from the first chain as a parameter to ai0 or ai1
-                        int firstChainSource = Main.projectile[firstChain].whoAmI;
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(50 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, firstChainSource, 0);
-                    } else
-                    {
-                        // Save the IEntitySource from the first chain here
-                        firstChain = Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(50 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, 0, 1);
-                        isNotFirstChain = true;
-                    }
-                }
+                strizerIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(1f * Player.direction, 0f), ModContent.ProjectileType<GloriousSword>(), (int)(200 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult * kudosMultiplier), 10, Player.whoAmI, -1, 1);
             }
         }
 
@@ -63,7 +47,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             if (!BeingUsed)
             {
                 VelocityMultiplier = new Vector2(1f, 1f);
-                isNotFirstChain = false;
+                kudosMultiplier = 1 + (Adept.Kudos * 0.0008f);
                 lastPlayerPos = Player.Center;
             }
             else
@@ -96,7 +80,23 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     Adept.IsUsingSpecialAbility = false;
                 }
             }
+
+            ProjectileUpdate();
+
             Player.velocity *= VelocityMultiplier;
+        }
+
+        public void ProjectileUpdate()
+        {
+            Projectile sparkcaliburg = Main.projectile[strizerIndex];
+            if (sparkcaliburg.active && sparkcaliburg.ModProjectile is ElectricSword)
+            {
+                strizerExists = true;
+            }
+            else
+            {
+                strizerExists = false;
+            }
         }
     }
 }

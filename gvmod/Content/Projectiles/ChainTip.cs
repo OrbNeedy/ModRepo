@@ -120,7 +120,7 @@ namespace gvmod.Content.Projectiles
                         theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
                         if (trappedNPCs[index] <= 0)
                         {
-                            theNpcInQuestion.StrikeNPC((int)(100 * adept.specialDamageLevelMult * adept.specialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0);
+                            theNpcInQuestion.StrikeNPC((int)(100 * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0);
                             trappedNPCs[index] = 6;
                         }
                     }

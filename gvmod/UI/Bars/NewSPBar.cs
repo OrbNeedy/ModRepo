@@ -59,7 +59,7 @@ namespace gvmod.UI.Bars
             var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             if (adept.Septima.Name == "Human") return;
 
-            if (adept.isOverheated)
+            if (adept.IsOverheated)
             {
                 gradientA = new Color(135, 11, 11);
                 gradientB = new Color(173, 21, 21);

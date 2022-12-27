@@ -43,13 +43,13 @@ namespace gvmod.Content.Projectiles
 
             switch (Projectile.ai[1]) {
                 case 1:
-                    if (adept.isUsingSpecialAbility)
+                    if (adept.IsUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
                     }
                     break;
                 default:
-                    if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         Projectile.timeLeft = 2;
                     }
@@ -58,14 +58,14 @@ namespace gvmod.Content.Projectiles
 
             if (Projectile.ai[1] == 1)
             {
-                if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                 {
                     Projectile.timeLeft = 2;
                 }
             }
             if (Projectile.ai[1] == 1)
             {
-                if (adept.isUsingPrimaryAbility && adept.canUsePrimary)
+                if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                 {
                     Projectile.timeLeft = 2;
                 }

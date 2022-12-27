@@ -23,9 +23,9 @@ namespace gvmod.Common.Players
             if (septimalSurge)
             {
                 Player.GetDamage<SeptimaDamageClass>() *= 2;
-                adept.primaryDamageEquipMult *= 2;
-                adept.specialDamageEquipMult *= 2;
-                adept.secondaryDamageEquipMult *= 2;
+                adept.PrimaryDamageEquipMult *= 2;
+                adept.SpecialDamageEquipMult *= 2;
+                adept.SecondaryDamageEquipMult *= 2;
             }
         }
     }

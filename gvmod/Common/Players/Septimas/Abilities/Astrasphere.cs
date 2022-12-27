@@ -51,10 +51,10 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             if (BeingUsed)
             {
-                if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.specialDamageLevelMult * Adept.specialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
                 basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
             }
         }
@@ -88,12 +88,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
             if (BeingUsed)
             {
-                Adept.isUsingSpecialAbility = true;
+                Adept.IsUsingSpecialAbility = true;
                 SpecialTimer++;
                 if (SpecialTimer >= SpecialDuration)
                 {
                     BeingUsed = false;
-                    Adept.isUsingSpecialAbility = false;
+                    Adept.IsUsingSpecialAbility = false;
                 }
             }
             Player.velocity *= VelocityMultiplier;

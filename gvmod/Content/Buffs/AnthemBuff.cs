@@ -16,11 +16,6 @@ namespace gvmod.Content.Buffs
             Main.buffNoTimeDisplay[Type] = false;
         }
 
-        public override void Update(NPC npc, ref int buffIndex)
-        {
-            npc.damage *= 2;
-        }
-
         public override bool RightClick(int buffIndex)
         {
             return false;

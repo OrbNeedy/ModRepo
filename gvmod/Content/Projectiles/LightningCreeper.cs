@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +9,7 @@ namespace gvmod.Content.Projectiles
 {
     internal class LightningCreeper : ModProjectile
     {
-        private Texture2D big = (Texture2D)ModContent.Request<Texture2D>("gvmod/Content/Projectiles/LightningCreeper_Big",
+        private Asset<Texture2D> big = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/LightningCreeper_Big",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
         public override void SetStaticDefaults()
         {
@@ -48,10 +49,28 @@ namespace gvmod.Content.Projectiles
 
         public override void PostDraw(Color lightColor)
         {
-            if (Projectile.timeLeft == 150)
+            
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.timeLeft <= 150)
             {
-                Main.EntitySpriteDraw(big, Projectile.Center - Main.screenPosition, Projectile.getRect(), Color.White, 0, Projectile.Center - Main.screenPosition, 1f, SpriteEffects.None, 0);
+                var position = Projectile.TopRight - Main.screenPosition;
+                Main.EntitySpriteDraw(
+                    big.Value,
+                    position,
+                    null,
+                    Color.White,
+                    0f,
+                    big.Size(),
+                    1f,
+                    SpriteEffects.None,
+                    0
+                );
+                return false;
             }
+            return true;
         }
     }
 }

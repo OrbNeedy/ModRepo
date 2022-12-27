@@ -13,7 +13,7 @@ namespace gvmod.Common.GlobalPlayers
         private Asset<Texture2D> anthemAura = ModContent.Request<Texture2D>("gvmod/Assets/Effects/Anthem");
         public override Position GetDefaultPosition()
         {
-            return new Between(PlayerDrawLayers.SolarShield, PlayerDrawLayers.ElectrifiedDebuffFront);
+            return new Between(PlayerDrawLayers.CaptureTheGem, PlayerDrawLayers.BeetleBuff);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)

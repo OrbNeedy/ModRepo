@@ -11,7 +11,7 @@ namespace gvmod.Content.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("You will be resurrected upon death with an Anthem.\n"
-							 + "You can feel latent power in this.\n");
+							 + "Part of a bigger picture.\n");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
@@ -26,7 +26,7 @@ namespace gvmod.Content.Items.Accessories
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			var adept = player.GetModPlayer<AdeptPlayer>();
-			adept.hasMirrorShard = true;
+			adept.HasMirrorShard = true;
 		}
 	}
 }

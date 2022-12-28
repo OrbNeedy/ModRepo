@@ -61,13 +61,13 @@ namespace gvmod.UI.Bars
 
             if (adept.IsOverheated)
             {
-                gradientA = new Color(135, 11, 11);
-                gradientB = new Color(173, 21, 21);
+                gradientA = new Color(100, 11, 11);
+                gradientB = new Color(155, 21, 21);
             }
             else
             {
-                gradientA = new Color(12, 179, 173);
-                gradientB = new Color(77, 232, 227);
+                gradientA = adept.Septima.DarkColor;
+                gradientB = adept.Septima.ClearColor;
             }
             base.Draw(spriteBatch);
         }

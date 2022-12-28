@@ -2,44 +2,48 @@
 using Terraria;
 using gvmod.Common.Players.Septimas.Abilities;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace gvmod.Common.Players
 {
     public abstract class Septima
     {
-        private AdeptPlayer adept;
-        private Player player;
-        private List<Special> abilities = new List<Special>();
-        private float spUsage;
-        private int secondaryCooldown;
-        private Vector2 velocityMultiplier;
+        public Player Player { get; }
+        public AdeptPlayer Adept { get; }
+
+        public abstract string Name { get; }
 
         public int SecondaryTimer { get; set; }
+        public int SecondaryCooldownTime { get; set; }
 
-        public Player Player { get => player; }
+        public List<Special> Abilities { get; set; } = new List<Special>();
+        public float ApBaseRegen { get; set; }
 
-        public AdeptPlayer Adept { get => adept; }
+        public float SpBaseRegen { get; set; }
+        public float SpBaseOverheatRegen { get; set; }
+        public float SpBaseUsage { get; set; }
 
-        public List<Special> Abilities { get => abilities; set => abilities = value; }
-        public float SpUsage { get => spUsage; set => spUsage = value; }
-        public abstract string Name { get; }
-        public int SecondaryCooldownTime { get => secondaryCooldown; set => secondaryCooldown = value; }
-
-        public Vector2 VelocityMultiplier { get => velocityMultiplier; set => velocityMultiplier = value; }
+        public Vector2 VelocityMultiplier { get; set; }
 
         public abstract bool CanRecharge { get; }
 
+        public abstract Color ClearColor { get; }
+        public abstract Color MainColor { get; }
+        public abstract Color DarkColor { get; }
+
         protected Septima(AdeptPlayer adept, Player player)
         {
-            this.adept = adept;
-            this.player = player;
-            velocityMultiplier = new Vector2(1, 1);
+            Adept = adept;
+            Player = player;
+            VelocityMultiplier = new Vector2(1, 1);
             InitializeAbilitiesList();
         }
 
-        // Add methods to make custom prevation and miscelaneous effects for different septimas
-
         public abstract void InitializeAbilitiesList();
+
+        public abstract void OnOverheat();
+
+        public abstract void OnRecovery();
 
         public abstract void FirstAbilityEffects();
 
@@ -49,6 +53,8 @@ namespace gvmod.Common.Players
 
         public abstract void SecondAbility();
 
+        public abstract bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter);
+
         public abstract void MiscEffects();
 
         public abstract void Updates();
@@ -56,17 +62,17 @@ namespace gvmod.Common.Players
         public List<Special> AvaliableSpecials()
         {
             List<Special> specials = new List<Special>();
-            for (int i = 0; i < abilities.Count; i++)
+            for (int i = 0; i < Abilities.Count; i++)
             {
-                if (abilities[i] == null)
+                if (Abilities[i] == null)
                 {
                     specials.Add(new None(Player, Adept));
                 }
                 else
                 {
-                    if (adept.Level >= abilities[i].UnlockLevel)
+                    if (Adept.Level >= Abilities[i].UnlockLevel)
                     {
-                        specials.Add(abilities[i]);
+                        specials.Add(Abilities[i]);
                     }
                 }
             }
@@ -76,14 +82,14 @@ namespace gvmod.Common.Players
         public List<int> AvaliableSpecialsIndex()
         {
             List<int> specials = new List<int>();
-            for (int i = 0; i < abilities.Count; i++)
+            for (int i = 0; i < Abilities.Count; i++)
             {
-                if (abilities[i] == null)
+                if (Abilities[i] == null)
                 {
                     specials.Add(0);
                 } else
                 {
-                    if (adept.Level >= abilities[i].UnlockLevel)
+                    if (Adept.Level >= Abilities[i].UnlockLevel)
                     {
                         specials.Add(i);
                     }

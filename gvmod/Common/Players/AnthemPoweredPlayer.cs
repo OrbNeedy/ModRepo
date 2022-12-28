@@ -40,11 +40,11 @@ namespace gvmod.Common.Players
                 {
                     adept.SPUsageModifier *= 0;
                 }
-                adept.SPRegenModifier *= (float)(5.5 * adept.AnthemLevel);
-                adept.SPRegenOverheatModifier *= 2;
-                adept.SpecialDamageLevelMult *= (float)(1.01 * adept.AnthemLevel);
-                adept.SecondaryDamageLevelMult *= (float)(1.01 * adept.AnthemLevel);
-                Player.GetDamage<SeptimaDamageClass>() *= (float)(1.01 * adept.AnthemLevel);
+                adept.SPRegenModifier += (0.33f * adept.AnthemLevel);
+                adept.SPRegenOverheatModifier += 2;
+                adept.SpecialDamageEquipMult += (0.01f * adept.AnthemLevel);
+                adept.SecondaryDamageEquipMult += (0.01f * adept.AnthemLevel);
+                Player.GetDamage<SeptimaDamageClass>() += (0.01f * adept.AnthemLevel);
             }
             base.PostUpdateBuffs();
         }

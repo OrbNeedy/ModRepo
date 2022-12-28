@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Abilities;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
+using Terraria.DataStructures;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -20,13 +21,20 @@ namespace gvmod.Common.Players.Septimas
 
         public AzureThunderclap(AdeptPlayer adept, Player player) : base(adept, player)
         {
-            SpUsage = 0.5f;
             SecondaryCooldownTime = 600;
+            SpBaseUsage = 0.5f;
+            SpBaseRegen = 2.5f;
+            SpBaseOverheatRegen = 1f;
+            ApBaseRegen = (1f / 3600f);
         }
 
         public override string Name => "Azure Thunderclap";
 
         public override bool CanRecharge => true;
+
+        public override Color ClearColor => new Color(77, 175, 232);
+        public override Color MainColor => new Color(44, 143, 205);
+        public override Color DarkColor => new Color(12, 112, 179);
 
         public override void InitializeAbilitiesList()
         {
@@ -40,16 +48,26 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new SeptimalSurge(Player, Adept));
         }
 
+        public override void OnOverheat()
+        {
+            VelocityMultiplier *= 0.5f;
+        }
+
+        public override void OnRecovery()
+        {
+            VelocityMultiplier = Vector2.One;
+        }
+
         public override void FirstAbilityEffects()
         {
             if (Player.wet)
             {
-                SpUsage = Adept.MaxSeptimalPower;
+                SpBaseUsage = Adept.MaxSeptimalPower;
                 return;
             }
             else
             {
-                SpUsage = 0.5f;
+                SpBaseUsage = 0.5f;
             }
         }
 
@@ -57,7 +75,7 @@ namespace gvmod.Common.Players.Septimas
         {
             if (!flashfieldExists)
             {
-                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult), 0, Player.whoAmI, -1, 0);
+                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult), 12, Player.whoAmI, -1, 0);
             }
             foreach (Tag tag in taggedNPCs)
             {
@@ -92,15 +110,23 @@ namespace gvmod.Common.Players.Septimas
             }
         }
 
+        public override bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        {
+            if (!Adept.IsOverheated && Adept.AnthemLevel >= 1 && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)*2 / 5))
+            {
+                Main.NewText("Prevasion");
+                Adept.TimeSincePrimary = 0;
+                Adept.IsRecharging = false;
+                Adept.RechargeTimer = 0;
+                Player.immune = true;
+                Player.AddImmuneTime(cooldownCounter, 60);
+                return true;
+            }
+            return false;
+        }
+
         public override void MiscEffects()
         {
-            if (Adept.IsOverheated)
-            {
-                VelocityMultiplier *= 0f;
-            } else
-            {
-                VelocityMultiplier = new Vector2(1f, 1f);
-            }
         }
 
         public override void Updates()

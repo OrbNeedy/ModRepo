@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Abilities;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
+using Terraria.DataStructures;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -19,13 +20,20 @@ namespace gvmod.Common.Players.Septimas
         private bool flashfieldExists = false;
         public AzureStriker(AdeptPlayer adept, Player player) : base(adept, player)
         {
-            SpUsage = 1f;
             SecondaryCooldownTime = 300;
+            SpBaseUsage = 1f;
+            SpBaseRegen = 2f;
+            SpBaseOverheatRegen = 1f;
+            ApBaseRegen = (1f / 4020f);
         }
 
         public override string Name => "Azure Striker";
 
         public override bool CanRecharge => true;
+
+        public override Color ClearColor => new Color(77, 232, 227);
+        public override Color MainColor => new Color(44, 205, 195);
+        public override Color DarkColor => new Color(12, 179, 173);
 
         public override void InitializeAbilitiesList()
         {
@@ -39,16 +47,24 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new SeptimalSurge(Player, Adept));
         }
 
+        public override void OnOverheat()
+        {
+        }
+
+        public override void OnRecovery()
+        {
+        }
+
         public override void FirstAbilityEffects()
         {
             if (Player.wet)
             {
-                SpUsage = Adept.MaxSeptimalPower * 10;
+                SpBaseUsage = Adept.MaxSeptimalPower * 10;
                 return;
             }
             else
             {
-                SpUsage = 1f;
+                SpBaseUsage = 1f;
             }
         }
 
@@ -96,6 +112,22 @@ namespace gvmod.Common.Players.Septimas
             {
                 Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 8, Player.whoAmI);
             }
+        }
+
+        public override bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        {
+            if (!Adept.IsOverheated && Adept.AnthemLevel >= 1 && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2) / 4))
+            {
+                if (Adept.AnthemLevel < 5 && Adept.IsUsingPrimaryAbility) return false;
+                Main.NewText("Prevasion");
+                Adept.TimeSincePrimary = 0;
+                Adept.IsRecharging = false;
+                Adept.RechargeTimer = 0;
+                Player.immune = true;
+                Player.AddImmuneTime(cooldownCounter, 60);
+                return true;
+            }
+            return false;
         }
 
         public override void MiscEffects()

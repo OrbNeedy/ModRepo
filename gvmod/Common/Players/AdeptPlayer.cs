@@ -35,7 +35,7 @@ namespace gvmod.Common.Players
         private const int rechargeCooldown = 60;
         private const int rechargeDuration = 30;
         private int rechargeDelay;
-        private int rechargeTimer;
+        public int RechargeTimer { get; set; }
 
         private int slotToUse;
 
@@ -154,8 +154,6 @@ namespace gvmod.Common.Players
                     {
                         SpecialInvincibility = true;
                     }
-                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
-                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special2.JustPressed)
@@ -174,8 +172,6 @@ namespace gvmod.Common.Players
                     {
                         SpecialInvincibility = true;
                     }
-                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
-                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special3.JustPressed)
@@ -194,8 +190,6 @@ namespace gvmod.Common.Players
                     {
                         SpecialInvincibility = true;
                     }
-                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
-                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
             if (KeybindSystem.special4.JustPressed)
@@ -214,8 +208,6 @@ namespace gvmod.Common.Players
                     {
                         SpecialInvincibility = true;
                     }
-                    Main.NewText("Do you get invincibility? " + SpecialInvincibility);
-                    Main.NewText("But do you not get to move? " + cantMove);
                 }
             }
 
@@ -247,16 +239,16 @@ namespace gvmod.Common.Players
             if (Septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !IsOverheated && !IsUsingPrimaryAbility)
             {
                 rechargeDelay = rechargeCooldown;
-                rechargeTimer = rechargeDuration;
+                RechargeTimer = rechargeDuration;
                 // Insert visual effect
             }
             if (rechargeDelay > 0)
             {
                 rechargeDelay--;
             }
-            if (rechargeTimer > 0)
+            if (RechargeTimer > 0)
             {
-                rechargeTimer--;
+                RechargeTimer--;
                 SPRegenModifier = MaxSeptimalPower / 60;
                 TimeSincePrimary = 60;
                 IsRecharging = true;
@@ -391,22 +383,12 @@ namespace gvmod.Common.Players
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
-            if (AnthemLevel >= 1 && (Septima is AzureStriker  || Septima is AzureThunderclap) && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)/4))
-            {
-                Main.NewText("Prevasion");
-                TimeSincePrimary = 0;
-                IsRecharging = false;
-                rechargeTimer = 0;
-                Player.immune = true;
-                Player.AddImmuneTime(cooldownCounter, 60);
-                return false;
-            }
             if (IsUsingSpecialAbility && Septima.Abilities[ActiveSlots[slotToUse]].GivesIFrames)
             {
                 Player.immune = true;
                 return false;
             }
-            return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
+            return !Septima.OnPrevasion(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
         }
 
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
@@ -486,12 +468,22 @@ namespace gvmod.Common.Players
         {
             if (SeptimalPower <= 0)
             {
+                if (!IsOverheated)
+                {
+                    // Something like .OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
+                    Septima.OnOverheat();
+                }
                 IsOverheated = true;
                 SeptimalPower = 0;
             }
             if (SeptimalPower >= MaxSeptimalPower)
             {
+                if (IsOverheated)
+                {
+                    Septima.OnRecovery();
+                }
                 IsOverheated = false;
+                SeptimalPower = MaxSeptimalPower;
             }
             if (TimeSinceSecondary < Septima.SecondaryCooldownTime)
             {
@@ -504,7 +496,7 @@ namespace gvmod.Common.Players
             }
             if (AbilityPower < MaxAbilityPower)
             {
-                AbilityPower += (1f/4020f) * APRegenModifier;
+                AbilityPower += Septima.ApBaseRegen * APRegenModifier;
             }
             UpdateSeptimaForFirst();
             UpdateSeptimaForSecond();
@@ -513,6 +505,7 @@ namespace gvmod.Common.Players
 
         public void ResetResources()
         {
+            MaxSeptimalPower = 300;
             APUsageModifier = 1;
             SPUsageModifier = 1;
             APRegenModifier = 1;
@@ -524,7 +517,7 @@ namespace gvmod.Common.Players
         {
             if (IsUsingPrimaryAbility && !IsOverheated && !(IsUsingSecondaryAbility || IsUsingSpecialAbility))
             {
-                if (SeptimalPower > 0) SeptimalPower -= (Septima.SpUsage * SPUsageModifier);
+                if (SeptimalPower > 0) SeptimalPower -= (Septima.SpBaseUsage * SPUsageModifier);
                 TimeSincePrimary = 0;
             }
             if (!IsUsingPrimaryAbility || IsOverheated || IsUsingSecondaryAbility || IsUsingSpecialAbility) TimeSincePrimary++;
@@ -532,13 +525,12 @@ namespace gvmod.Common.Players
             {
                 if (!IsOverheated)
                 {
-                    SeptimalPower += (2 * SPRegenModifier);
+                    SeptimalPower += (Septima.SpBaseRegen * SPRegenModifier);
                 }
                 else
                 {
-                    SeptimalPower += (1 * SPRegenOverheatModifier);
+                    SeptimalPower += (Septima.SpBaseOverheatRegen * SPRegenOverheatModifier);
                 }
-                if (SeptimalPower > MaxSeptimalPower) SeptimalPower = MaxSeptimalPower;
                 TimeSincePrimary = 60;
             }
         }

@@ -32,8 +32,7 @@ namespace gvmod.Content.Items.Accessories
 			adept.PrimaryDamageEquipMult *= 0.75f;
 			adept.SecondaryDamageEquipMult *= 0.75f;
 			adept.SpecialDamageEquipMult *= 0.75f;
-			// For developing purposes, it negates SP and AP usage, normally it just makes it so
-			// the SP usage is halved and makes it so 90% of the time you don't use any AP
+			// For developing purposes, it negates SP and AP usage.
 			adept.SPUsageModifier *= 0f;
 			adept.APUsageModifier *= 0f;
         }

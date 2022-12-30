@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Content;
 using gvmod.Content.Buffs;
 using Terraria;
 using Terraria.GameContent.Creative;
@@ -6,12 +7,12 @@ using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
 {
-    public class Glaive : ModItem
+    public class FalconQuill : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Transforms the player into an armed phenomenon, incresing their \n"
-                             + "capabilities.");
+            Tooltip.SetDefault("Transforms the player into an improved armed phenomenon, incresing their \n"
+                             + "capabilities significantly.");
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
@@ -19,16 +20,15 @@ namespace gvmod.Content.Items.Accessories
         public override void SetDefaults()
         {
             Item.width = 26;
-            Item.height = 56;
+            Item.height = 52;
             Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            Item.color = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>().Septima.MainColor;
-            if (!player.HasBuff<ArmedPhenomenon3>() && !player.HasBuff<ArmedPhenomenon2A>() && !player.HasBuff<ArmedPhenomenon2B>())
+            if (!player.HasBuff<ArmedPhenomenon3>())
             {
-                player.AddBuff(ModContent.BuffType<ArmedPhenomenon>(), 2, true);
+                player.AddBuff(ModContent.BuffType<ArmedPhenomenon2B>(), 2, true);
             }
         }
     }

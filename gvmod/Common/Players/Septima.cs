@@ -45,6 +45,8 @@ namespace gvmod.Common.Players
 
         public abstract void OnRecovery();
 
+        public abstract void DuringOverheat();
+
         public abstract void FirstAbilityEffects();
 
         public abstract void FirstAbility();

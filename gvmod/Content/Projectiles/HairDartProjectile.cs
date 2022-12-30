@@ -154,7 +154,7 @@ namespace gvmod.Content.Projectiles
                     temp.NextVasukiPlayerSource = Projectile.owner;
                     temp.VasukiDartParams[0] = Projectile.ai[0];
                     temp.VasukiDartParams[1] = Projectile.ai[1];
-                    temp.VasukiIsAlsoDullahan = true; // This is set to false in the normal dart
+                    temp.VasukiIsAlsoDullahan = false; // This is set to false in the normal dart
                     temp.VasukiTimer = 60;
                     temp.VasukiShoot = true;
                 }

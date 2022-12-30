@@ -236,6 +236,11 @@ namespace gvmod.Common.Players
                 Septima.Abilities[ActiveSlots[slotToUse]]?.Effects();
             }
 
+            if (IsOverheated)
+            {
+                DuringOverheat();
+            }
+
             if (Septima.CanRecharge && rechargeComboCount != 0 && rechargeDelay == 0 && !IsOverheated && !IsUsingPrimaryAbility)
             {
                 rechargeDelay = rechargeCooldown;
@@ -471,7 +476,7 @@ namespace gvmod.Common.Players
                 if (!IsOverheated)
                 {
                     // Something like .OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
-                    Septima.OnOverheat();
+                    OnOverheat();
                 }
                 IsOverheated = true;
                 SeptimalPower = 0;
@@ -480,7 +485,7 @@ namespace gvmod.Common.Players
             {
                 if (IsOverheated)
                 {
-                    Septima.OnRecovery();
+                    OnRecover();
                 }
                 IsOverheated = false;
                 SeptimalPower = MaxSeptimalPower;
@@ -501,6 +506,21 @@ namespace gvmod.Common.Players
             UpdateSeptimaForFirst();
             UpdateSeptimaForSecond();
             UpdateSeptimaForSpecial();
+        }
+
+        public void OnOverheat()
+        {
+            Septima.OnOverheat();
+        }
+
+        public void OnRecover()
+        {
+            Septima.OnRecovery();
+        }
+
+        public void DuringOverheat()
+        {
+            Septima.DuringOverheat();
         }
 
         public void ResetResources()

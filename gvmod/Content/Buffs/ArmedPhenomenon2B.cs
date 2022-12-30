@@ -4,12 +4,12 @@ using gvmod.Common.Players;
 
 namespace gvmod.Content.Buffs
 {
-    public class ArmedPhenomenon : ModBuff
+    public class ArmedPhenomenon2B : ModBuff
     {
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Armed Phenomenon");
-            Description.SetDefault("The glaive has driven out your septima's power.");
+            Description.SetDefault("The falcon quill has driven out your septima's power.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;
@@ -23,13 +23,8 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            player.statDefense += 8;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
-            adept.MaxSeptimalPower += 80;
-            adept.PrimaryDamageEquipMult += 0.05f;
-            adept.SecondaryDamageEquipMult += 0.05f;
-            adept.SpecialDamageEquipMult += 0.05f;
+            BetterArmedPhenomenonPlayer betterPlayer = player.GetModPlayer<BetterArmedPhenomenonPlayer>();
+            betterPlayer.sumeragiType = true;
         }
     }
 }

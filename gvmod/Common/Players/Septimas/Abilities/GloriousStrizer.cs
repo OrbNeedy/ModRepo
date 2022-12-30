@@ -88,8 +88,8 @@ namespace gvmod.Common.Players.Septimas.Abilities
 
         public void ProjectileUpdate()
         {
-            Projectile sparkcaliburg = Main.projectile[strizerIndex];
-            if (sparkcaliburg.active && sparkcaliburg.ModProjectile is ElectricSword)
+            Projectile strizer = Main.projectile[strizerIndex];
+            if (strizer.active && strizer.ModProjectile is GloriousSword)
             {
                 strizerExists = true;
             }

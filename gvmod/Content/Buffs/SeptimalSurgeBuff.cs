@@ -1,8 +1,6 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using gvmod.Common.Players;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.DataStructures;
 
 namespace gvmod.Content.Buffs
 {

@@ -1,4 +1,5 @@
-﻿using gvmod.Content.Buffs;
+﻿using gvmod.Common.Players;
+using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -18,7 +19,7 @@ namespace gvmod.Common.GlobalPlayers
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
-            if (drawInfo.drawPlayer.HasBuff(ModContent.BuffType<AnthemBuff>()))
+            if (drawInfo.drawPlayer.HasBuff(ModContent.BuffType<AnthemBuff>()) && drawInfo.drawPlayer.GetModPlayer<AdeptPlayer>().AnthemLevel < 5)
             {
                 var position = drawInfo.Center - Main.screenPosition;
                 position = new Vector2((int)position.X, (int)position.Y);

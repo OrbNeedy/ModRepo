@@ -31,7 +31,7 @@ namespace gvmod.Content.Projectiles
             Projectile.damage = 0;
             Projectile.knockBack = 0;
 
-            Projectile.aiStyle = 0;
+            Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.tileCollide = false;

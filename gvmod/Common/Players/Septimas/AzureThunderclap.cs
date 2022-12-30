@@ -50,12 +50,17 @@ namespace gvmod.Common.Players.Septimas
 
         public override void OnOverheat()
         {
-            VelocityMultiplier *= 0.5f;
         }
 
         public override void OnRecovery()
         {
-            VelocityMultiplier = Vector2.One;
+            SpBaseUsage = 0.5f;
+        }
+
+        public override void DuringOverheat()
+        {
+            Player.controlJump = false;
+            Player.moveSpeed *= 0.2f;
         }
 
         public override void FirstAbilityEffects()

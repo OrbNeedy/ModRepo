@@ -53,6 +53,12 @@ namespace gvmod.Common.Players.Septimas
 
         public override void OnRecovery()
         {
+            SpBaseUsage = 1f;
+        }
+
+        public override void DuringOverheat()
+        {
+
         }
 
         public override void FirstAbilityEffects()
@@ -61,10 +67,6 @@ namespace gvmod.Common.Players.Septimas
             {
                 SpBaseUsage = Adept.MaxSeptimalPower * 10;
                 return;
-            }
-            else
-            {
-                SpBaseUsage = 1f;
             }
         }
 

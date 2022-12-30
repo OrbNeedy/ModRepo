@@ -9,6 +9,8 @@ using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Abilities;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace gvmod.Content.Items.Weapons
 {
@@ -19,6 +21,7 @@ namespace gvmod.Content.Items.Weapons
         private int ai0;
         private int ai1;
         private List<int> orochiDroneIndex;
+        private static Asset<Texture2D> glowmask;
 
         private static string[] upgradeDescriptions = new string[6] { "\nNaga: Adds a piercing effect and increases speed.", 
 			"\nMizuchi: Adds a slight homing effect to the darts.",  
@@ -34,7 +37,20 @@ namespace gvmod.Content.Items.Weapons
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults()
+        public override void Load()
+        {
+            if (!Main.dedServ)
+            {
+                glowmask = ModContent.Request<Texture2D>("gvmod/Content/Items/Weapons/DartLeaderGlowmask");
+            }
+        }
+
+        public override void Unload()
+        {
+            glowmask = null;
+        }
+
+        public override void SetDefaults()
 		{
 			Item.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
 			Item.damage = 2;
@@ -208,7 +224,26 @@ namespace gvmod.Content.Items.Weapons
             return false;
 		}
 
-		public override void AddRecipes()
+        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        {
+            spriteBatch.Draw(
+                glowmask.Value,
+                new Vector2
+                (
+                    Item.position.X - Main.screenPosition.X + Item.width * 0.5f,
+                    Item.position.Y - Main.screenPosition.Y + Item.height - glowmask.Value.Height * 0.5f
+                ),
+                new Rectangle(0, 0, glowmask.Value.Width, glowmask.Value.Height),
+                Color.White,
+                rotation,
+                glowmask.Value.Size() * 0.5f,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+        }
+
+        public override void AddRecipes()
 		{
 			CreateRecipe(1)
 				.Register();

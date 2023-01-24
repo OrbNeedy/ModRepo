@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -120,7 +119,7 @@ namespace gvmod.Content.Projectiles
                         theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
                         if (trappedNPCs[index] <= 0)
                         {
-                            theNpcInQuestion.StrikeNPC((int)(100 * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0);
+                            Main.player[Projectile.owner].ApplyDamageToNPC(theNpcInQuestion, (int)(100 * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0, false);
                             trappedNPCs[index] = 6;
                         }
                     }

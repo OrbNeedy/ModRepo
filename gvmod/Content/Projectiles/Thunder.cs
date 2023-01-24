@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using gvmod.Content;
 using ReLogic.Content;
+using Terraria.DataStructures;
 
 namespace gvmod.Content.Projectiles
 {
@@ -31,11 +32,33 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
+        public override void OnSpawn(IEntitySource source)
+        {
+            switch (Projectile.ai[0])
+            {
+                case 1:
+                    Projectile.Size = new Vector2(400, 1000);
+                    break;
+                case 2:
+                    Projectile.timeLeft = 25;
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             for (int i = 0; i <= 4; i++)
             {
                 var position = Projectile.TopRight - Main.screenPosition + new Vector2(0f, 250 * i);
+                var scale = Vector2.One;
+                if (Projectile.ai[0] == 1)
+                {
+                    scale = new Vector2(12.5f, 1);
+                }
                 Main.EntitySpriteDraw(
                     thunder.Value, 
                     position, 
@@ -43,7 +66,7 @@ namespace gvmod.Content.Projectiles
                     Color.White, 
                     0f, 
                     thunder.Size(), 
-                    1f, 
+                    scale, 
                     SpriteEffects.None, 
                     0
                 );

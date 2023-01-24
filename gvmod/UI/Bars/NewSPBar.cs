@@ -77,7 +77,7 @@ namespace gvmod.UI.Bars
             base.DrawSelf(spriteBatch);
 
             var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
-            float quotient = adept.SeptimalPower / adept.MaxSeptimalPower;
+            float quotient = adept.SeptimalPower / adept.MaxSeptimalPower2;
             quotient = Utils.Clamp(quotient, 0f, 1f);
 
             Rectangle hitbox = barFrame.GetInnerDimensions().ToRectangle();
@@ -111,7 +111,7 @@ namespace gvmod.UI.Bars
             }
 
             var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
-            int percentage = (int)(adept.SeptimalPower / adept.MaxSeptimalPower * 100);
+            int percentage = (int)(adept.SeptimalPower / adept.MaxSeptimalPower2 * 100);
             label.SetText(adept.Septima.Name);
             this.percentage.SetText(percentage + "%");
             base.Update(gameTime);

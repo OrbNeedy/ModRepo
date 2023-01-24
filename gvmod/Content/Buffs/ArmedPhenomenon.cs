@@ -26,7 +26,7 @@ namespace gvmod.Content.Buffs
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             player.statDefense += 8;
             player.GetDamage<SeptimaDamageClass>() += 0.1f;
-            adept.MaxSeptimalPower += 80;
+            adept.MaxSeptimalPower2 += 80;
             adept.PrimaryDamageEquipMult += 0.05f;
             adept.SecondaryDamageEquipMult += 0.05f;
             adept.SpecialDamageEquipMult += 0.05f;

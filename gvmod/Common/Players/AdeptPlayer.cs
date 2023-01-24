@@ -18,6 +18,8 @@ namespace gvmod.Common.Players
     {
         public Septima Septima { get; set; }
         public float MaxSeptimalPower { get; set; }
+        public float MaxSeptimalPower2 { get; set; }
+        public bool[] SPUpgrades { get; set; }
         public float SeptimalPower { get; set; }
         public float MaxAbilityPower { get; set; }
         public float AbilityPower { get; set; }
@@ -52,11 +54,6 @@ namespace gvmod.Common.Players
         public float SPRegenModifier { get; set; }
         public float SPRegenOverheatModifier { get; set; }
 
-        public bool HasMirrorShard { get; set; }
-        public bool HasWholeMirror { get; set; }
-        public bool HasDjinnLamp { get; set; }
-        public int AnthemLevel { get; set; }
-
         public bool IsUsingPrimaryAbility { get; set; }
         public bool CanUsePrimary { get; set; }
         public bool IsUsingSecondaryAbility { get; set; }
@@ -75,7 +72,8 @@ namespace gvmod.Common.Players
         public override void Initialize()
         {
             base.Initialize();
-            MaxSeptimalPower = 300;
+            MaxSeptimalPower = 150;
+            MaxSeptimalPower2 = MaxSeptimalPower;
             SeptimalPower = MaxSeptimalPower;
             MaxAbilityPower = 3;
             AbilityPower = MaxAbilityPower;
@@ -92,6 +90,7 @@ namespace gvmod.Common.Players
             SecondaryDamageLevelMult = 1;
             SpecialDamageLevelMult = 1;
             ActiveSlots = new List<int>() { 0, 0, 0, 0};
+            SPUpgrades = new bool[3] {false, false, false};
             slotToUse = 0;
         }
 
@@ -109,6 +108,22 @@ namespace gvmod.Common.Players
             {
                 Septima = GetSeptima(tag.GetString("Septima"));
             }
+            if (tag.ContainsKey("MaxSP"))
+            {
+                MaxSeptimalPower = tag.GetFloat("MaxSP");
+            }
+            if (tag.ContainsKey("Upgrade1"))
+            {
+                SPUpgrades[0] = tag.GetBool("Upgrade1");
+            }
+            if (tag.ContainsKey("Upgrade2"))
+            {
+                SPUpgrades[1] = tag.GetBool("Upgrade2");
+            }
+            if (tag.ContainsKey("Upgrade3"))
+            {
+                SPUpgrades[2] = tag.GetBool("Upgrade3");
+            }
         }
 
         public override void SaveData(TagCompound tag)
@@ -116,6 +131,10 @@ namespace gvmod.Common.Players
             tag["Level"] = Level;
             tag["Experience"] = Experience;
             tag["Septima"] = Septima.Name;
+            tag["MaxSP"] = MaxSeptimalPower;
+            tag["Upgrade1"] = SPUpgrades[0];
+            tag["Upgrade2"] = SPUpgrades[1];
+            tag["Upgrade3"] = SPUpgrades[2];
         }
 
         public override void OnEnterWorld(Player player)
@@ -254,7 +273,7 @@ namespace gvmod.Common.Players
             if (RechargeTimer > 0)
             {
                 RechargeTimer--;
-                SPRegenModifier = MaxSeptimalPower / 60;
+                SPRegenModifier = MaxSeptimalPower2 / 60;
                 TimeSincePrimary = 60;
                 IsRecharging = true;
             } else
@@ -375,7 +394,8 @@ namespace gvmod.Common.Players
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if ((HasMirrorShard || HasWholeMirror || HasDjinnLamp) && AnthemLevel <= 0)
+            AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
+            if ((muse.HasMirrorShard || muse.HasWholeMirror || muse.HasDjinnLamp) && muse.AnthemLevel <= 0)
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
                 Player.statLife += fullHealth;
@@ -424,6 +444,7 @@ namespace gvmod.Common.Players
 
         public void UpdateKudos()
         {
+            AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
             List<NPC> npcs = GetNPCsInRadius(1600);
             int initialBossTimer = BossKudosGainTimer;
             KudosTimer++;
@@ -450,7 +471,7 @@ namespace gvmod.Common.Players
                 Kudos = 0;
             }
 
-            if (AnthemLevel > 0 || KudosTimer >= 960)
+            if (muse.AnthemLevel > 0 || KudosTimer >= 960)
             {
                 BossKudosGainTimer = -1;
                 Kudos = 0;
@@ -459,7 +480,7 @@ namespace gvmod.Common.Players
 
         public float SeptimalPowerToFraction()
         {
-            return SeptimalPower / MaxSeptimalPower;
+            return SeptimalPower / MaxSeptimalPower2;
         }
 
         public float ExperienceToFraction()
@@ -475,20 +496,19 @@ namespace gvmod.Common.Players
             {
                 if (!IsOverheated)
                 {
-                    // Something like .OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
                     OnOverheat();
                 }
                 IsOverheated = true;
                 SeptimalPower = 0;
             }
-            if (SeptimalPower >= MaxSeptimalPower)
+            if (SeptimalPower >= MaxSeptimalPower2)
             {
                 if (IsOverheated)
                 {
                     OnRecover();
                 }
                 IsOverheated = false;
-                SeptimalPower = MaxSeptimalPower;
+                SeptimalPower = MaxSeptimalPower2;
             }
             if (TimeSinceSecondary < Septima.SecondaryCooldownTime)
             {
@@ -525,7 +545,7 @@ namespace gvmod.Common.Players
 
         public void ResetResources()
         {
-            MaxSeptimalPower = 300;
+            MaxSeptimalPower2 = MaxSeptimalPower;
             APUsageModifier = 1;
             SPUsageModifier = 1;
             APRegenModifier = 1;

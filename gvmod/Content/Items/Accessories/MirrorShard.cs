@@ -25,8 +25,8 @@ namespace gvmod.Content.Items.Accessories
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			var adept = player.GetModPlayer<AdeptPlayer>();
-			adept.HasMirrorShard = true;
+			var muse = player.GetModPlayer<AdeptMuse>();
+			muse.HasMirrorShard = true;
 		}
 	}
 }

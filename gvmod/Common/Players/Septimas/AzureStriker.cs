@@ -8,12 +8,14 @@ using gvmod.Common.Players.Septimas.Abilities;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using Terraria.DataStructures;
+using System;
 
 namespace gvmod.Common.Players.Septimas
 {
     internal class AzureStriker : Septima
     {
         private int secondaryDuration = 15;
+        private int visualProjectileTimer = 14;
         private bool isFalling = false;
         private List<Tag> taggedNPCs = new List<Tag>();
         private int flashfieldIndex;
@@ -53,7 +55,9 @@ namespace gvmod.Common.Players.Septimas
 
         public override void OnRecovery()
         {
+            MorbPlayer morb = Player.GetModPlayer<MorbPlayer>();
             SpBaseUsage = 1f;
+            morb.AttackTimer = 22;
         }
 
         public override void DuringOverheat()
@@ -92,8 +96,15 @@ namespace gvmod.Common.Players.Septimas
                 float tagMultiplier = (float)((tag.Level * 0.75));
                 if (tag.ShockIframes == 0)
                 {
-                    theNpcInQuestion.StrikeNPC((int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction);
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(1, 1).RotatedByRandom(MathHelper.ToRadians(360)) * 16, ModContent.ProjectileType<ElectricBolt>(), 1, 0, Player.whoAmI, tag.NpcIndex, 1);
+                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, false);
                     tag.ShockIframes = 6;
+                }
+
+                if (visualProjectileTimer <= 0)
+                {
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(1, 1).RotatedByRandom(MathHelper.ToRadians(360)) * 16, ModContent.ProjectileType<ElectricBolt>(), 1, 0, Player.whoAmI, tag.NpcIndex, 1);
+                    visualProjectileTimer = 14;
                 }
             }
         }
@@ -118,9 +129,10 @@ namespace gvmod.Common.Players.Septimas
 
         public override bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
-            if (!Adept.IsOverheated && Adept.AnthemLevel >= 1 && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2) / 4))
+            AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
+            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2) / 4))
             {
-                if (Adept.AnthemLevel < 5 && Adept.IsUsingPrimaryAbility) return false;
+                if (muse.AnthemLevel < 5 && Adept.IsUsingPrimaryAbility) return false;
                 Main.NewText("Prevasion");
                 Adept.TimeSincePrimary = 0;
                 Adept.IsRecharging = false;
@@ -130,6 +142,14 @@ namespace gvmod.Common.Players.Septimas
                 return true;
             }
             return false;
+        }
+
+        public override void MorbAttack(int timer)
+        {
+            if (timer == 1)
+            {
+                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center - new Vector2(184, 0), new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(150 * Math.Pow(Adept.SpecialDamageLevelMult, 2)), 14, Player.whoAmI, 1);
+            }
         }
 
         public override void MiscEffects()
@@ -156,6 +176,7 @@ namespace gvmod.Common.Players.Septimas
         public override void Updates()
         {
             UpdateTaggedNPCs();
+            if (visualProjectileTimer > 0) visualProjectileTimer--;
             if (Adept.IsUsingSecondaryAbility && Adept.TimeSinceSecondary >= SecondaryCooldownTime)
             {
                 SecondaryTimer++;

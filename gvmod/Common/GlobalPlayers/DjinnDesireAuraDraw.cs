@@ -20,7 +20,7 @@ namespace gvmod.Common.GlobalPlayers
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
-            if (drawInfo.drawPlayer.HasBuff(ModContent.BuffType<AnthemBuff>()) && drawInfo.drawPlayer.GetModPlayer<AdeptPlayer>().AnthemLevel == 5)
+            if (drawInfo.drawPlayer.HasBuff(ModContent.BuffType<AnthemBuff>()) && drawInfo.drawPlayer.GetModPlayer<AdeptMuse>().AnthemLevel == 5)
             {
                 var position = drawInfo.Center - Main.screenPosition;
                 position = new Vector2((int)position.X, (int)position.Y);

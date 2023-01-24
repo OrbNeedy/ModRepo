@@ -25,7 +25,7 @@ namespace gvmod.Common.Players
                 Player.endurance += 0.1f;
                 Player.GetDamage<SeptimaDamageClass>() += 0.2f;
 
-                adept.MaxSeptimalPower += 200;
+                adept.MaxSeptimalPower2 += 200;
                 adept.PrimaryDamageEquipMult += 0.2f;
                 adept.SecondaryDamageEquipMult += 0.2f;
                 adept.SpecialDamageEquipMult += 0.2f;
@@ -37,7 +37,7 @@ namespace gvmod.Common.Players
             {
                 Player.statDefense += 12;
                 Player.GetDamage<SeptimaDamageClass>() += 0.15f;
-                adept.MaxSeptimalPower += 140;
+                adept.MaxSeptimalPower2 += 140;
                 adept.PrimaryDamageEquipMult += 0.12f;
                 adept.SecondaryDamageEquipMult += 0.12f;
                 adept.SpecialDamageEquipMult += 0.12f;

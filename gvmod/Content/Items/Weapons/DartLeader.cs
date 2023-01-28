@@ -20,7 +20,7 @@ namespace gvmod.Content.Items.Weapons
         public bool[] Upgrades { get; set; } = new bool[6] { false, false, false, false, false, false };
         private int ai0;
         private int ai1;
-        private List<int> orochiDroneIndex;
+        private int orochiTimer;
         private static Asset<Texture2D> glowmask;
 
         private static string[] upgradeDescriptions = new string[6] { "\nNaga: Adds a piercing effect and increases speed.", 
@@ -71,7 +71,7 @@ namespace gvmod.Content.Items.Weapons
 			tooltip = "";
             ai0 = 0;
             ai1 = 0;
-            orochiDroneIndex = new List<int>();        
+            orochiTimer = 0;        
         }
 
         public override ModItem Clone(Item item)
@@ -129,14 +129,7 @@ namespace gvmod.Content.Items.Weapons
 
 		public override void UpdateInventory(Player player)
 		{
-            for (int i = 0; i < orochiDroneIndex.Count; i++)
-            {
-                Projectile theProjectileInQuestion = Main.projectile[orochiDroneIndex[i]];
-                if (theProjectileInQuestion.ModProjectile is not OrochiDrone || !theProjectileInQuestion.active)
-                {
-                    orochiDroneIndex.RemoveAt(i);
-                }
-            }
+            if (orochiTimer > 0) orochiTimer--;
 
 			int upgradeLevel = 0;
             tooltip = "A pistol that shoots hair darts, allows Azure Striker and Azure Thunderclap to \nmark an enemy and shock them with their Flashfield to deal damage.";
@@ -149,7 +142,6 @@ namespace gvmod.Content.Items.Weapons
                 }
             }
 
-            // Resets the item's stats
             Item.damage = 2;
             Item.knockBack = 0;
             Item.rare = ItemRarityID.Green;
@@ -208,12 +200,11 @@ namespace gvmod.Content.Items.Weapons
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-            // ai0 will be penetration, set to an odd number for penetration and an even number to disable penetration, ai1 will be homing, Mizuchi effects will be 2, Vasuki effects will be 2, and both will be 3
-            // Maybe make two separate projectiles to shoot, like one for dullahan or Naga
             if (Upgrades[0]) ai0++;
-            if (Upgrades[3] && orochiDroneIndex.Count <= 3)
+            if (Upgrades[3] && orochiTimer == 0)
             {
-                orochiDroneIndex.Add(Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<OrochiDrone>(), 0, 0, player.whoAmI));
+                Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<OrochiDrone>(), 0, 0, player.whoAmI);
+                orochiTimer = 60;
             }
             if (Upgrades[2])
 			{

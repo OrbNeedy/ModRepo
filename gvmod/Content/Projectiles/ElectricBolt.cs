@@ -1,6 +1,7 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Common.Players.Septimas;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -58,17 +59,9 @@ namespace gvmod.Content.Projectiles
                 target = FindClosestNPC(200);
             }
 
-            if (!target.active || target.life <= 0)
-            {
-                target = null;
-            }
+            if (target == null) return;
 
-            if (Projectile.ai[0] == -1 && (target.immortal || target.friendly))
-            {
-                target = null;
-            }
-
-            if (target != null && Projectile.timeLeft <= 900)
+            if (Projectile.timeLeft <= 900)
             {
                 if (Projectile.timeLeft <= 875)
                 {
@@ -100,30 +93,24 @@ namespace gvmod.Content.Projectiles
             }
         }
 
-        public NPC FindClosestNPC(int range)
+        public NPC FindClosestNPC(float range)
         {
             NPC closestNPC = null;
+            float squaredRange = range * range;
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                var npc = Main.npc[i];
-                if (!npc.active && npc.life <= 0) continue;
-                if (closestNPC == null)
+                NPC target = Main.npc[i];
+                if (target.CanBeChasedBy())
                 {
-                    closestNPC = npc;
+                    float distance = Vector2.DistanceSquared(target.Center, Projectile.Center);
+                    if (distance < squaredRange)
+                    {
+                        squaredRange = distance;
+                        closestNPC = target;
+                    }
                 }
-                else if (Vector2.Distance(Projectile.Center, Main.npc[i].Center) < Vector2.Distance(Projectile.Center, closestNPC.Center))
-                {
-                    closestNPC = npc;
-                }
             }
-            if (Vector2.Distance(Projectile.Center, closestNPC.Center) < range)
-            {
-                return closestNPC;
-            }
-            else
-            {
-                return null;
-            }
+            return closestNPC;
         }
     }
 }

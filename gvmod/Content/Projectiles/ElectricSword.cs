@@ -1,5 +1,6 @@
 ﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -74,6 +75,31 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
             }
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            float rotationFactor = Projectile.rotation + (float)Math.PI / 4f;
+            float verticalScaleFactor = 190f;
+            float widthMultiplier = 45f;
+            float collisionPoint = 0f;
+
+            Rectangle swordHitboxBounds = new Rectangle(0, 0, 400, 400);
+
+            swordHitboxBounds.X = (int)Projectile.position.X - swordHitboxBounds.Width / 2;
+            swordHitboxBounds.Y = (int)Projectile.position.Y - swordHitboxBounds.Height / 2;
+
+            Vector2 hitLineEnd = Projectile.Center + rotationFactor.ToRotationVector2() * 180f;
+            //How do I even do this?
+            Vector2 verticalHitLineEnd = Projectile.Center + rotationFactor.ToRotationVector2() * verticalScaleFactor;
+            Vector2 verticalHitLineEnd2 = Projectile.Center + rotationFactor.ToRotationVector2() * verticalScaleFactor;
+
+            if (swordHitboxBounds.Intersects(targetHitbox)
+                && Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, hitLineEnd, widthMultiplier * Projectile.scale, ref collisionPoint))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

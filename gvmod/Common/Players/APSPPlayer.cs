@@ -8,8 +8,8 @@ namespace gvmod.Common.Players
         private int globalTimer;
         private float apLimiter;
         private float spLimiter;
-        public float ApAdded;
-        public float SpAdded;
+        public float ApAdded { get; set; }
+        public float SpAdded { get; set; }
         public override void Initialize()
         {
             globalTimer = 0;

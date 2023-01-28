@@ -19,18 +19,24 @@ namespace gvmod.Common.Players
         public Septima Septima { get; set; }
         public float MaxSeptimalPower { get; set; }
         public float MaxSeptimalPower2 { get; set; }
+        public int PowerLevel { get; set; }
+        public bool UnlockedPotential { get; set; }
+
         public bool[] SPUpgrades { get; set; }
         public float SeptimalPower { get; set; }
         public float MaxAbilityPower { get; set; }
         public float AbilityPower { get; set; }
+        
         public int Level { get; set; }
         public int Experience { get; set; }
         public int MaxEXP { get; set; }
         public int ExtraEXP { get; set; }
+
         public int Kudos { get; set; }
         public int KudosTimer { get; set; }
         public int BossKudosGainTimer { get; set; }
         public int SpecificallyBossTimer { get; set; }
+        
         public List<int> ActiveSlots { get; set; }
 
         private int rechargeComboCount;
@@ -91,6 +97,7 @@ namespace gvmod.Common.Players
             SpecialDamageLevelMult = 1;
             ActiveSlots = new List<int>() { 0, 0, 0, 0};
             SPUpgrades = new bool[3] {false, false, false};
+            PowerLevel = 1;
             slotToUse = 0;
         }
 
@@ -124,6 +131,14 @@ namespace gvmod.Common.Players
             {
                 SPUpgrades[2] = tag.GetBool("Upgrade3");
             }
+            if (tag.ContainsKey("PowerLevel"))
+            {
+                PowerLevel = tag.GetInt("PowerLevel");
+            }
+            if (tag.ContainsKey("UnlockedPotential"))
+            {
+                UnlockedPotential = tag.GetBool("UnlockedPotential");
+            }
         }
 
         public override void SaveData(TagCompound tag)
@@ -135,6 +150,8 @@ namespace gvmod.Common.Players
             tag["Upgrade1"] = SPUpgrades[0];
             tag["Upgrade2"] = SPUpgrades[1];
             tag["Upgrade3"] = SPUpgrades[2];
+            tag["PowerLevel"] = PowerLevel;
+            tag["UnlockedPotential"] = UnlockedPotential;
         }
 
         public override void OnEnterWorld(Player player)
@@ -625,9 +642,9 @@ namespace gvmod.Common.Players
         {
             return choice switch
             {
-                0 => new AzureStriker(this, Player),
-                1 => new AzureThunderclap(this, Player),
-                _ => new AzureStriker(this, Player),
+                0 => new AzureStriker(this, Player.GetModPlayer<AdeptMuse>(), Player),
+                1 => new AzureThunderclap(this, Player.GetModPlayer<AdeptMuse>(), Player),
+                _ => new AzureStriker(this, Player.GetModPlayer<AdeptMuse>(), Player),
             };
         }
 
@@ -635,9 +652,9 @@ namespace gvmod.Common.Players
         {
             return name switch
             {
-                "Azure Striker" => new AzureStriker(this, Player),
-                "Azure Thunderclap" => new AzureThunderclap(this, Player),
-                _ => new AzureStriker(this, Player),
+                "Azure Striker" => new AzureStriker(this, Player.GetModPlayer<AdeptMuse>(), Player),
+                "Azure Thunderclap" => new AzureThunderclap(this, Player.GetModPlayer<AdeptMuse>(), Player),
+                _ => new AzureStriker(this, Player.GetModPlayer<AdeptMuse>(), Player),
             };
         }
 

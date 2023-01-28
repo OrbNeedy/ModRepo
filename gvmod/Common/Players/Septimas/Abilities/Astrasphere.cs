@@ -20,7 +20,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         private int sphere3Index;
         private bool sphere3Exists = false;
 
-        public Astrasphere(Player player, AdeptPlayer adept) : base(player, adept)
+        public Astrasphere(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 1;
             SpecialCooldownTime = 600;
@@ -102,7 +102,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         public void ProjectileUpdate()
         {
             Projectile flashfield = Main.projectile[flashfieldIndex];
-            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker)
+            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker && flashfield.owner == Player.whoAmI)
             {
                 flashfieldExists = true;
             }
@@ -112,7 +112,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
 
             Projectile sphere1 = Main.projectile[sphere1Index];
-            if (sphere1.active && sphere1.ModProjectile is ElectricSphere)
+            if (sphere1.active && sphere1.ModProjectile is ElectricSphere && sphere1.owner == Player.whoAmI)
             {
                 sphere1Exists = true;
             }
@@ -122,7 +122,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
 
             Projectile sphere2 = Main.projectile[sphere2Index];
-            if (sphere2.active && sphere2.ModProjectile is ElectricSphere)
+            if (sphere2.active && sphere2.ModProjectile is ElectricSphere && sphere2.owner == Player.whoAmI)
             {
                 sphere2Exists = true;
             }
@@ -132,7 +132,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
             }
 
             Projectile sphere3 = Main.projectile[sphere3Index];
-            if (sphere3.active && sphere3.ModProjectile is ElectricSphere)
+            if (sphere3.active && sphere3.ModProjectile is ElectricSphere && sphere3.owner == Player.whoAmI)
             {
                 sphere3Exists = true;
             }

@@ -5,7 +5,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     internal class GalvanicPatch : Special
     {
-        public GalvanicPatch(Player player, AdeptPlayer adept) : base(player, adept)
+        public GalvanicPatch(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 1;
             SpecialCooldownTime = 600;

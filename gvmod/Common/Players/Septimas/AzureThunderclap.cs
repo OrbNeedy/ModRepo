@@ -21,7 +21,7 @@ namespace gvmod.Common.Players.Septimas
         private int flashfieldIndex;
         private bool flashfieldExists = false;
 
-        public AzureThunderclap(AdeptPlayer adept, Player player) : base(adept, player)
+        public AzureThunderclap(AdeptPlayer adept, AdeptMuse muse, Player player) : base(adept, muse, player)
         {
             SecondaryCooldownTime = 600;
             SpBaseUsage = 0.5f;
@@ -40,14 +40,14 @@ namespace gvmod.Common.Players.Septimas
 
         public override void InitializeAbilitiesList()
         {
-            Abilities.Add(new None(Player, Adept));
-            Abilities.Add(new Astrasphere(Player, Adept));
-            Abilities.Add(new GalvanicPatch(Player, Adept));
-            Abilities.Add(new Sparkcaliburg(Player, Adept));
-            Abilities.Add(new GalvanicRenewal(Player, Adept));
-            Abilities.Add(new VoltaicChains(Player, Adept));
-            Abilities.Add(new GloriousStrizer(Player, Adept));
-            Abilities.Add(new SeptimalSurge(Player, Adept));
+            Abilities.Add(new None(Player, Adept, "T"));
+            Abilities.Add(new Astrasphere(Player, Adept, "T"));
+            Abilities.Add(new GalvanicPatch(Player, Adept, "T"));
+            Abilities.Add(new Sparkcaliburg(Player, Adept, "T"));
+            Abilities.Add(new GalvanicRenewal(Player, Adept, "T"));
+            Abilities.Add(new VoltaicChains(Player, Adept, "T"));
+            Abilities.Add(new GloriousStrizer(Player, Adept, "T"));
+            Abilities.Add(new SeptimalSurge(Player, Adept, "T"));
         }
 
         public override void OnOverheat()
@@ -121,8 +121,16 @@ namespace gvmod.Common.Players.Septimas
         {
             if (SecondaryTimer <= 1 && Adept.SecondaryInUse)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(-10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
+                switch (Adept.PowerLevel)
+                {
+                    case 1:
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(-10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
+                        break;
+                    case 2:
+                        //Capsule thing
+                        break;
+                }
             }
         }
 
@@ -159,7 +167,9 @@ namespace gvmod.Common.Players.Septimas
 
         public override void Updates()
         {
-            UpdateMarkedNPCs(); 
+            UpdateMarkedNPCs();
+            CheckEvolution();
+            UpdateEvolution();
             if (visualProjectileTimer > 0) visualProjectileTimer--;
             if (Adept.IsUsingSecondaryAbility && Adept.TimeSinceSecondary >= SecondaryCooldownTime)
             {
@@ -185,6 +195,32 @@ namespace gvmod.Common.Players.Septimas
             }
 
             Player.velocity *= VelocityMultiplier;
+        }
+
+        public override void CheckEvolution()
+        {
+            if (Adept.Level >= 30 && NPC.downedMechBoss1 &&
+                NPC.downedMechBoss2 && NPC.downedMechBoss3 &&
+                Adept.PowerLevel == 1 && Muse.HasAMuseItem)
+            {
+                Adept.PowerLevel++;
+                Main.NewText("Your septima has reached new heights!", ClearColor);
+            }
+
+            if (Adept.Level >= 60 && NPC.downedMoonlord &&
+                Adept.PowerLevel == 2 && Adept.UnlockedPotential)
+            {
+                Adept.PowerLevel++;
+                Main.NewText("Your septima has reached it's pinnacle!", ClearColor);
+            }
+        }
+
+        public override void UpdateEvolution()
+        {
+            if (Adept.PowerLevel == 2)
+            {
+                secondaryDuration = 20;
+            }
         }
 
         public void UpdateMarkedNPCs()

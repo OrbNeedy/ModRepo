@@ -9,7 +9,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     public class None : Special
     {
-        public None(Player player, AdeptPlayer adept) : base(player, adept)
+        public None(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
         }
 

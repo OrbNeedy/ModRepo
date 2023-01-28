@@ -7,6 +7,7 @@ namespace gvmod.Common.Players
 {
     public class AdeptMuse : ModPlayer
     {
+        public bool HasAMuseItem { get; set; }
         public int MinutesWithMuseItems { get; set; }
         public int SecondsWithMuseItems { get; set; }
         public int[] MuseItems { get; private set; }
@@ -46,30 +47,40 @@ namespace gvmod.Common.Players
             tag["MuseSeconds"] = SecondsWithMuseItems;
         }
 
+        public override void ResetEffects()
+        {
+            HasAMuseItem = false;
+        }
+
         public override void PostUpdate()
         {
             AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
+            if (HasAMuseItem)
+            {
+                SecondsWithMuseItems++;
+            }
+
             if (SecondsWithMuseItems >= 3600)
             {
                 SecondsWithMuseItems = 0;
                 MinutesWithMuseItems++;
             }
 
-            if (MinutesWithMuseItems >= 1 && !adept.SPUpgrades[0] && Main.hardMode)
+            if (MinutesWithMuseItems >= 5 && !adept.SPUpgrades[0] && Main.hardMode)
             {
                 adept.SPUpgrades[0] = true;
                 adept.MaxSeptimalPower += 75;
                 Main.NewText("Your septimal energy has increased!", adept.Septima.MainColor);
             }
 
-            if (MinutesWithMuseItems >= 2 && !adept.SPUpgrades[1] && NPC.downedPlantBoss)
+            if (MinutesWithMuseItems >= 20 && !adept.SPUpgrades[1] && NPC.downedPlantBoss)
             {
                 adept.SPUpgrades[1] = true;
                 adept.MaxSeptimalPower += 75;
                 Main.NewText("Your septimal energy has increased yet again!", adept.Septima.MainColor);
             }
 
-            if (MinutesWithMuseItems >= 3 && !adept.SPUpgrades[2] && NPC.downedMoonlord)
+            if (MinutesWithMuseItems >= 45 && !adept.SPUpgrades[2] && NPC.downedMoonlord)
             {
                 adept.SPUpgrades[2] = true;
                 adept.MaxSeptimalPower += 100;

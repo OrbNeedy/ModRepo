@@ -5,7 +5,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     internal class GalvanicRenewal : Special
     {
-        public GalvanicRenewal(Player player, AdeptPlayer adept) : base(player, adept)
+        public GalvanicRenewal(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 2;
             SpecialCooldownTime = 600;

@@ -5,11 +5,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     public abstract class Special
     {
-        public Special(Player player, AdeptPlayer adept)
+        public Special(Player player, AdeptPlayer adept, string type)
         {
             Player = player;
             Adept = adept;
             VelocityMultiplier = new Vector2(1f, 1f);
+            Type = type;
         }
 
         public int SpecialTimer { get; set; }
@@ -21,6 +22,8 @@ namespace gvmod.Common.Players.Septimas.Abilities
         public Player Player { get; }
 
         public AdeptPlayer Adept { get; }
+
+        public string Type { get; set; }
 
         public abstract int UnlockLevel { get; }
 

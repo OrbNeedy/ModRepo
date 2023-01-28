@@ -14,7 +14,7 @@ namespace gvmod.Content.Projectiles
     {
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
-        private float speedLimit;
+        private Color color;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dullahan bolt");
@@ -58,13 +58,15 @@ namespace gvmod.Content.Projectiles
             // For color
             switch (Projectile.ai[0])
             {
-                case 1:
-                    break;
                 case 2:
+
                     break;
-                case 3:
+                case 4:
+                    break;
+                case 6:
                     break;
                 default:
+                    color = Color.White;
                     break;
             }
         }
@@ -72,33 +74,31 @@ namespace gvmod.Content.Projectiles
         public override void AI()
         {
             NPC target = FindClosestNPC(200);
+
             switch (Projectile.ai[1])
             {
                 case 1:
                     // Mizuchi homing
-                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly)
+                    if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
                     {
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                        {
-                            Projectile.velocity.X += 0.4f;
-                        }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                        {
-                            Projectile.velocity.X -= 0.4f;
-                        }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.4f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.4f;
-                        }
+                        Projectile.velocity.X += 0.4f;
+                    }
+                    else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
+                    {
+                        Projectile.velocity.X -= 0.4f;
+                    }
+                    if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
+                    {
+                        Projectile.velocity.Y += 0.4f;
+                    }
+                    else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
+                    {
+                        Projectile.velocity.Y -= 0.4f;
                     }
                     break;
                 case 3:
                     // Improved Mizuchi homing and vasuki effect
-                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly && !target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
+                    if (!target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
                     {
                         if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
                         {
@@ -117,8 +117,6 @@ namespace gvmod.Content.Projectiles
                             Projectile.velocity.Y -= 0.7f;
                         }
                     }
-                    break;
-                default:
                     break;
             }
             base.AI();
@@ -181,28 +179,24 @@ namespace gvmod.Content.Projectiles
             }
         }
 
-        public NPC FindClosestNPC(int range)
+        public NPC FindClosestNPC(float range)
         {
             NPC closestNPC = null;
+            float squaredRange = range * range;
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                var npc = Main.npc[i];
-                if (!npc.active && npc.life <= 0) continue;
-                if (closestNPC == null)
+                NPC target = Main.npc[i];
+                if (target.CanBeChasedBy())
                 {
-                    closestNPC = npc;
-                } else if (Vector2.Distance(Projectile.Center, Main.npc[i].Center) < Vector2.Distance(Projectile.Center, closestNPC.Center))
-                {
-                    closestNPC = npc;
+                    float distance = Vector2.DistanceSquared(target.Center, Projectile.Center);
+                    if (distance < squaredRange)
+                    {
+                        squaredRange = distance;
+                        closestNPC = target;
+                    }
                 }
             }
-            if (Vector2.Distance(Projectile.Center, closestNPC.Center) < range)
-            {
-                return closestNPC;
-            } else
-            {
-                return null;
-            }
+            return closestNPC;
         }
 
         public void AddTaggedNPC(NPC target)

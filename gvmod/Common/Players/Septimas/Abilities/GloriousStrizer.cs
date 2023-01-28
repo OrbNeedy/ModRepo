@@ -11,7 +11,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         private float kudosMultiplier = 1;
         private int strizerIndex;
         private bool strizerExists = false;
-        public GloriousStrizer(Player player, AdeptPlayer adept) : base(player, adept)
+        public GloriousStrizer(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 3;
             SpecialCooldownTime = 600;
@@ -89,7 +89,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
         public void ProjectileUpdate()
         {
             Projectile strizer = Main.projectile[strizerIndex];
-            if (strizer.active && strizer.ModProjectile is GloriousSword)
+            if (strizer.active && strizer.ModProjectile is GloriousSword && strizer.owner == Player.whoAmI)
             {
                 strizerExists = true;
             }

@@ -10,6 +10,7 @@ namespace gvmod.Common.Players
     {
         public Player Player { get; }
         public AdeptPlayer Adept { get; }
+        public AdeptMuse Muse { get; }
 
         public abstract string Name { get; }
 
@@ -31,9 +32,10 @@ namespace gvmod.Common.Players
         public abstract Color MainColor { get; }
         public abstract Color DarkColor { get; }
 
-        protected Septima(AdeptPlayer adept, Player player)
+        protected Septima(AdeptPlayer adept, AdeptMuse muse, Player player)
         {
             Adept = adept;
+            Muse = muse;
             Player = player;
             VelocityMultiplier = new Vector2(1, 1);
             InitializeAbilitiesList();
@@ -71,7 +73,7 @@ namespace gvmod.Common.Players
             {
                 if (Abilities[i] == null)
                 {
-                    specials.Add(new None(Player, Adept));
+                    specials.Add(new None(Player, Adept, ""));
                 }
                 else
                 {
@@ -106,5 +108,9 @@ namespace gvmod.Common.Players
             }
             return specials;
         }
+
+        public abstract void CheckEvolution();
+
+        public abstract void UpdateEvolution();
     }
 }

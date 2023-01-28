@@ -12,7 +12,7 @@ using System;
 
 namespace gvmod.Common.Players.Septimas
 {
-    internal class AzureStriker : Septima
+    public class AzureStriker : Septima
     {
         private int secondaryDuration = 15;
         private int visualProjectileTimer = 14;
@@ -20,7 +20,7 @@ namespace gvmod.Common.Players.Septimas
         private List<Tag> taggedNPCs = new List<Tag>();
         private int flashfieldIndex;
         private bool flashfieldExists = false;
-        public AzureStriker(AdeptPlayer adept, Player player) : base(adept, player)
+        public AzureStriker(AdeptPlayer adept, AdeptMuse muse, Player player) : base(adept, muse, player)
         {
             SecondaryCooldownTime = 300;
             SpBaseUsage = 1f;
@@ -39,14 +39,14 @@ namespace gvmod.Common.Players.Septimas
 
         public override void InitializeAbilitiesList()
         {
-            Abilities.Add(new None(Player, Adept));
-            Abilities.Add(new Astrasphere(Player, Adept));
-            Abilities.Add(new GalvanicPatch(Player, Adept));
-            Abilities.Add(new Sparkcaliburg(Player, Adept));
-            Abilities.Add(new GalvanicRenewal(Player, Adept));
-            Abilities.Add(new VoltaicChains(Player, Adept));
-            Abilities.Add(new GloriousStrizer(Player, Adept));
-            Abilities.Add(new SeptimalSurge(Player, Adept));
+            Abilities.Add(new None(Player, Adept, "S"));
+            Abilities.Add(new Astrasphere(Player, Adept, "S"));
+            Abilities.Add(new GalvanicPatch(Player, Adept, "S"));
+            Abilities.Add(new Sparkcaliburg(Player, Adept, "S"));
+            Abilities.Add(new GalvanicRenewal(Player, Adept, "S"));
+            Abilities.Add(new VoltaicChains(Player, Adept, "S"));
+            Abilities.Add(new GloriousStrizer(Player, Adept, "S"));
+            Abilities.Add(new SeptimalSurge(Player, Adept, "S"));
         }
 
         public override void OnOverheat()
@@ -92,7 +92,6 @@ namespace gvmod.Common.Players.Septimas
 
             foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[tag.NpcIndex];
                 float tagMultiplier = (float)((tag.Level * 0.75));
                 if (tag.ShockIframes == 0)
                 {
@@ -176,6 +175,8 @@ namespace gvmod.Common.Players.Septimas
         public override void Updates()
         {
             UpdateTaggedNPCs();
+            CheckEvolution();
+            UpdateEvolution();
             if (visualProjectileTimer > 0) visualProjectileTimer--;
             if (Adept.IsUsingSecondaryAbility && Adept.TimeSinceSecondary >= SecondaryCooldownTime)
             {
@@ -200,6 +201,28 @@ namespace gvmod.Common.Players.Septimas
             }
 
             Player.velocity *= VelocityMultiplier;
+        }
+
+        public override void CheckEvolution()
+        {
+            if (Adept.Level >= 20 && NPC.downedMechBossAny &&
+                Adept.PowerLevel == 1 && Muse.AnthemLevel > 0 &&
+                Muse.MinutesWithMuseItems >= 10)
+            {
+                Adept.PowerLevel++;
+                Main.NewText("Your septima has reached new heights!", ClearColor);
+            }
+
+            if (Adept.Level >= 45 && NPC.downedMoonlord &&
+                Adept.PowerLevel == 2 && Adept.UnlockedPotential)
+            {
+                Adept.PowerLevel++;
+                Main.NewText("Your septima has reached it's pinnacle!", ClearColor);
+            }
+        }
+
+        public override void UpdateEvolution()
+        {
         }
 
         public void UpdateTaggedNPCs()

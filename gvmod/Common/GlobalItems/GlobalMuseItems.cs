@@ -15,7 +15,7 @@ namespace gvmod.Common.GlobalItems
             {
                 if (item.type == id)
                 {
-                    muse.SecondsWithMuseItems++;
+                    muse.HasAMuseItem = true;
                     break;
                 }
             }

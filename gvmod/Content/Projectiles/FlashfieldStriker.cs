@@ -1,13 +1,18 @@
-﻿using gvmod.Common.Players.Septimas;
-using gvmod.Common.Players;
+﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace gvmod.Content.Projectiles
 {
     public class FlashfieldStriker : ModProjectile
     {
+        private Vector2 position;
+        private int state;
+        private int counting;
+        private Vector2 target;
 
         public override void SetStaticDefaults()
         {
@@ -48,11 +53,23 @@ namespace gvmod.Content.Projectiles
                         Projectile.timeLeft = 2;
                     }
                     break;
-                default:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                case 2:
+                    counting++;
+                    if ((state == 2 && counting >= 60) || (counting >= 120))
                     {
-                        Projectile.timeLeft = 2;
+                        state++;
+                        counting = 0;
                     }
+                    MovementAI();
+                    break;
+                case 3:
+                    counting++;
+                    if ((state == 2 && counting >= 60) || (counting >= 120))
+                    {
+                        state++;
+                        counting = 0;
+                    }
+                    MovementAI();
                     break;
             }
 
@@ -69,6 +86,19 @@ namespace gvmod.Content.Projectiles
                 {
                     Projectile.timeLeft = 2;
                 }
+            }
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            base.OnSpawn(source);
+            state = 1;
+            counting = 0;
+            position = Projectile.Center;
+            if (Projectile.ai[1] >= 2)
+            {
+                Projectile.penetrate = -1;
+                Projectile.timeLeft = 300;
             }
         }
 
@@ -99,6 +129,27 @@ namespace gvmod.Content.Projectiles
             float a = ellipseDimentions.X / 2f;
             float b = ellipseDimentions.Y / 2f;
             return (x * x) / (a * a) + (y * y) / (b * b) <= 1;
+        }
+
+        private void MovementAI()
+        {
+            if (state >= 2)
+            {
+                if (counting <= 1)
+                {
+                    target = Main.MouseWorld;
+                }
+                if (position.Distance(target) > 10)
+                {
+                    Main.NewText("Hmmstd've");
+                    position += position.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
+                }
+            }
+            Projectile.Center = position;
+            if (state == 3)
+            {
+                Projectile.timeLeft = 0;
+            }
         }
     }
 }

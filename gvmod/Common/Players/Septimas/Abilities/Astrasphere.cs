@@ -9,8 +9,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
 {
     internal class Astrasphere : Special
     {
-        private Vector2 basePosition = new Vector2(128);
-        private Vector2 lastPlayerPos = new Vector2(0);
+        private Vector2 basePosition;
+        private Vector2 lastPlayerPos;
+        private Vector2 centerPosition;
+        private Vector2 targetPosition;
+        private int phase;
+        private int baseDamage;
         private int flashfieldIndex;
         private bool flashfieldExists = false;
         private int sphere1Index;
@@ -27,8 +31,13 @@ namespace gvmod.Common.Players.Septimas.Abilities
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
+            basePosition = new Vector2(128);
             lastPlayerPos = player.Center;
             SpecialDuration = 120;
+            centerPosition = Player.Center;
+            phase = 1;
+            baseDamage = 80;
+            targetPosition = Vector2.Zero;
         }
 
         public override int UnlockLevel => 1;
@@ -51,11 +60,14 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             if (BeingUsed)
             {
-                if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(80 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
-                basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
+                if (Type == "S")
+                {
+                    TypeSAttack();
+                }
+                if (Type == "T")
+                {
+                    TypeTAttack();
+                }
             }
         }
 
@@ -94,6 +106,9 @@ namespace gvmod.Common.Players.Septimas.Abilities
                 {
                     BeingUsed = false;
                     Adept.IsUsingSpecialAbility = false;
+                    phase = 1;
+                    centerPosition = Player.Center;
+                    basePosition = new Vector2(128);
                 }
             }
             Player.velocity *= VelocityMultiplier;
@@ -139,6 +154,121 @@ namespace gvmod.Common.Players.Septimas.Abilities
             else
             {
                 sphere3Exists = false;
+            }
+        }
+
+        private void TypeSAttack()
+        {
+            switch(Adept.PowerLevel)
+            {
+                case 1:
+                    baseDamage = 80;
+                    if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
+                    break;
+                case 2:
+                    baseDamage = 100;
+                    if (phase <= 1)
+                    {
+                        targetPosition = Main.MouseWorld;
+                    }
+                    if (phase == 2 && centerPosition.DistanceSQ(targetPosition) <= 10)
+                    {
+                        centerPosition += centerPosition.DirectionTo(targetPosition) * 10;
+                    } else
+                    {
+                        centerPosition = Player.Center;
+                    }
+                    if (phase == 3)
+                    {
+                        basePosition *= 1.1f;
+                    }
+                    if (phase == 1)
+                    {
+                        if (!flashfieldExists)
+                        {
+                            flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                        }
+                    }
+                    if (phase == 1 && SpecialTimer <= 1)
+                    {
+                        sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                        sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                        sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                    }
+                    basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
+                    if (phase < 3 && SpecialTimer == (SpecialDuration - 1))
+                    {
+                        phase++;
+                        if (phase == 1)
+                        {
+                            SpecialTimer = SpecialDuration / 2;
+                        } else
+                        {
+                            SpecialTimer = 0;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void TypeTAttack()
+        {
+            switch(Adept.PowerLevel)
+            {
+                case 1:
+                    baseDamage = 80;
+                    if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 1);
+                    basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
+                    break;
+                case 2:
+                    baseDamage = 100;
+                    if (phase <= 1)
+                    {
+                        targetPosition = Main.MouseWorld;
+                        if (SpecialTimer <= 1)
+                        {
+                            basePosition *= 0.1f;
+                        }
+                    }
+                    if (phase == 2 && centerPosition.Distance(targetPosition) <= 10)
+                    {
+                        centerPosition += centerPosition.DirectionTo(targetPosition) * 10;
+                    }
+                    else
+                    {
+                        centerPosition = Player.Center;
+                    }
+                    if (phase == 3)
+                    {
+                        basePosition *= 1.1f;
+                    }
+                    if (phase == 1 && SpecialTimer <= 1)
+                    {
+                        sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                        sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                        sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), centerPosition + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1, 2);
+                    }
+                    basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
+                    if (phase < 3 && SpecialTimer == (SpecialDuration - 1))
+                    {
+                        phase++;
+                        if (phase == 1)
+                        {
+                            SpecialTimer = SpecialDuration / 2;
+                        }
+                        else
+                        {
+                            SpecialTimer = 0;
+                        }
+                    }
+                    break;
             }
         }
     }

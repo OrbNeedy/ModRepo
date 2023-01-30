@@ -124,7 +124,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     baseDamage = 75;
                     if (SpecialTimer == 275)
                     {
-                        for (int i = -8; i < 9; i++)
+                        for (int i = -9; i < 10; i++)
                         {
                             Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(64 * i, 0f), Vector2.Zero, ModContent.ProjectileType<Thunder>(), (int)(175 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10f, Player.whoAmI);
                         }
@@ -142,7 +142,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     break;
                 case 2:
                     baseDamage = 65;
-                    if (SpecialTimer == 299 && extend > 0)
+                    if (SpecialTimer == (SpecialDuration - 1) && extend > 0)
                     {
                         SpecialTimer = 0;
                         extend--;

@@ -9,7 +9,12 @@ namespace gvmod.Content.Projectiles
 {
     internal class ElectricSphere : ModProjectile
     {
-        private int aiForm = 1;
+        private int origin;
+        private int state;
+        private int counting;
+        private Vector2 axis;
+        private Vector2 position;
+        private Vector2 target;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Electric Sphere");
@@ -34,9 +39,15 @@ namespace gvmod.Content.Projectiles
         public override void AI()
         {
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
-            if (Projectile.ai[0] == -1)
+
+            float rotation = 3.5f;
+            if (adept.PowerLevel >= 2 && adept.Septima is AzureThunderclap)
             {
-                Projectile.penetrate = 2;
+                rotation = 3.5f;
+            }
+            if (Projectile.ai[1] >= 0)
+            {
+                position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
             }
 
             switch (Projectile.ai[1])
@@ -45,20 +56,40 @@ namespace gvmod.Content.Projectiles
                     if (adept.IsUsingSpecialAbility)
                     {
                         Projectile.timeLeft = 2;
-                        Projectile.Center = Projectile.Center.RotatedBy(MathHelper.ToRadians(3.5f), Main.player[Projectile.owner].Center);
+                        Projectile.penetrate = 2;
                     }
                     break;
-                default:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                case 2:
+                    counting++;
+                    if ((state == 2 && counting >= 60) || (counting >= 120))
                     {
-                        Projectile.timeLeft = 2;
+                        state++;
+                        counting = 0;
                     }
+                    MovementAI();
+                    break;
+                case 3:
+                    counting++;
+                    if ((state == 2 && counting >= 60) || (counting >= 120))
+                    {
+                        state++;
+                        counting = 0;
+                    }
+                    MovementAI();
                     break;
             }
         }
 
         public override void OnSpawn(IEntitySource source)
         {
+            Main.NewText("Hello there");
+            state = 1;
+            counting = 0;
+            if (Projectile.ai[1] >= 2)
+            {
+                Projectile.penetrate = -1;
+                Projectile.timeLeft = 300;
+            }
             base.OnSpawn(source);
             Player player = Main.player[Projectile.owner];
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
@@ -68,21 +99,39 @@ namespace gvmod.Content.Projectiles
                 {
                     if (!adept.IsUsingSpecialAbility)
                     {
-                        aiForm = 1;
+                        origin = 1;
                     } else 
                     {
-                        aiForm = 2;
+                        origin = 2;
                     }
                 } else
                 {
-                    aiForm = 0;
+                    origin = 0;
                 }
             }
+            axis = target = player.Center;
+            position = Projectile.Center;
         }
 
-        public override void Kill(int timeLeft)
+        private void MovementAI()
         {
-            base.Kill(timeLeft);
+            if (state == 2)
+            {
+                if (counting <= 1)
+                {
+                    target = Main.MouseWorld;
+                }
+                if (axis.Distance(target) > 10)
+                {
+                    axis += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
+                    position += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
+                }
+            }
+            if (state == 3)
+            {
+                position += position.DirectionFrom(axis).SafeNormalize(Vector2.Zero) * 6;
+            }
+            Projectile.Center = position;
         }
     }
 }

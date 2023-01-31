@@ -9,8 +9,6 @@ namespace gvmod.Common.Players.Septimas.Abilities
     {
         private Vector2 lastPlayerPos = new Vector2(0);
         private int baseDamage;
-        // Essentially, will have to make it behave like vanilla swords, moving rectangular hitboxes
-        private Vector2 sparkcaliburgPosition;
         private int sparkcaliburgIndex;
         private int sparkcaliburgIndex2;
         private int sparkcaliburgIndex3;
@@ -174,10 +172,11 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     }
                     break;
                 case 2:
-                    baseDamage = 175;
+                    baseDamage = 150;
+                    SpecialDuration = 180;
                     if (!sparkcaliburgExists)
                     {
-                        sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * Player.direction, 0f), new Vector2(1f * Player.direction, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, -1, 1);
+                        sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0.01f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, 0, 2);
                     }
                     break;
             }

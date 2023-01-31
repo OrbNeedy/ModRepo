@@ -42,7 +42,8 @@ namespace gvmod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            Item.color = player.GetModPlayer<AdeptPlayer>().Septima.MainColor;
+            bodyColor = player.GetModPlayer<AdeptPlayer>().Septima.MainColor;
+            Item.color = bodyColor;
             if (!player.HasBuff<ArmedPhenomenon3>() && !player.HasBuff<ArmedPhenomenon2A>() && !player.HasBuff<ArmedPhenomenon2B>())
             {
                 player.AddBuff(ModContent.BuffType<ArmedPhenomenon>(), 2, true);

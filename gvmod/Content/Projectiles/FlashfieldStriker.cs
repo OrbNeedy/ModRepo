@@ -40,13 +40,24 @@ namespace gvmod.Content.Projectiles
         {
             Player player = Main.player[Projectile.owner];
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            Projectile.Center = player.Center;
-            if (Projectile.ai[0] == -1)
+            switch (Projectile.ai[0])
             {
-                Projectile.penetrate = 2;
+                case -1:
+                    Projectile.penetrate = 2;
+                    break;
+                default:
+                    Projectile.penetrate = -1;
+                    break;
             }
 
             switch (Projectile.ai[1]) {
+                case 0:
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        Projectile.timeLeft = 2;
+                        Projectile.Center = player.Center;
+                    }
+                    break;
                 case 1:
                     if (adept.IsUsingSpecialAbility)
                     {
@@ -71,21 +82,6 @@ namespace gvmod.Content.Projectiles
                     }
                     MovementAI();
                     break;
-            }
-
-            if (Projectile.ai[1] == 1)
-            {
-                if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
-                {
-                    Projectile.timeLeft = 2;
-                }
-            }
-            if (Projectile.ai[1] == 1)
-            {
-                if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
-                {
-                    Projectile.timeLeft = 2;
-                }
             }
         }
 
@@ -141,7 +137,6 @@ namespace gvmod.Content.Projectiles
                 }
                 if (position.Distance(target) > 10)
                 {
-                    Main.NewText("Hmmstd've");
                     position += position.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
                 }
             }

@@ -45,6 +45,16 @@ namespace gvmod.Content.Projectiles
             {
                 rotation = 3.5f;
             }
+            switch (Projectile.ai[0])
+            {
+                case -1:
+                    Projectile.penetrate = 2;
+                    break;
+                default:
+                    Projectile.penetrate = -1;
+                    break;
+            }
+
             if (Projectile.ai[1] >= 0)
             {
                 position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
@@ -82,7 +92,6 @@ namespace gvmod.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            Main.NewText("Hello there");
             state = 1;
             counting = 0;
             if (Projectile.ai[1] >= 2)

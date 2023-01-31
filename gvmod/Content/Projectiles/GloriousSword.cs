@@ -1,6 +1,7 @@
 ﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Projectiles
@@ -74,6 +75,28 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
             }
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            float widthMultiplier = 60f;
+            float collisionPoint = 0f;
+
+            Rectangle swordHitboxBounds = new Rectangle(0, 0, 400, 400);
+
+            swordHitboxBounds.X = (int)Projectile.position.X - swordHitboxBounds.Width / 2;
+            swordHitboxBounds.Y = (int)Projectile.position.Y - swordHitboxBounds.Height / 2;
+
+            Vector2 tip = Projectile.Left.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 root = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+
+            if (swordHitboxBounds.Intersects(targetHitbox)
+                && (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, tip, widthMultiplier * Projectile.scale, ref collisionPoint)
+                || Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, root, widthMultiplier * Projectile.scale, ref collisionPoint)))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

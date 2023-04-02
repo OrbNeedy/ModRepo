@@ -1,6 +1,7 @@
 ﻿using gvmod.Common.GlobalNPCs;
 using gvmod.Common.Players;
 using gvmod.Content.Buffs;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -69,24 +70,23 @@ namespace gvmod.Content.Projectiles
         private void MovementAI(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            float xPos = 0;
-            float yPos = 0;
-            int velocity = timer * 8;
-            int velocity2 = timer * 6;
+            int xPos = 800;
+            int yPos = 600;
+            int velocityX = 0;
+            int velocityY = 0;
             switch (phase)
             {
                 case 1 or 2:
-                    xPos = 0;
                     if (timer == 240)
                     {
-                        Projectile.damage = (int)(360 * adept.SpecialDamageEquipMult * adept.SpecialDamageEquipMult);
+                        Projectile.damage = (int)(440 * adept.SpecialDamageEquipMult * adept.SpecialDamageEquipMult);
                     }
                     if (timer >= 200)
                     {
-                        yPos -= ((timer - 200) * 4);
+                        velocityY = -10;
                     } else
                     {
-                        yPos = -200;
+                        Projectile.Center = player.Center + new Vector2(0, -200);
                     }
                     if (timer >= 300)
                     {
@@ -97,50 +97,52 @@ namespace gvmod.Content.Projectiles
                         {
                             phase += 2;
                         }
+                        Projectile.Center = Main.MouseWorld + new Vector2(xPos, -yPos);
                         timer = 0;
                     }
                     break;
                 case 3:
-                    xPos = 800 - velocity;
-                    yPos = -600 + velocity2;
-                    if (timer >= 180)
+                    velocityX = -16;
+                    velocityY = 12;
+                    if (timer >= 90)
                     {
                         phase++;
+                        Projectile.Center = Main.MouseWorld + new Vector2(-xPos, -yPos);
                         timer = 0;
                     }
                     break;
                 case 4:
-                    xPos = -800 + velocity;
-                    yPos = -600 + velocity2;
-                    if (timer >= 180)
+                    velocityX = 16;
+                    velocityY = 12;
+                    if (timer >= 90)
                     {
                         phase++;
+                        Projectile.Center = Main.MouseWorld + new Vector2(-xPos, 0);
                         timer = 0;
                     }
                     break;
                 case 5:
-                    xPos = -800 + velocity;
-                    yPos = 0;
-                    if (timer >= 180)
+                    velocityX = 16;
+                    if (timer >= 90)
                     {
                         phase++;
+                        Projectile.Center = Main.MouseWorld + new Vector2(xPos, 0);
                         timer = 0;
                     }
                     break;
                 case 6:
-                    xPos = 800 - velocity;
-                    yPos = 0;
-                    if (timer >= 180)
+                    velocityX = -16;
+                    if (timer >= 90)
                     {
                         phase++;
+                        Projectile.Center = Main.MouseWorld + new Vector2(0, -yPos);
                         timer = 0;
                     }
                     break;
                 case 7:
                     // If ai0 = 1, do an enhanced finish
-                    xPos = 0;
-                    yPos = -600 + velocity2;
-                    if (timer >= 180)
+                    velocityY = 16;
+                    if (timer >= 90)
                     {
                         phase++;
                         timer = 0;
@@ -150,7 +152,7 @@ namespace gvmod.Content.Projectiles
                     Projectile.timeLeft = 0;
                     break;
             }
-            Projectile.Center = player.Center + new Vector2(xPos, yPos);
+            Projectile.velocity = new Vector2(velocityX, velocityY);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

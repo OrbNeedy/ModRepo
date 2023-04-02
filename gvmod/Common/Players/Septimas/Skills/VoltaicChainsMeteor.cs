@@ -8,14 +8,15 @@ namespace gvmod.Common.Players.Septimas.Skills
 {
     public class VoltaicChainsMeteor : Special
     {
+        private int meteorIndex;
         public VoltaicChainsMeteor(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 2;
-            SpecialCooldownTime = 600;
+            SpecialCooldownTime = 1200;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 1500;
+            SpecialDuration = 300;
         }
 
         public override int UnlockLevel => 30;
@@ -30,9 +31,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         {
             if (BeingUsed && SpecialTimer == 1)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0); Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(600, 400), new Vector2(0, -10), ModContent.ProjectileType<ChainTip>(), 0, 15, Player.whoAmI, -1, 2);
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(-600, -400), new Vector2(0, 10), ModContent.ProjectileType<ChainTip>(), 0, 15, Player.whoAmI, -1, 2);
+                meteorIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0); Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0);
             }
         }
 
@@ -42,12 +41,17 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override void Update()
         {
+            Projectile meteor = Main.projectile[meteorIndex];
             if (!BeingUsed)
             {
                 VelocityMultiplier = new Vector2(1f, 1f);
             }
             else
             {
+                if (!meteor.active || meteor.ModProjectile is not ChainMeteor || meteor.owner != Player.whoAmI)
+                {
+                    SpecialTimer = SpecialDuration - 45;
+                }
                 Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)

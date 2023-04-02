@@ -1,47 +1,43 @@
-﻿using Terraria;
+﻿using gvmod.Content.Buffs;
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
-    internal class GalvanicPatch : Special
+    public class SeptimalSurge : Special
     {
-        public GalvanicPatch(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
+        public SeptimalSurge(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 1;
             SpecialCooldownTime = 600;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
-            SpecialTimer = 1;
-            SpecialDuration = 25;
+            SpecialTimer = 1; 
+            SpecialDuration = 60;
         }
 
-        public override int UnlockLevel => 3;
+        public override int UnlockLevel => 65;
 
         public override bool IsOffensive => false;
 
         public override bool GivesIFrames => true;
 
-        public override string Name => "Galvanic Patch";
+        public override string Name => "Septimal Surge";
 
         public override void Effects()
         {
             if (BeingUsed)
             {
-                Dust.NewDust(Player.Center, 10, 10, DustID.GreenTorch);
+                Dust.NewDust(Player.Center, 10, 10, DustID.BlueTorch);
             }
         }
 
         public override void Attack()
         {
-            float maxLife = Player.statLifeMax;
-            float denominator = SpecialDuration;
-            float ammount = maxLife / (4 * denominator);
             if (BeingUsed)
             {
-                Main.NewText("Healing: " + ammount);
-                Main.NewText("Max health: " + maxLife);
-                Main.NewText("Denominator: " + denominator);
-                Player.Heal((int)ammount);
+                Player.AddBuff(ModContent.BuffType<SeptimalSurgeBuff>(), 1800);
             }
         }
 

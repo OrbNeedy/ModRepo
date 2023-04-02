@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
     internal class GloriousStrizer : Special
     {

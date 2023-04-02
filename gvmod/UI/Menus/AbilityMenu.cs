@@ -1,7 +1,7 @@
 ﻿
 
 using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

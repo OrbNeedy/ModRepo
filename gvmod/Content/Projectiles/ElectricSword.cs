@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Projectiles
@@ -187,12 +186,15 @@ namespace gvmod.Content.Projectiles
             swordHitboxBounds.X = (int)Projectile.position.X - swordHitboxBounds.Width / 2;
             swordHitboxBounds.Y = (int)Projectile.position.Y - swordHitboxBounds.Height / 2;
 
-            Vector2 tip = Projectile.Left.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
-            Vector2 root = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 tip = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 root = Projectile.TopLeft.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 root2 = Projectile.BottomLeft.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
 
             if (swordHitboxBounds.Intersects(targetHitbox)
                 && (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, tip, widthMultiplier * Projectile.scale, ref collisionPoint)
-                || Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, root, widthMultiplier * Projectile.scale, ref collisionPoint)))
+                || Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, root, widthMultiplier * Projectile.scale, ref collisionPoint)
+                || Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, root2, widthMultiplier * Projectile.scale, ref collisionPoint)
+                || Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), root, root2, widthMultiplier * Projectile.scale, ref collisionPoint)))
             {
                 return true;
             }

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using Terraria.DataStructures;
@@ -95,15 +95,8 @@ namespace gvmod.Common.Players.Septimas
                 float tagMultiplier = (float)((tag.Level * 0.75));
                 if (tag.ShockIframes == 0)
                 {
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(1, 1).RotatedByRandom(MathHelper.ToRadians(360)) * 16, ModContent.ProjectileType<ElectricBolt>(), 1, 0, Player.whoAmI, tag.NpcIndex, 1);
                     Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, false);
                     tag.ShockIframes = 6;
-                }
-
-                if (visualProjectileTimer <= 0)
-                {
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(1, 1).RotatedByRandom(MathHelper.ToRadians(360)) * 16, ModContent.ProjectileType<ElectricBolt>(), 1, 0, Player.whoAmI, tag.NpcIndex, 1);
-                    visualProjectileTimer = 14;
                 }
             }
         }

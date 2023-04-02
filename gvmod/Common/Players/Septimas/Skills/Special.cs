@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
     public abstract class Special
     {

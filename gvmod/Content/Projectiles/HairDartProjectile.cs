@@ -15,7 +15,6 @@ namespace gvmod.Content.Projectiles
     {
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
-        private int limiter;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bolt");
@@ -46,7 +45,6 @@ namespace gvmod.Content.Projectiles
             
             if (Projectile.ai[0] % 2 == 1)
             {
-                limiter = 16;
                 if (Projectile.ai[1] == 1 || Projectile.ai[1] == 3)
                 {
                     Projectile.penetrate = 5;
@@ -55,9 +53,6 @@ namespace gvmod.Content.Projectiles
                 {
                     Projectile.penetrate = -1;
                 }
-            } else
-            {
-                limiter = 10;
             }
 
             // For color
@@ -77,57 +72,61 @@ namespace gvmod.Content.Projectiles
         public override void AI()
         {
             NPC target = FindClosestNPC(200);
-            limiter++;
-            switch (Projectile.ai[1])
+
+            if (target != null)
             {
-                case 1:
-                    // Mizuchi homing
-                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly)
-                    {
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
+                switch (Projectile.ai[1])
+                {
+                    case 1:
+                        // Mizuchi homing
+                        if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly)
                         {
-                            Projectile.velocity.X += 0.4f;
+                            if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
+                            {
+                                Projectile.velocity.X += 0.4f;
+                            }
+                            else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
+                            {
+                                Projectile.velocity.X -= 0.4f;
+                            }
+                            if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
+                            {
+                                Projectile.velocity.Y += 0.4f;
+                            }
+                            else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
+                            {
+                                Projectile.velocity.Y -= 0.4f;
+                            }
                         }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
+                        break;
+                    case 3:
+                        // Improved Mizuchi homing and vasuki effect
+                        if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly && target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
                         {
-                            Projectile.velocity.X -= 0.4f;
+                            if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
+                            {
+                                Projectile.velocity.X += 0.7f;
+                            }
+                            else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
+                            {
+                                Projectile.velocity.X -= 0.7f;
+                            }
+                            if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
+                            {
+                                Projectile.velocity.Y += 0.7f;
+                            }
+                            else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
+                            {
+                                Projectile.velocity.Y -= 0.7f;
+                            }
                         }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.4f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.4f;
-                        }
-                    }
-                    break;
-                case 3:
-                    // Improved Mizuchi homing and vasuki effect
-                    if (target != null && target.active && target.life > 0 && !target.immortal && !target.friendly && target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
-                    {
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                        {
-                            Projectile.velocity.X += 0.7f;
-                        }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                        {
-                            Projectile.velocity.X -= 0.7f;
-                        }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.7f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.7f;
-                        }
-                    }
-                    break;
-                default:
-                    // Nothing here actually
-                    break;
+                        break;
+                    default:
+                        // Nothing here actually
+                        break;
+                }
             }
+            
             base.AI();
         }
 

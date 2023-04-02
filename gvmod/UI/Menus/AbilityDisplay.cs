@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Terraria.UI;
 using Terraria.GameContent.UI.Elements;
 using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 
 namespace gvmod.UI.Menus
 {

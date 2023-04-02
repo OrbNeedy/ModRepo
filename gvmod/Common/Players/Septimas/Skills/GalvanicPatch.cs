@@ -1,13 +1,13 @@
 ﻿using Terraria;
 using Terraria.ID;
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
-    internal class GalvanicRenewal : Special
+    internal class GalvanicPatch : Special
     {
-        public GalvanicRenewal(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
+        public GalvanicPatch(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
-            ApUsage = 2;
+            ApUsage = 1;
             SpecialCooldownTime = 600;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
@@ -15,13 +15,13 @@ namespace gvmod.Common.Players.Septimas.Abilities
             SpecialDuration = 25;
         }
 
-        public override int UnlockLevel => 35;
+        public override int UnlockLevel => 3;
 
         public override bool IsOffensive => false;
 
         public override bool GivesIFrames => true;
 
-        public override string Name => "Galvanic Renewal";
+        public override string Name => "Galvanic Patch";
 
         public override void Effects()
         {
@@ -35,13 +35,12 @@ namespace gvmod.Common.Players.Septimas.Abilities
         {
             float maxLife = Player.statLifeMax;
             float denominator = SpecialDuration;
-            float ammount = maxLife / denominator;
-            if (ammount <= 0)
-            {
-                ammount = 1;
-            }
+            float ammount = maxLife / (4 * denominator);
             if (BeingUsed)
             {
+                Main.NewText("Healing: " + ammount);
+                Main.NewText("Max health: " + maxLife);
+                Main.NewText("Denominator: " + denominator);
                 Player.Heal((int)ammount);
             }
         }

@@ -1,11 +1,12 @@
 ﻿using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
     public class VoltaicChains : Special
     {
@@ -53,13 +54,11 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     ChainPositions positions = new ChainPositions(Player);
                     if (isNotFirstChain)
                     {
-                        // Pass the IEntitySource from the first chain as a parameter to ai0 or ai1
                         int firstChainSource = Main.projectile[firstChain].whoAmI;
                         Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, firstChainSource, 0);
                     }
                     else
                     {
-                        // Save the IEntitySource from the first chain here
                         firstChain = Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, 0, 1);
                         isNotFirstChain = true;
                     }
@@ -122,11 +121,21 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     break;
                 case 2:
                     baseDamage = 75;
-                    if (SpecialTimer == 275)
+                    if (extend < 2)
                     {
-                        for (int i = -9; i < 10; i++)
+                        if (SpecialTimer >= 299)
                         {
-                            Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(64 * i, 0f), Vector2.Zero, ModContent.ProjectileType<Thunder>(), (int)(175 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10f, Player.whoAmI);
+                            extend--;
+                            SpecialTimer = 238;
+                        }
+                    } else
+                    {
+                        if (SpecialTimer == 299)
+                        {
+                            for (int i = -9; i < 10; i++)
+                            {
+                                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(68 * i, 0f), Vector2.Zero, ModContent.ProjectileType<Thunder>(), (int)(175 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10f, Player.whoAmI);
+                            }
                         }
                     }
                     break;

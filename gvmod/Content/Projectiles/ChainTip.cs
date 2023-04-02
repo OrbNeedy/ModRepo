@@ -1,6 +1,5 @@
 ﻿using gvmod.Common.GlobalNPCs;
 using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,22 +47,22 @@ namespace gvmod.Content.Projectiles
         public override void OnSpawn(IEntitySource source)
         {
             startingPosition = Projectile.Center;
-            if (Projectile.ai[1] == 1)
+            // ai0 is exclusively used to save the first chain's id
+            // Perhaps using a negative number will allow to use it for something else
+            switch (Projectile.ai[1])
             {
-                Projectile.timeLeft = 300;
+                case 1:
+                    Projectile.timeLeft = 300;
+                    break;
+                case 2:
+                    Projectile.timeLeft = 1500;
+                    break;
             }
             base.OnSpawn(source);
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (Projectile.ai[1] == 1)
-            {
-                target.AddBuff(ModContent.BuffType<Chained>(), Projectile.timeLeft);
-            } else
-            {
-                target.GetGlobalNPC<ChainedNPC>().ChainedTime = Main.projectile[(int)Projectile.ai[0]].timeLeft;
-            }
             foreach (int index in trappedNPCs.Keys)
             {
                 if (index == target.whoAmI)
@@ -72,63 +71,96 @@ namespace gvmod.Content.Projectiles
                     return;
                 }
             }
-            trappedNPCs.Add(target.whoAmI, 0);
-            entrapmentPotency.Add(target.whoAmI, 0);
-            base.OnHitNPC(target, damage, knockback, crit);
+            if (!electrify)
+            {
+                switch (Projectile.ai[1])
+                {
+                    case 0:
+                        target.GetGlobalNPC<ChainedNPC>().ChainedTime = Main.projectile[(int)Projectile.ai[0]].timeLeft;
+                        trappedNPCs.Add(target.whoAmI, 0);
+                        entrapmentPotency.Add(target.whoAmI, 0);
+                        break;
+                    case 1:
+                        target.GetGlobalNPC<ChainedNPC>().ChainedTime = Projectile.timeLeft;
+                        trappedNPCs.Add(target.whoAmI, 0);
+                        entrapmentPotency.Add(target.whoAmI, 0);
+                        break;
+                }
+            }
         }
 
         public override void AI()
         {
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
-            if (Projectile.ai[1] != 1)
+            switch (Projectile.ai[1])
             {
-
-                if (Projectile.timeLeft <= 580)
-                {
-                    Projectile.velocity *= 0.25f;
-                }
-                if (Main.projectile[(int)Projectile.ai[0]].timeLeft <= 70)
-                {
-                    aiState = 2;
-                }
-                if (aiState == 2 && !electrify)
-                {
-                    Projectile.timeLeft = desynchTime;
-                    electrify = true;
-                }
-            }
-            if (Projectile.ai[1] == 1)
-            {
-                if (Projectile.timeLeft <= 280)
-                {
-                    Projectile.velocity *= 0.25f;
-                }
-                if (Projectile.timeLeft == 70)
-                {
-                    electrify = true;
-                    aiState = 2;
-                }
-            }
-            if (Projectile.timeLeft <= 70 && electrify)
-            {
-                foreach (int index in trappedNPCs.Keys)
-                {
-                    NPC theNpcInQuestion = Main.npc[index];
-                    if (theNpcInQuestion.active && theNpcInQuestion.life > 0)
+                case 0:
+                    if (Projectile.timeLeft <= 580)
                     {
-                        theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
-                        if (trappedNPCs[index] <= 0)
-                        {
-                            Main.player[Projectile.owner].ApplyDamageToNPC(theNpcInQuestion, (int)(100 * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0, false);
-                            trappedNPCs[index] = 6;
-                        }
+                        Projectile.velocity *= 0.25f;
                     }
-                }
+                    if (Main.projectile[(int)Projectile.ai[0]].timeLeft <= 70)
+                    {
+                        aiState = 2;
+                    }
+                    if (aiState == 2 && !electrify)
+                    {
+                        Projectile.timeLeft = desynchTime;
+                        Projectile.damage *= 4;
+                        electrify = true;
+                    }
+                    break;
+                case 1:
+                    if (Projectile.timeLeft <= 280)
+                    {
+                        Projectile.velocity *= 0.25f;
+                    }
+                    if (Projectile.timeLeft == 70)
+                    {
+                        electrify = true;
+                        aiState = 2;
+                    }
+                    break;
+                case 2:
+                    if (Projectile.timeLeft <= 1500)
+                    {
+                        electrify = true;
+                    }
+                    break;
+            }
+            if (electrify)
+            {
+                ElectrifyAI(adept);
             }
             foreach (int index in trappedNPCs.Keys)
             {
                 trappedNPCs[index]--;
             }
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (electrify)
+            {
+                Player player = Main.player[Projectile.owner];
+                float widthMultiplier = 80f;
+                float collisionPoint = 0f;
+
+                Rectangle chainHitboxBounds = new(0, 0, 3840, 2160);
+
+                chainHitboxBounds.X = (int)player.Center.X - chainHitboxBounds.Width / 2;
+                chainHitboxBounds.Y = (int)player.Center.Y - chainHitboxBounds.Height / 2;
+
+                Vector2 tip = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+                Vector2 root = startingPosition;
+
+                if (chainHitboxBounds.Intersects(targetHitbox)
+                    && Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), tip, root, widthMultiplier * Projectile.scale, ref collisionPoint))
+                {
+                    return true;
+                }
+            }
+            return base.Colliding(projHitbox, targetHitbox);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -159,11 +191,24 @@ namespace gvmod.Content.Projectiles
                 directionToOrigin = origin - center;
                 distanceToOrigin = directionToOrigin.Length();
 
-                Color drawColor = Color.White;
+                SpriteEffects rotationEffect;
+                if (Projectile.spriteDirection == -1)
+                {
+                    rotationEffect = SpriteEffects.FlipHorizontally;
+                } else
+                {
+                    rotationEffect = SpriteEffects.None;
+                }
 
-                Main.EntitySpriteDraw(chainTexture.Value, center - Main.screenPosition,
-                    chainTexture.Value.Bounds, drawColor, chainRotation,
-                    chainTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(chainTexture.Value, 
+                    center - Main.screenPosition,
+                    chainTexture.Value.Bounds,
+                    Color.White, 
+                    chainRotation,
+                    chainTexture.Size() * 0.5f, 
+                    1f, 
+                    rotationEffect, 
+                    0);
             }
             return false;
         }
@@ -191,6 +236,34 @@ namespace gvmod.Content.Projectiles
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             startingPosition = reader.ReadVector2();
+        }
+        
+        private void ElectrifyAI(AdeptPlayer adept)
+        {
+            switch (Projectile.ai[1])
+            {
+                case 0 or 1:
+                    if (Projectile.timeLeft <= 70)
+                    {
+                        foreach (int index in trappedNPCs.Keys)
+                        {
+                            NPC theNpcInQuestion = Main.npc[index];
+                            if (theNpcInQuestion.active && theNpcInQuestion.life > 0)
+                            {
+                                theNpcInQuestion.AddBuff(ModContent.BuffType<VoltaicElectrocution>(), 10);
+                                if (trappedNPCs[index] <= 0)
+                                {
+                                    Main.player[Projectile.owner].ApplyDamageToNPC(theNpcInQuestion, (int)(100 * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult * (1 + (trappedNPCs.Count * 0.5)) * (1 + (entrapmentPotency[index] * 0.5))), 0, 0, false);
+                                    trappedNPCs[index] = 6;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    Projectile.damage = 200;
+                    break;
+            }
         }
     }
 }

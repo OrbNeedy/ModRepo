@@ -1,11 +1,10 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using gvmod.Content.Buffs;
 using gvmod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using Terraria.DataStructures;
@@ -40,12 +39,17 @@ namespace gvmod.Common.Players.Septimas
 
         public override void InitializeAbilitiesList()
         {
+            Abilities.Clear();
             Abilities.Add(new None(Player, Adept, "T"));
             Abilities.Add(new Astrasphere(Player, Adept, "T"));
             Abilities.Add(new GalvanicPatch(Player, Adept, "T"));
             Abilities.Add(new Sparkcaliburg(Player, Adept, "T"));
             Abilities.Add(new GalvanicRenewal(Player, Adept, "T"));
             Abilities.Add(new VoltaicChains(Player, Adept, "T"));
+            if (Adept.PowerLevel >= 2)
+            {
+                Abilities.Add(new VoltaicChainsMeteor(Player, Adept, "T"));
+            }
             Abilities.Add(new GloriousStrizer(Player, Adept, "T"));
             Abilities.Add(new SeptimalSurge(Player, Adept, "T"));
         }
@@ -89,18 +93,11 @@ namespace gvmod.Common.Players.Septimas
 
             foreach (Tag tag in taggedNPCs)
             {
-                NPC theNpcInQuestion = Main.npc[tag.NpcIndex];
                 float tagMultiplier = (float)((tag.Level * 0.75) + 0.25);
                 if (tag.ShockIframes == 0)
                 {
                     Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, false);
                     tag.ShockIframes = 8;
-                }
-
-                if (visualProjectileTimer <= 0)
-                {
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(1, 1).RotatedByRandom(MathHelper.ToRadians(360)) * 16, ModContent.ProjectileType<ElectricBolt>(), 1, 0, Player.whoAmI, tag.NpcIndex, 1);
-                    visualProjectileTimer = 12;
                 }
             }
         }
@@ -204,6 +201,7 @@ namespace gvmod.Common.Players.Septimas
                 Adept.PowerLevel == 1 && Muse.HasAMuseItem)
             {
                 Adept.PowerLevel++;
+                InitializeAbilitiesList();
                 Main.NewText("Your septima has reached new heights!", ClearColor);
             }
 
@@ -211,6 +209,7 @@ namespace gvmod.Common.Players.Septimas
                 Adept.PowerLevel == 2 && Adept.UnlockedPotential)
             {
                 Adept.PowerLevel++;
+                InitializeAbilitiesList();
                 Main.NewText("Your septima has reached it's pinnacle!", ClearColor);
             }
         }

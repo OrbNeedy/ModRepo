@@ -8,7 +8,6 @@ using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using gvmod.Common.Players.Septimas.Abilities;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 

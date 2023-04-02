@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Terraria;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 
@@ -38,7 +38,6 @@ namespace gvmod.Common.Players
             Muse = muse;
             Player = player;
             VelocityMultiplier = new Vector2(1, 1);
-            InitializeAbilitiesList();
         }
 
         public abstract void InitializeAbilitiesList();

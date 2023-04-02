@@ -75,49 +75,52 @@ namespace gvmod.Content.Projectiles
         {
             NPC target = FindClosestNPC(200);
 
-            switch (Projectile.ai[1])
+            if (target != null)
             {
-                case 1:
-                    // Mizuchi homing
-                    if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                    {
-                        Projectile.velocity.X += 0.4f;
-                    }
-                    else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                    {
-                        Projectile.velocity.X -= 0.4f;
-                    }
-                    if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                    {
-                        Projectile.velocity.Y += 0.4f;
-                    }
-                    else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                    {
-                        Projectile.velocity.Y -= 0.4f;
-                    }
-                    break;
-                case 3:
-                    // Improved Mizuchi homing and vasuki effect
-                    if (!target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
-                    {
+                switch (Projectile.ai[1])
+                {
+                    case 1:
+                        // Mizuchi homing
                         if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
                         {
-                            Projectile.velocity.X += 0.7f;
+                            Projectile.velocity.X += 0.4f;
                         }
                         else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
                         {
-                            Projectile.velocity.X -= 0.7f;
+                            Projectile.velocity.X -= 0.4f;
                         }
                         if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
                         {
-                            Projectile.velocity.Y += 0.7f;
+                            Projectile.velocity.Y += 0.4f;
                         }
                         else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
                         {
-                            Projectile.velocity.Y -= 0.7f;
+                            Projectile.velocity.Y -= 0.4f;
                         }
-                    }
-                    break;
+                        break;
+                    case 3:
+                        // Improved Mizuchi homing and vasuki effect
+                        if (!target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
+                        {
+                            if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
+                            {
+                                Projectile.velocity.X += 0.7f;
+                            }
+                            else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
+                            {
+                                Projectile.velocity.X -= 0.7f;
+                            }
+                            if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
+                            {
+                                Projectile.velocity.Y += 0.7f;
+                            }
+                            else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
+                            {
+                                Projectile.velocity.Y -= 0.7f;
+                            }
+                        }
+                        break;
+                }
             }
             base.AI();
         }

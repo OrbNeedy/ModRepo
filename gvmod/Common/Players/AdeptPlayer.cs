@@ -5,7 +5,7 @@ using gvmod.Common.Systems;
 using gvmod.Common.Players.Septimas;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
-using gvmod.Common.Players.Septimas.Abilities;
+using gvmod.Common.Players.Septimas.Skills;
 using System.Collections.Generic;
 using System;
 using Terraria.DataStructures;
@@ -157,6 +157,7 @@ namespace gvmod.Common.Players
         public override void OnEnterWorld(Player player)
         {
             ActiveSlots = new List<int>() { 0, 0, 0, 0};
+            Septima.InitializeAbilitiesList();
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)

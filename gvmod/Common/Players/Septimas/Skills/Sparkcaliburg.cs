@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace gvmod.Common.Players.Septimas.Abilities
+namespace gvmod.Common.Players.Septimas.Skills
 {
     public class Sparkcaliburg : Special
     {
@@ -172,7 +172,7 @@ namespace gvmod.Common.Players.Septimas.Abilities
                     }
                     break;
                 case 2:
-                    baseDamage = 150;
+                    baseDamage = 250;
                     SpecialDuration = 180;
                     if (!sparkcaliburgExists)
                     {

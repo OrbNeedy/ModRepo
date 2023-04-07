@@ -73,7 +73,6 @@ namespace gvmod.Content.Projectiles
                     MovementAI();
                     break;
             }
-            Projectile.Center = position;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -130,6 +129,7 @@ namespace gvmod.Content.Projectiles
                 {
                     position += position.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
                 }
+                Projectile.Center = position;
             }
             if (state == 3)
             {

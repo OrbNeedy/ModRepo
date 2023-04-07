@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players.Septimas;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 

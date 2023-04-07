@@ -12,12 +12,15 @@ namespace gvmod.Common.Players
         public AdeptPlayer Adept { get; }
         public AdeptMuse Muse { get; }
 
+        public abstract List<int> RegularProjectileResistances { get; }
+        public abstract List<int> RegularProjectileVulnerabilites { get; }
+
         public abstract string Name { get; }
 
         public int SecondaryTimer { get; set; }
         public int SecondaryCooldownTime { get; set; }
 
-        public List<Special> Abilities { get; set; } = new List<Special>();
+        public List<Special> Abilities { get; } = new List<Special>();
         public float ApBaseRegen { get; set; }
 
         public float SpBaseRegen { get; set; }

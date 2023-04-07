@@ -37,6 +37,14 @@ namespace gvmod.Common.Players.Septimas
         public override Color MainColor => new Color(44, 205, 195);
         public override Color DarkColor => new Color(12, 179, 173);
 
+        public override List<int> RegularProjectileResistances => new List<int> { ProjectileID.MagnetSphereBolt, 
+            ProjectileID.MartianTurretBolt, ProjectileID.Electrosphere, ModContent.ProjectileType<ElectricSphere>(),
+            ModContent.ProjectileType<ElectricSword>(), ModContent.ProjectileType<ChainTip>(), 
+            ModContent.ProjectileType<ChainMeteor>(), ModContent.ProjectileType<Thunder>(), 
+            ModContent.ProjectileType<ElectricBolt>() };
+
+        public override List<int> RegularProjectileVulnerabilites => new List<int> { };
+
         public override void InitializeAbilitiesList()
         {
             Abilities.Add(new None(Player, Adept, "S"));

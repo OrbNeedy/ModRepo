@@ -63,16 +63,7 @@ namespace gvmod.Content.Projectiles
                         Projectile.timeLeft = 2;
                     }
                     break;
-                case 2:
-                    counting++;
-                    if ((state == 2 && counting >= 60) || (counting >= 120))
-                    {
-                        state++;
-                        counting = 0;
-                    }
-                    MovementAI();
-                    break;
-                case 3:
+                default:
                     counting++;
                     if ((state == 2 && counting >= 60) || (counting >= 120))
                     {
@@ -82,6 +73,7 @@ namespace gvmod.Content.Projectiles
                     MovementAI();
                     break;
             }
+            Projectile.Center = position;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -139,7 +131,6 @@ namespace gvmod.Content.Projectiles
                     position += position.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
                 }
             }
-            Projectile.Center = position;
             if (state == 3)
             {
                 Projectile.timeLeft = 0;

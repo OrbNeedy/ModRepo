@@ -2,11 +2,13 @@
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using gvmod.Content.Items.Accessories;
+using gvmod.Content;
 
 namespace gvmod.Common.Players
 {
     public class AdeptMuse : ModPlayer
     {
+        public bool AnthemBuff { get; set; }
         public bool HasAMuseItem { get; set; }
         public int MinutesWithMuseItems { get; set; }
         public int SecondsWithMuseItems { get; set; }
@@ -18,6 +20,7 @@ namespace gvmod.Common.Players
 
         public override void Initialize()
         {
+            AnthemBuff = false;
             MinutesWithMuseItems = 0;
             SecondsWithMuseItems = 0;
             MuseItems = new int[] { ModContent.ItemType<MirrorShard>(), 
@@ -49,7 +52,39 @@ namespace gvmod.Common.Players
 
         public override void ResetEffects()
         {
+            AnthemBuff = false;
+            AnthemLevel = 0;
             HasAMuseItem = false;
+        }
+
+        public override void PostUpdateBuffs()
+        {
+            AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
+            if (AnthemBuff)
+            {
+                if (HasDjinnLamp)
+                {
+                    AnthemLevel = 5;
+                }
+                else if (HasWholeMirror)
+                {
+                    AnthemLevel = 3;
+                }
+                else
+                {
+                    AnthemLevel = 1;
+                }
+                if (AnthemLevel > 1)
+                {
+                    adept.SPUsageModifier *= 0;
+                }
+                adept.SPRegenModifier += (0.33f * AnthemLevel);
+                adept.SPRegenOverheatModifier += 2;
+                adept.SpecialDamageEquipMult += (0.01f * AnthemLevel);
+                adept.SecondaryDamageEquipMult += (0.01f * AnthemLevel);
+                Player.GetDamage<SeptimaDamageClass>() += (0.01f * AnthemLevel);
+            }
+            base.PostUpdateBuffs();
         }
 
         public override void PostUpdate()

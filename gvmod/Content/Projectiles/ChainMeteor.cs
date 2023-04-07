@@ -17,8 +17,8 @@ namespace gvmod.Content.Projectiles
 {
     public class ChainMeteor : ModProjectile
     {
-        // 1: Accumulate chains 2: Shoot thunders 3: Fly offscreen 4-7: Attack pattern 8: Either the last
-        // movement before disappearing or the movement where it summons a glorious strizer to break the chain
+        // 1: Accumulate chains, 2: Shoot thunders, 3: Fly offscreen, 4-7: Attack pattern, 8: Either the last
+        // movement before disappearing or the enhanced finisher with a Glorious Strizer
         private int phase;
         private int timer;
         public override void SetStaticDefaults()

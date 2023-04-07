@@ -9,7 +9,6 @@ namespace gvmod.Content.Projectiles
 {
     internal class ElectricSphere : ModProjectile
     {
-        private int origin;
         private int state;
         private int counting;
         private Vector2 axis;
@@ -41,10 +40,6 @@ namespace gvmod.Content.Projectiles
             AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
 
             float rotation = 3.5f;
-            if (adept.PowerLevel >= 2 && adept.Septima is AzureThunderclap)
-            {
-                rotation = 3.5f;
-            }
             switch (Projectile.ai[0])
             {
                 case -1:
@@ -55,10 +50,7 @@ namespace gvmod.Content.Projectiles
                     break;
             }
 
-            if (Projectile.ai[1] >= 0)
-            {
-                position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
-            }
+            position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
 
             switch (Projectile.ai[1])
             {
@@ -69,16 +61,7 @@ namespace gvmod.Content.Projectiles
                         Projectile.penetrate = 2;
                     }
                     break;
-                case 2:
-                    counting++;
-                    if ((state == 2 && counting >= 60) || (counting >= 120))
-                    {
-                        state++;
-                        counting = 0;
-                    }
-                    MovementAI();
-                    break;
-                case 3:
+                default:
                     counting++;
                     if ((state == 2 && counting >= 60) || (counting >= 120))
                     {
@@ -88,6 +71,7 @@ namespace gvmod.Content.Projectiles
                     MovementAI();
                     break;
             }
+            Projectile.Center = position;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -101,23 +85,6 @@ namespace gvmod.Content.Projectiles
             }
             base.OnSpawn(source);
             Player player = Main.player[Projectile.owner];
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            if (source == player.GetSource_FromThis())
-            {
-                if (adept.Septima is AzureStriker || adept.Septima is AzureThunderclap)
-                {
-                    if (!adept.IsUsingSpecialAbility)
-                    {
-                        origin = 1;
-                    } else 
-                    {
-                        origin = 2;
-                    }
-                } else
-                {
-                    origin = 0;
-                }
-            }
             axis = target = player.Center;
             position = Projectile.Center;
         }
@@ -140,7 +107,6 @@ namespace gvmod.Content.Projectiles
             {
                 position += position.DirectionFrom(axis).SafeNormalize(Vector2.Zero) * 6;
             }
-            Projectile.Center = position;
         }
     }
 }

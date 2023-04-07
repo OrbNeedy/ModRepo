@@ -1,8 +1,4 @@
-﻿using gvmod.Content;
-using gvmod.Content.Buffs;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace gvmod.Common.Players
 {

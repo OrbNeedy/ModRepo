@@ -282,7 +282,6 @@ namespace gvmod.Common.Players
             {
                 rechargeDelay = rechargeCooldown;
                 RechargeTimer = rechargeDuration;
-                // Insert visual effect
             }
             if (rechargeDelay > 0)
             {

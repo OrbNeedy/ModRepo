@@ -31,8 +31,7 @@ namespace gvmod.Content.Items.Weapons
 		private string tooltip;
 		public override void SetStaticDefaults()		
 		{
-			DisplayName.SetDefault("Dart Leader");
-			Tooltip.SetDefault("");
+            Item.SetNameOverride("Dart Leader");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -80,7 +79,7 @@ namespace gvmod.Content.Items.Weapons
             return clone;
         }
 
-        public override void OnCreate(ItemCreationContext context)
+        public override void OnCreated(ItemCreationContext context)
         {
             for (int i = 0; i < Upgrades.Length; i++)
             {

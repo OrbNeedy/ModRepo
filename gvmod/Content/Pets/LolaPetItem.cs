@@ -16,8 +16,8 @@ namespace gvmod.Content.Pets
         private Color bodyColor = Color.White;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Battle pod");
-            Tooltip.SetDefault("She will drink your oil and call you boss.");
+            // DisplayName.SetDefault("Battle pod");
+            // Tooltip.SetDefault("She will drink your oil and call you boss.");
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

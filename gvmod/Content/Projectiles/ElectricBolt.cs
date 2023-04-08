@@ -13,7 +13,7 @@ namespace gvmod.Content.Projectiles
         private NPC target;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Electric Bolt");
+            // DisplayName.SetDefault("Electric Bolt");
         }
 
         public override void SetDefaults()

@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cobalt headband");
-            Tooltip.SetDefault("Cloth with some cobalt sprinkled in it.\n" +
-                "Increases all septima damage by 10% and reduces SP usage.");
+            // DisplayName.SetDefault("Cobalt headband");
+            /* Tooltip.SetDefault("Cloth with some cobalt sprinkled in it.\n" +
+                "Increases all septima damage by 10% and reduces SP usage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

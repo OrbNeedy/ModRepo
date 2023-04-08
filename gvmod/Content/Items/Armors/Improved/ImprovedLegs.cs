@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.Improved
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Protective Leggins");
-            Tooltip.SetDefault("Thunder thights.\n" +
-                "Increses movement speed by 15% and reduces SP usage.");
+            // DisplayName.SetDefault("Protective Leggins");
+            /* Tooltip.SetDefault("Thunder thights.\n" +
+                "Increses movement speed by 15% and reduces SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

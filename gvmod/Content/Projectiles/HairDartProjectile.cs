@@ -17,7 +17,7 @@ namespace gvmod.Content.Projectiles
         private List<int> npcsTaggedByThis;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bolt");
+            // DisplayName.SetDefault("Bolt");
         }
 
         public override void SetDefaults()
@@ -140,9 +140,9 @@ namespace gvmod.Content.Projectiles
             return base.PreDraw(ref lightColor);
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            base.OnHitNPC(target, damage, knockback, crit);
+            base.OnHitNPC(target, hit, damageDone);
             Septima septima = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>().Septima;
 
             if ((Projectile.ai[1] == 2 || Projectile.ai[1] == 3) && !target.immortal && !target.friendly)

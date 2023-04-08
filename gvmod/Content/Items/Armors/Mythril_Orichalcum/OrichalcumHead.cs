@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Orichalcum fedora");
-            Tooltip.SetDefault("A fedora made of orichalcum and silk.\n" +
-                "Increases all septima damage by 15%\nIncreases movement speed when overheated.");
+            // DisplayName.SetDefault("Orichalcum fedora");
+            /* Tooltip.SetDefault("A fedora made of orichalcum and silk.\n" +
+                "Increases all septima damage by 15%\nIncreases movement speed when overheated."); */
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

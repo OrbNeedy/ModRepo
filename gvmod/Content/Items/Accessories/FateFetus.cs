@@ -9,10 +9,10 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fate in a pod");
-            Tooltip.SetDefault("Gives a secondary passive SP regeneration and 50% chance to not \n" +
+            // DisplayName.SetDefault("Fate in a pod");
+            /* Tooltip.SetDefault("Gives a secondary passive SP regeneration and 50% chance to not \n" +
                 "consume any AP. Decreases overheat SP regeneration, and releases an attack upon \n" +
-                "recovering from overheat.");
+                "recovering from overheat."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

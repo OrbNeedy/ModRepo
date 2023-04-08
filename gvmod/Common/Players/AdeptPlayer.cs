@@ -154,7 +154,7 @@ namespace gvmod.Common.Players
             tag["UnlockedPotential"] = UnlockedPotential;
         }
 
-        public override void OnEnterWorld(Player player)
+        public override void OnEnterWorld()
         {
             ActiveSlots = new List<int>() { 0, 0, 0, 0};
             Septima.InitializeAbilitiesList();
@@ -423,25 +423,36 @@ namespace gvmod.Common.Players
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        public override bool FreeDodge(Player.HurtInfo info)
         {
-            if (IsUsingSpecialAbility && Septima.Abilities[ActiveSlots[slotToUse]].GivesIFrames)
+            if (Player == Main.LocalPlayer)
             {
-                Player.immune = true;
-                return false;
+                return Septima.OnPrevasion(info);
             }
-            return !Septima.OnPrevasion(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
+            return base.FreeDodge(info);
         }
 
-        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
-            base.OnHitByNPC(npc, damage, crit);
+            if (Player == Main.LocalPlayer)
+            {
+                if (IsUsingSpecialAbility && Septima.Abilities[ActiveSlots[slotToUse]].GivesIFrames)
+                {
+                    return true;
+                }
+            }
+            return base.ImmuneTo(damageSource, cooldownCounter, dodgeable);
+        }
+
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
+        {
+            base.OnHitByNPC(npc, hurtInfo);
             Kudos = 0;
         }
 
-        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
-            base.OnHitByProjectile(proj, damage, crit);
+            base.OnHitByProjectile(proj, hurtInfo);
             Kudos = 0;
         }
 

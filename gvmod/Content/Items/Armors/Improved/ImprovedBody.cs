@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.Improved
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Improved Breastplate");
-            Tooltip.SetDefault("Improved with special minerals.\n" +
-                "Increases all septima damage by 12%.");
+            // DisplayName.SetDefault("Improved Breastplate");
+            /* Tooltip.SetDefault("Improved with special minerals.\n" +
+                "Increases all septima damage by 12%."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

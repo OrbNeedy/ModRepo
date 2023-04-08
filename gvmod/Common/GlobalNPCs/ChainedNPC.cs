@@ -1,7 +1,5 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
-using gvmod.Common.Players;
-using gvmod.Content.Buffs;
 
 namespace gvmod.Common.GlobalNPCs
 {
@@ -23,10 +21,6 @@ namespace gvmod.Common.GlobalNPCs
             {
                 npc.velocity *= 0.5f;
             }
-        }
-
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
-        {
         }
     }
 }

@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Chlorophyte
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chlorophyte tophat");
-            Tooltip.SetDefault("Makes you more calmed.\n" +
-                "Decreases SP usage and increases Septima damage.");
+            // DisplayName.SetDefault("Chlorophyte tophat");
+            /* Tooltip.SetDefault("Makes you more calmed.\n" +
+                "Decreases SP usage and increases Septima damage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

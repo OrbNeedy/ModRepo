@@ -1,16 +1,7 @@
-﻿using gvmod.Common.GlobalNPCs;
-using gvmod.Common.Players;
-using gvmod.Content.Buffs;
-using Microsoft.CodeAnalysis;
+﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Projectiles
@@ -23,7 +14,7 @@ namespace gvmod.Content.Projectiles
         private int timer;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chain Meteor");
+            // DisplayName.SetDefault("Chain Meteor");
         }
 
         public override void SetDefaults()

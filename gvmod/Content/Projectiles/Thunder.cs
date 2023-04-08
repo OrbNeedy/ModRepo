@@ -13,7 +13,7 @@ namespace gvmod.Content.Projectiles
         private Asset<Texture2D> thunder = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/RightThunder");
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Thunder");
+            // DisplayName.SetDefault("Thunder");
         }
 
         public override void SetDefaults()

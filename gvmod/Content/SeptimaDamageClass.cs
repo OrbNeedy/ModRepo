@@ -1,7 +1,4 @@
-﻿using gvmod.Common.Players;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.Localization;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace gvmod.Content
@@ -10,7 +7,7 @@ namespace gvmod.Content
     {
         public override void SetDefaultStats(Player player)
         {
-            ClassName.SetDefault("Septima damage");
+            // DisplayName.SetDefault("Septima damage");
             player.GetCritChance<SeptimaDamageClass>() += 0.05f;
         }
 

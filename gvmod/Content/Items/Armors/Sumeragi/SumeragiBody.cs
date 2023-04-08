@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.Sumeragi
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sumeragi uniform jacket");
-            Tooltip.SetDefault("Made to resist the harshest environment while allowing great movement.\n" +
-                "Increases septima damage and reduces SP usage.");
+            // DisplayName.SetDefault("Sumeragi uniform jacket");
+            /* Tooltip.SetDefault("Made to resist the harshest environment while allowing great movement.\n" +
+                "Increases septima damage and reduces SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

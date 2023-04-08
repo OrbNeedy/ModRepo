@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.Sumeragi
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sumeragi uniform leggins");
-            Tooltip.SetDefault("Made to be used in the battlefield, still feel absurdly comfortable.\n" +
-                "Increases septima damage and movement speed.");
+            // DisplayName.SetDefault("Sumeragi uniform leggins");
+            /* Tooltip.SetDefault("Made to be used in the battlefield, still feel absurdly comfortable.\n" +
+                "Increases septima damage and movement speed."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

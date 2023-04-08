@@ -11,8 +11,8 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Transforms the player into an improved armed phenomenon, incresing their \n"
-                             + "capabilities significantly.");
+            /* Tooltip.SetDefault("Transforms the player into an improved armed phenomenon, incresing their \n"
+                             + "capabilities significantly."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

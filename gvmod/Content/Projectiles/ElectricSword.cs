@@ -18,7 +18,7 @@ namespace gvmod.Content.Projectiles
         private Vector2 position;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Luxcaliburg");
+            // DisplayName.SetDefault("Luxcaliburg");
         }
 
         public override void SetDefaults()

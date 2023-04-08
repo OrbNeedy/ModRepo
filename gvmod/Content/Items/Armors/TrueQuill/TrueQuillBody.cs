@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.TrueQuill
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("True Quill Breastplate");
-            Tooltip.SetDefault("It's been upgraded with the best cloth stolen from the cultist.\n" +
-                "Increases all septima damage and reduces SP usage.");
+            // DisplayName.SetDefault("True Quill Breastplate");
+            /* Tooltip.SetDefault("It's been upgraded with the best cloth stolen from the cultist.\n" +
+                "Increases all septima damage and reduces SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

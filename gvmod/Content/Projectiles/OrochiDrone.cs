@@ -17,7 +17,7 @@ namespace gvmod.Content.Projectiles
         private bool firstRotationNegative;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Orochi Drone");
+            // DisplayName.SetDefault("Orochi Drone");
         }
 
         public override void SetDefaults()

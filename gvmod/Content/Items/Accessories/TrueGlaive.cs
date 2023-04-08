@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Binding brand");
-            Tooltip.SetDefault("Transforms the player into the ultimate armed phenomenon, incresing their \n"
-                             + "capabilities a lot.");
+            // DisplayName.SetDefault("Binding brand");
+            /* Tooltip.SetDefault("Transforms the player into the ultimate armed phenomenon, incresing their \n"
+                             + "capabilities a lot."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

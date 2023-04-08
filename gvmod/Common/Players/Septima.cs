@@ -56,10 +56,10 @@ namespace gvmod.Common.Players
         public abstract void FirstAbility();
 
         public abstract void SecondAbilityEffects();
-
+        
         public abstract void SecondAbility();
 
-        public abstract bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter);
+        public abstract bool OnPrevasion(Player.HurtInfo info);
 
         // This method will not run if timer is less than 1, so take that in mind when making attacks
         public abstract void MorbAttack(int timer);

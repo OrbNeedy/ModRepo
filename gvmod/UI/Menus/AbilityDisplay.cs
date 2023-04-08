@@ -78,7 +78,6 @@ namespace gvmod.UI.Menus
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
             var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
             assignedSpecial = adept.Septima.Abilities[specialIndex];
             if (assignedSpecial != null)

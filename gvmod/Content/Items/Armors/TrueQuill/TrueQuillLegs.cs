@@ -12,9 +12,9 @@ namespace gvmod.Content.Items.Armors.TrueQuill
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("True Quill legs");
-            Tooltip.SetDefault("Improved with the finest cloth, stolen from a madman.\n" +
-                "Increases all septima damage, movement speed, and decreases SP usage.");
+            // DisplayName.SetDefault("True Quill legs");
+            /* Tooltip.SetDefault("Improved with the finest cloth, stolen from a madman.\n" +
+                "Increases all septima damage, movement speed, and decreases SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

@@ -7,17 +7,17 @@ namespace gvmod.Common.GlobalNPCs
 {
     public class KudosLoot : GlobalNPC
     {
-        public override void HitEffect(NPC npc, int hitDirection, double damage)
+        public override void HitEffect(NPC npc, NPC.HitInfo hit)
         {
-            base.HitEffect(npc, hitDirection, damage);
+            base.HitEffect(npc, hit);
             if (!npc.friendly && !npc.immortal)
             {
                 AdeptPlayer adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
                 int kudosToBeWon = 0;
                 kudosToBeWon += (int)((npc.lifeMax * 0.15f + 0.15f * npc.damage) * (1 + npc.defense * 0.15f));
-                if (damage < npc.lifeMax)
+                if (hit.Damage < npc.lifeMax)
                 {
-                    kudosToBeWon *= (int)(damage / npc.lifeMax);
+                    kudosToBeWon *= (int)(hit.Damage / npc.lifeMax);
                 }
                 else
                 {

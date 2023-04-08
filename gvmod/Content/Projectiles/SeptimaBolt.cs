@@ -12,7 +12,7 @@ namespace gvmod.Content.Projectiles
         private NPC target;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Septima Bolt");
+            // DisplayName.SetDefault("Septima Bolt");
         }
 
         public override void SetDefaults()

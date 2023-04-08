@@ -9,8 +9,8 @@ namespace gvmod.Content.Items.Ammo
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bolt");
-            Tooltip.SetDefault("A dart made out of your hair. \nThe name \"Hair dart\" is way too uncool.");
+            // DisplayName.SetDefault("Bolt");
+            // Tooltip.SetDefault("A dart made out of your hair. \nThe name \"Hair dart\" is way too uncool.");
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

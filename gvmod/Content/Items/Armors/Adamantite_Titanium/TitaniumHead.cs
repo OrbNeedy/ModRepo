@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Titanium hairclip");
-            Tooltip.SetDefault("Might not be helpful if your hair isn't long enough.\n" +
-                "25% increased main attack damage and septimal damage.");
+            // DisplayName.SetDefault("Titanium hairclip");
+            /* Tooltip.SetDefault("Might not be helpful if your hair isn't long enough.\n" +
+                "25% increased main attack damage and septimal damage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

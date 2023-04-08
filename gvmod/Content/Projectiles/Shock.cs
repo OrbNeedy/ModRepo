@@ -11,7 +11,7 @@ namespace gvmod.Content.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shock");
+            // DisplayName.SetDefault("Shock");
         }
 
         public override void SetDefaults()

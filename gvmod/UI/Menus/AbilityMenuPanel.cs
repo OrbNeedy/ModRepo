@@ -44,18 +44,18 @@ namespace gvmod.UI.Menus
             }
         }
 
-        public override void MouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
-            base.MouseDown(evt);
+            base.LeftMouseDown(evt);
             if (ContainsPoint(evt.MousePosition) && CanMove)
             {
                 DragStart(evt);
             }
         }
 
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
-            base.MouseUp(evt);
+            base.LeftMouseUp(evt);
             if (ContainsPoint(evt.MousePosition) && CanMove)
             {
                 DragEnd(evt);

@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Sumeragi
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sumeragi tophat");
-            Tooltip.SetDefault("A hat used during warfare, it enhances the user's septima.\n" +
-                "Increases SP recover and septima damage.");
+            // DisplayName.SetDefault("Sumeragi tophat");
+            /* Tooltip.SetDefault("A hat used during warfare, it enhances the user's septima.\n" +
+                "Increases SP recover and septima damage."); */
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

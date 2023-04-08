@@ -14,7 +14,7 @@ namespace gvmod.Content.Projectiles
         private Vector2 position;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Glorious Strizer");
+            // DisplayName.SetDefault("Glorious Strizer");
         }
 
         public override void SetDefaults()

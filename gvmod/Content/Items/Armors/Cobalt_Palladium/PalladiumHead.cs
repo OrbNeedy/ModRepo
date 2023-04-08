@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Paladium glasses");
-            Tooltip.SetDefault("Glasses with a paladium frame, the lenses are purely aesthetic.\n" +
-                "Increases all septima damage by 10% and increases SP regen.");
+            // DisplayName.SetDefault("Paladium glasses");
+            /* Tooltip.SetDefault("Glasses with a paladium frame, the lenses are purely aesthetic.\n" +
+                "Increases all septima damage by 10% and increases SP regen."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

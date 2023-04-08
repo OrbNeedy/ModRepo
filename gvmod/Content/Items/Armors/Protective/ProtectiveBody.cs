@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Protective
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Protective Breastplate");
-            Tooltip.SetDefault("It feels surprisingly comfy.\n" +
-                "Increases all septima damge by 5%.");
+            // DisplayName.SetDefault("Protective Breastplate");
+            /* Tooltip.SetDefault("It feels surprisingly comfy.\n" +
+                "Increases all septima damge by 5%."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

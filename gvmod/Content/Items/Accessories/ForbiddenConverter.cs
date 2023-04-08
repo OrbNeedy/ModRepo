@@ -10,7 +10,7 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Upon picking up health, increases SP.");
+            // Tooltip.SetDefault("Upon picking up health, increases SP.");
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

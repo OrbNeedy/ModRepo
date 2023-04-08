@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Hallowed
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hallowed hardhat");
-            Tooltip.SetDefault("If you find something better that could be put in this slot, please tell me.\n" +
-                "Increases SP usage and greatly increases all Septima attack.");
+            // DisplayName.SetDefault("Hallowed hardhat");
+            /* Tooltip.SetDefault("If you find something better that could be put in this slot, please tell me.\n" +
+                "Increases SP usage and greatly increases all Septima attack."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

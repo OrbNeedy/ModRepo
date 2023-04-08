@@ -10,8 +10,8 @@ namespace gvmod.Content.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("You will be resurrected upon death with an Anthem.\n"
-							 + "Part of a bigger picture.");
+			/* Tooltip.SetDefault("You will be resurrected upon death with an Anthem.\n"
+							 + "Part of a bigger picture."); */
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}

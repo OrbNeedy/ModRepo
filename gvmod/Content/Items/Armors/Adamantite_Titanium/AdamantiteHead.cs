@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Adamantite bow");
-            Tooltip.SetDefault("Even boys look good with bows, manly even.\n" +
-                "Increases SP by 80 and all SP recovery by 35%.");
+            // DisplayName.SetDefault("Adamantite bow");
+            /* Tooltip.SetDefault("Even boys look good with bows, manly even.\n" +
+                "Increases SP by 80 and all SP recovery by 35%."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

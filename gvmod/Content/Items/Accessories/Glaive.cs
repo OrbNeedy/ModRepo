@@ -15,8 +15,8 @@ namespace gvmod.Content.Items.Accessories
         private Color bodyColor = Color.White;
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Transforms the player into an armed phenomenon, incresing their \n"
-                             + "capabilities.");
+            /* Tooltip.SetDefault("Transforms the player into an armed phenomenon, incresing their \n"
+                             + "capabilities."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

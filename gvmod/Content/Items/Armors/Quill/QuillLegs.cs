@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Quill
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Protective Leggins");
-            Tooltip.SetDefault("Your legs feel more powerful.\n" +
-                "Increses movement speed by 10%.");
+            // DisplayName.SetDefault("Protective Leggins");
+            /* Tooltip.SetDefault("Your legs feel more powerful.\n" +
+                "Increses movement speed by 10%."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

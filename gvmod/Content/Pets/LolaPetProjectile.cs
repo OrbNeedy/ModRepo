@@ -35,7 +35,7 @@ namespace gvmod.Content.Pets
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lola");
+            // DisplayName.SetDefault("Lola");
 
             Main.projPet[Projectile.type] = true;
         }

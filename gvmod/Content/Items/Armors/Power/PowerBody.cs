@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Power
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Power Breastplate");
-            Tooltip.SetDefault("Greatly amplifies your septima, but doesn't feel as comfy.\n" +
-                "Increases all septima damage and SP usage.");
+            // DisplayName.SetDefault("Power Breastplate");
+            /* Tooltip.SetDefault("Greatly amplifies your septima, but doesn't feel as comfy.\n" +
+                "Increases all septima damage and SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

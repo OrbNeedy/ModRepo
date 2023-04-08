@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Quill
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Protective Breastplate");
-            Tooltip.SetDefault("It slightly amplifies your septima.\n" +
-                "Increases all septima damge by 10%.");
+            // DisplayName.SetDefault("Protective Breastplate");
+            /* Tooltip.SetDefault("It slightly amplifies your septima.\n" +
+                "Increases all septima damge by 10%."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

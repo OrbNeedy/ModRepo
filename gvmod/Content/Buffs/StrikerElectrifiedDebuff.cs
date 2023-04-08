@@ -8,8 +8,8 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Azure electricity");
-            Description.SetDefault("Getting shocked by an azure striker. \nResist with: Azure Striker.");
+            // DisplayName.SetDefault("Azure electricity");
+            // Description.SetDefault("Getting shocked by an azure striker. \nResist with: Azure Striker.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

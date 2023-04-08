@@ -141,17 +141,17 @@ namespace gvmod.Common.Players.Septimas
             }
         }
 
-        public override bool OnPrevasion(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        public override bool OnPrevasion(Player.HurtInfo info)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && Main.CalculateDamagePlayersTake(damage, Player.statDefense) <= ((Player.statLifeMax + Player.statLifeMax2)*2 / 5))
+            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2)*2 / 5))
             {
                 Main.NewText("Prevasion");
                 Adept.TimeSincePrimary = 0;
                 Adept.IsRecharging = false;
                 Adept.RechargeTimer = 0;
                 Player.immune = true;
-                Player.AddImmuneTime(cooldownCounter, 60);
+                Player.AddImmuneTime(ImmunityCooldownID.General, 60);
                 return true;
             }
             return false;

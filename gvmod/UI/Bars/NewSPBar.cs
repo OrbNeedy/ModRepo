@@ -117,18 +117,18 @@ namespace gvmod.UI.Bars
             base.Update(gameTime);
         }
 
-        public override void MouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
-            base.MouseDown(evt);
+            base.LeftMouseDown(evt);
             if (barFrame.ContainsPoint(evt.MousePosition))
             {
                 DragStart(evt);
             }
         }
 
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
-            base.MouseUp(evt);
+            base.LeftMouseUp(evt);
             if (barFrame.ContainsPoint(evt.MousePosition))
             {
                 DragEnd(evt);

@@ -15,7 +15,7 @@ namespace gvmod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flashfield");
+            // DisplayName.SetDefault("Flashfield");
         }
 
         public override void SetDefaults()

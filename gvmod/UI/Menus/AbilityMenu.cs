@@ -49,7 +49,7 @@ namespace gvmod.UI.Menus
                 abilityDisplays[i] = new AbilityDisplay(display, i);
                 abilityDisplays[i].Width.Set(58, 0f);
                 abilityDisplays[i].Height.Set(48, 0f);
-                abilityDisplays[i].OnClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
+                abilityDisplays[i].OnLeftClick += (evt, listener) => { OnSlotClick(evt, listener, currentI); };
             }
             abilityDisplays[0].Left.Set(12, 0);
             abilityDisplays[0].Top.Set(8, 0);
@@ -75,7 +75,7 @@ namespace gvmod.UI.Menus
             selectionRight.Top.Set(54, 0f);
             selectionRight.Width.Set(20, 0f);
             selectionRight.Height.Set(48, 0f);
-            selectionRight.OnMouseDown += OnClickRightArrow;
+            selectionRight.OnLeftMouseDown += OnClickRightArrow;
 
             // Left arrow for selecting
             Asset<Texture2D> leftArrow = ModContent.Request<Texture2D>("gvmod/Assets/Icons/ArrowLeft");
@@ -84,7 +84,7 @@ namespace gvmod.UI.Menus
             selectionLeft.Top.Set(54, 0f);
             selectionLeft.Width.Set(20, 0f);
             selectionLeft.Height.Set(48, 0f);
-            selectionLeft.OnMouseDown += OnClickLeftArrow;
+            selectionLeft.OnLeftMouseDown += OnClickLeftArrow;
 
             // Selection option
             Asset<Texture2D> none = ModContent.Request<Texture2D>("gvmod/Assets/Icons/NoneIcon");
@@ -93,8 +93,8 @@ namespace gvmod.UI.Menus
             specialOption.Top.Set(59, 0f);
             specialOption.Width.Set(26, 0f);
             specialOption.Height.Set(22, 0f);
-            specialOption.OnMouseDown += OnOptionClick;
-            specialOption.OnMouseUp += OnOptionRelease;
+            specialOption.OnLeftMouseDown += OnOptionClick;
+            specialOption.OnLeftMouseUp += OnOptionRelease;
 
             // Level text
             level = new UIText("1", 1.2f);

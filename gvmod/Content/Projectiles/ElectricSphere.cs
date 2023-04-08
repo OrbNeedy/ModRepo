@@ -16,7 +16,7 @@ namespace gvmod.Content.Projectiles
         private Vector2 target;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Electric Sphere");
+            // DisplayName.SetDefault("Electric Sphere");
         }
 
         public override void SetDefaults()

@@ -9,8 +9,8 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Voltaic Electrocution");
-            Description.SetDefault("Shocked by Voltaic Chains.\nThat's gonna leave a mark.");
+            // DisplayName.SetDefault("Voltaic Electrocution");
+            // Description.SetDefault("Shocked by Voltaic Chains.\nThat's gonna leave a mark.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

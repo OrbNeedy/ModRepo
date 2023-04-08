@@ -13,7 +13,7 @@ namespace gvmod.Content.Projectiles
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lightning creeper");
+            // DisplayName.SetDefault("Lightning creeper");
         }
 
         public override void SetDefaults()

@@ -9,11 +9,11 @@ namespace gvmod.Content.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sunglasses of lightning");
-			Tooltip.SetDefault("25% reduced septimal damage\n"
+			// DisplayName.SetDefault("Sunglasses of lightning");
+			/* Tooltip.SetDefault("25% reduced septimal damage\n"
 							 + "50% reduced SP usage\n"
 							 + "90% chance not to consume AP when using a special ability\n"
-							 + "\"Hasta la vista, GV\"");
+							 + "\"Hasta la vista, GV\""); */
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}

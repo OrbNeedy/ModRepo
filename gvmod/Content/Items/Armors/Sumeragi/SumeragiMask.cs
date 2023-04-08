@@ -11,10 +11,10 @@ namespace gvmod.Content.Items.Armors.Sumeragi
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sumeragi mask");
-            Tooltip.SetDefault("A mask to conceal Sumeragi agents' identity when dealing with secet\n" +
+            // DisplayName.SetDefault("Sumeragi mask");
+            /* Tooltip.SetDefault("A mask to conceal Sumeragi agents' identity when dealing with secet\n" +
                 "missions.\n" +
-                "Increases SP recover and septima damage.");
+                "Increases SP recover and septima damage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

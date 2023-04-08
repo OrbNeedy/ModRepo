@@ -1,7 +1,7 @@
 ﻿using gvmod.Common.Players.Septimas;
 using gvmod.Content.Buffs;
 using gvmod.Content.Projectiles;
-using IL.Terraria;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,28 +26,27 @@ namespace gvmod.Common.Players
             }
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
             AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
             foreach (int projectileType in adept.Septima.RegularProjectileVulnerabilites)
             {
-                if (damageSource.SourceProjectileType == projectileType)
+                if (modifiers.DamageSource.SourceProjectileType == projectileType)
                 {
-                    damage /= 2;
+                    modifiers.FinalDamage /= 2;
                     break;
                 }
             }
             switch (adept.Septima)
             {
                 case AzureStriker or AzureThunderclap:
-                    if (damageSource.SourceProjectileType == ModContent.ProjectileType<ElectricWhipProjectile>())
+                    if (modifiers.DamageSource.SourceProjectileType == ModContent.ProjectileType<ElectricWhipProjectile>())
                     {
-                        adept.SeptimalPower += damage;
-                        damage = 0;
+                        adept.SeptimalPower += modifiers.FinalDamage.Flat;
+                        modifiers.FinalDamage *= 0;
                     }
                     break;
             }
-            return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
         }
     }
 }

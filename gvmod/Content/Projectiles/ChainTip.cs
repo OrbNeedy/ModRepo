@@ -24,7 +24,7 @@ namespace gvmod.Content.Projectiles
         private Dictionary<int, int> entrapmentPotency = new Dictionary<int, int>();
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Voltaic chain");
+            // DisplayName.SetDefault("Voltaic chain");
         }
 
         public override void SetDefaults()
@@ -61,7 +61,7 @@ namespace gvmod.Content.Projectiles
             base.OnSpawn(source);
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             foreach (int index in trappedNPCs.Keys)
             {

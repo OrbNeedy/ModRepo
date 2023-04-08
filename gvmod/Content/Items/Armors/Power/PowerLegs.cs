@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Power
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Power armored pants");
-            Tooltip.SetDefault("Made to increase your physical abilities, with no regard for your comfort.\n" +
-                "Increases all septima damage, movement speed, and all SP usage.");
+            // DisplayName.SetDefault("Power armored pants");
+            /* Tooltip.SetDefault("Made to increase your physical abilities, with no regard for your comfort.\n" +
+                "Increases all septima damage, movement speed, and all SP usage."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

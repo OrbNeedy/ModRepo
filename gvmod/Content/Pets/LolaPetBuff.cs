@@ -9,8 +9,8 @@ namespace gvmod.Content.Pets
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lola");
-            Description.SetDefault("She likes you.");
+            // DisplayName.SetDefault("Lola");
+            // Description.SetDefault("She likes you.");
 
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;

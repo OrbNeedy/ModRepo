@@ -10,9 +10,9 @@ namespace gvmod.Content.Items.Armors.Protective
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Protective Leggins");
-            Tooltip.SetDefault("Easy to move with these.\n" +
-                "Increses movement speed by 10%.");
+            // DisplayName.SetDefault("Protective Leggins");
+            /* Tooltip.SetDefault("Easy to move with these.\n" +
+                "Increses movement speed by 10%."); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

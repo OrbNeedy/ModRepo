@@ -11,9 +11,9 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mythril crown");
-            Tooltip.SetDefault("A crown made of mythril. It makes you want to suffer.\n" +
-                "Increases all septima damage by 15%. Increases overheat SP recovery.");
+            // DisplayName.SetDefault("Mythril crown");
+            /* Tooltip.SetDefault("A crown made of mythril. It makes you want to suffer.\n" +
+                "Increases all septima damage by 15%. Increases overheat SP recovery."); */
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }

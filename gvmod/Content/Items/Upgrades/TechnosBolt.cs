@@ -13,8 +13,8 @@ namespace gvmod.Content.Items.Upgrades
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Technos Upgrade");
-            Tooltip.SetDefault("An upgrade for Dart Leader. Only upgrades the weapon to the uppermost left of \nthe inventory. \nUse again to remove the upgrade.");
+            // DisplayName.SetDefault("Technos Upgrade");
+            // Tooltip.SetDefault("An upgrade for Dart Leader. Only upgrades the weapon to the uppermost left of \nthe inventory. \nUse again to remove the upgrade.");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 

@@ -8,8 +8,6 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Anthem");
-            // Description.SetDefault("Your septima is being amplified by a muse.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;

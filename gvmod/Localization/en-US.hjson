@@ -1,0 +1,357 @@
+# This is a test
+Mods: {
+	gvmod: {
+		DamageClasses.SeptimaDamageClass.DisplayName: septimal damage
+
+		CommonItemTooltip: {
+			IncreaseMaxSP: Increases Max SP by {0}.
+			IncreaseMaxSPPercentage: Increases Max SP by {0}%.
+			PercentIncreasedSeptimalDamage: "{0}% increased septimal damage."
+			PercentIncreasedSeptimalCritChance: "{0}% increased septimal critical strike chance."
+			PercentIncreasedSeptimalSpeed: "{0}% increased septimal attack speed."
+			NoUseAPChance: "{0}% chance not to consume AP when using a special Skill."
+		}
+
+		Projectiles: {
+			ElectricSword.DisplayName: Sparkcaliburg
+			ElectricSphere.DisplayName: Electric Sphere
+			ElectricBolt.DisplayName: Electric Bolt
+			DullahanProjectile.DisplayName: Dullahan Bolt
+			ChainTip.DisplayName: Chain Tip
+			ChainMeteor.DisplayName: Chain Meteor
+			LolaPetProjectile.DisplayName: Lola
+			ElectricWhipProjectile.DisplayName: Electric Whip
+			FlashfieldStriker.DisplayName: Flashfield
+			GloriousSword.DisplayName: Glorious Strizer
+			HairDartProjectile.DisplayName: Bolt
+			LightningCreeper.DisplayName: Lightning Creeper
+			OrochiDrone.DisplayName: Orochi Drone
+			SeptimaBolt.DisplayName: Septima Bolt
+			Shock.DisplayName: Shock
+			Thunder.DisplayName: Thunder
+		}
+
+		Items: {
+			LolaPetItem: {
+				Tooltip: An odd sphere that seems to house an AI.
+				DisplayName: Abbandoned Battle Pod
+			}
+
+			ElectricWhip: {
+				Tooltip: ""
+				DisplayName: Electric Whip
+			}
+
+			DartLeader: {
+				Tooltip:
+					'''
+					A gun that allows Azure Striker and Azure Thunderclap users to tag
+					enemies and deal extra damage with Flashfield. Can be upgraded.
+					'''
+				DisplayName: Dart Leader
+			}
+
+			VasukiBolt: {
+				Tooltip:
+					'''
+					An upgrade for Dart Leader that makes tagged targets shoot an extra dart
+					at close enemies. Increases the effect of the Mizuchi upgrade.
+					'''
+				DisplayName: Vasuki Bolt
+			}
+
+			TechnosBolt: {
+				Tooltip: An upgrade for Dart Leader that allows it to shoot additional bolts.
+				DisplayName: Technos Bolt
+			}
+
+			OrochiBolt: {
+				Tooltip:
+					'''
+					An upgrade for Dart Leader that allows it to deploy a drone that shoots 
+					additional darts
+					'''
+				DisplayName: Orochi Bolt
+			}
+
+			NagaBolt: {
+				Tooltip: An upgrade for Dart Leader that allows the darts to penetrate enemies.
+				DisplayName: Naga Bolt
+			}
+
+			MizuchiBolt: {
+				Tooltip:
+					'''
+					An upgrade for Dart Leader that gives a slight homing effect to the darts.
+					The effect is increased with the Vasuki upgrade.
+					'''
+				DisplayName: Mizuchi Bolt
+			}
+
+			DullahanBolt: {
+				Tooltip:
+					'''
+					An upgrade for Dart Leader that increases fire rate and dart damage.
+					Decreased dart penetration if used with Mizuchi and Naga.
+					'''
+				DisplayName: Dullahan Bolt
+			}
+
+			TrueQuillLegs: {
+				Tooltip: ""
+				DisplayName: True Quill Legs
+			}
+
+			TrueQuillBody: {
+				Tooltip: ""
+				DisplayName: True Quill Body
+			}
+
+			SumeragiTophat: {
+				Tooltip: ""
+				DisplayName: Sumeragi Tophat
+			}
+
+			SumeragiMask: {
+				Tooltip: ""
+				DisplayName: Sumeragi Mask
+			}
+
+			SumeragiLegs: {
+				Tooltip: ""
+				DisplayName: Sumeragi Legs
+			}
+
+			SumeragiBody: {
+				Tooltip: ""
+				DisplayName: Sumeragi Body
+			}
+
+			SumeragiBeret: {
+				Tooltip: ""
+				DisplayName: Sumeragi Beret
+			}
+
+			QuillLegs: {
+				Tooltip: ""
+				DisplayName: Quill Legs
+			}
+
+			QuillBody: {
+				Tooltip: ""
+				DisplayName: Quill Body
+			}
+
+			ProtectiveLegs: {
+				Tooltip: ""
+				DisplayName: Protective Legs
+			}
+
+			ProtectiveBody: {
+				Tooltip: ""
+				DisplayName: Protective Body
+			}
+
+			PowerLegs: {
+				Tooltip: ""
+				DisplayName: Power Legs
+			}
+
+			PowerBody: {
+				Tooltip: ""
+				DisplayName: Power Body
+			}
+
+			OrichalcumHead: {
+				Tooltip: ""
+				DisplayName: Orichalcum Head
+			}
+
+			MythrilHead: {
+				Tooltip: ""
+				DisplayName: Mythril Head
+			}
+
+			ImprovedLegs: {
+				Tooltip: ""
+				DisplayName: Improved Legs
+			}
+
+			ImprovedBody: {
+				Tooltip: ""
+				DisplayName: Improved Body
+			}
+
+			HallowedHead: {
+				Tooltip: ""
+				DisplayName: Hallowed Head
+			}
+
+			PalladiumHead: {
+				Tooltip: ""
+				DisplayName: Palladium Head
+			}
+
+			CobaltHead: {
+				Tooltip: ""
+				DisplayName: Cobalt Head
+			}
+
+			ChlorophyteHead: {
+				Tooltip: ""
+				DisplayName: Chlorophyte Head
+			}
+
+			TitaniumHead: {
+				Tooltip: ""
+				DisplayName: Titanium Head
+			}
+
+			AdamantiteHead: {
+				Tooltip: ""
+				DisplayName: Adamantite Head
+			}
+
+			HairDart: {
+				Tooltip:
+					'''
+					A dart made out of metal and hair, used as ammo for the Dart Leader.
+					Calling it a "Hair Dart" is way too uncool.
+					'''
+				DisplayName: Bolt
+			}
+
+			TrueGlaive: {
+				Tooltip: ""
+				DisplayName: Binding Brand
+			}
+
+			SpecialConverter: {
+				Tooltip: ""
+				DisplayName: Special Converter
+			}
+
+			SecretConverter: {
+				Tooltip: ""
+				DisplayName: Secret Converter
+			}
+
+			SealingGlasses: {
+				Tooltip: ""
+				DisplayName: Sealing Glasses
+			}
+
+			MirrorShard: {
+				Tooltip: ""
+				DisplayName: Mirror Shard
+			}
+
+			Grimoire: {
+				Tooltip: ""
+				DisplayName: Grimoire
+			}
+
+			Glaive: {
+				Tooltip: ""
+				DisplayName: Glaive
+			}
+
+			ForbiddenConverter: {
+				Tooltip: ""
+				DisplayName: Forbidden Converter
+			}
+
+			FateFetus: {
+				Tooltip:
+					'''
+					Gives a secondary passive SP regeneration and {0}% chance to not
+					consume any AP. Decreases overheat SP regeneration, and releases an attack upon 
+					recovering from overheat.
+					'''
+				DisplayName: Fate in a pod
+			}
+
+			FalconQuill: {
+				Tooltip: ""
+				DisplayName: Falcon Quill
+			}
+
+			ArcanumConverter: {
+				Tooltip: ""
+				DisplayName: Arcanum Converter
+			}
+		}
+
+		Buffs: {
+			LolaPetBuff: {
+				Description: She seems attached to you for taking her with you.
+				DisplayName: Lola
+			}
+
+			VoltaicElectrocution: {
+				Description: Your body is getting painfully electrocuted.
+				DisplayName: Voltaic Electrocution
+			}
+
+			ThunderclapElectrifiedDebuff: {
+				Description: Mods.gvmod.Buffs.ThunderclapElectrifiedDebuff.Description
+				DisplayName: Thunderclap Electrified Debuff
+			}
+
+			StrikerElectrifiedDebuff: {
+				Description: Mods.gvmod.Buffs.StrikerElectrifiedDebuff.Description
+				DisplayName: Striker Electrified Debuff
+			}
+
+			SeptimalSurgeBuff: {
+				Description: Your septima is stimulated. Doubled septimal damage.
+				DisplayName: Septimal Surge
+			}
+
+			GoodElectrified: {
+				Description: Thanks for the recharge.
+				DisplayName: Electrified
+			}
+
+			Chained: {
+				Description: You were pierced by a chain and can't move.
+				DisplayName: Chained
+			}
+
+			ArmedPhenomenon3: {
+				Description: The true glaive has driven out your septima's power.
+				DisplayName: Armed Phenomenon
+			}
+
+			ArmedPhenomenon2B: {
+				Description: The falcon quill has driven out your septima's power.
+				DisplayName: Armed Phenomenon
+			}
+
+			ArmedPhenomenon2A: {
+				Description: The grimoire has driven out your septima's power.
+				DisplayName: Armed Phenomenon
+			}
+
+			ArmedPhenomenon: {
+				Description: The glaive has driven out your septima's power.
+				DisplayName: Armed Phenomenon
+			}
+
+			AnthemBuff: {
+				Description: Your septima is being amplified by a muse.
+				DisplayName: Anthem
+			}
+		}
+
+		Keybinds: {
+			"Ability menu(Soon).DisplayName": Mods.gvmod.Keybinds.Ability menu(Soon).DisplayName
+			"Fourth special ability.DisplayName": Mods.gvmod.Keybinds.Fourth special ability.DisplayName
+			"Third special ability.DisplayName": Mods.gvmod.Keybinds.Third special ability.DisplayName
+			"Second special ability.DisplayName": Mods.gvmod.Keybinds.Second special ability.DisplayName
+			"First special ability.DisplayName": Mods.gvmod.Keybinds.First special ability.DisplayName
+			"Secondary septimal ability/cooldown time.DisplayName": Mods.gvmod.Keybinds.Secondary septimal ability/cooldown time.DisplayName
+			"Primary septimal ability.DisplayName": Mods.gvmod.Keybinds.Primary septimal ability.DisplayName
+		}
+	}
+}

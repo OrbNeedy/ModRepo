@@ -8,8 +8,6 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Septimal surge");
-            // Description.SetDefault("Your septima is getting to new heights.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;

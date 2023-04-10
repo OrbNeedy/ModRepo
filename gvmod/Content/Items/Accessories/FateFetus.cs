@@ -1,20 +1,27 @@
 ﻿using gvmod.Common.Players;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
 {
     public class FateFetus : ModItem
     {
+        public static readonly int apConsumeChance = 50;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Fate in a pod");
-            /* Tooltip.SetDefault("Gives a secondary passive SP regeneration and 50% chance to not \n" +
-                "consume any AP. Decreases overheat SP regeneration, and releases an attack upon \n" +
-                "recovering from overheat."); */
+            /* Tooltip.SetDefault(); */
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+        }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(apConsumeChance);
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
         }
 
         public override void SetDefaults()

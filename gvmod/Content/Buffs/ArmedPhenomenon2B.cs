@@ -8,8 +8,6 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Armed Phenomenon");
-            // Description.SetDefault("The falcon quill has driven out your septima's power.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;

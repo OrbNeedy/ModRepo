@@ -22,7 +22,7 @@ namespace gvmod.Content.Items.Weapons
         private int orochiTimer;
         private static Asset<Texture2D> glowmask;
 
-        private static string[] upgradeDescriptions = new string[6] { "\nNaga: Adds a piercing effect and increases speed.", 
+        private static readonly string[] upgradeDescriptions = new string[6] { "\nNaga: Adds a piercing effect and increases speed.", 
 			"\nMizuchi: Adds a slight homing effect to the darts.",  
 			"\nTechnos: Adds two extra darts when shooting.",
 			"\nOrochi: Deploys a drone when shooting that shoots extra darts, these darts \ndon't inherit other upgrades.", 

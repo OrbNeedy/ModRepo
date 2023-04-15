@@ -201,14 +201,6 @@ namespace gvmod.Common.Players
                     AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 1;
-                    if (special.IsOffensive)
-                    {
-                        cantMove = true;
-                    }
-                    if (special.GivesIFrames)
-                    {
-                        SpecialInvincibility = true;
-                    }
                 }
             }
             if (KeybindSystem.special3.JustPressed)
@@ -247,8 +239,27 @@ namespace gvmod.Common.Players
                     }
                 }
             }
+        }
 
-            
+        public override void SetControls()
+        {
+            if (cantMove)
+            {
+                Player.controlLeft = false;
+                Player.controlRight = false;
+                Player.controlUp = false;
+                Player.controlDown = false;
+                Player.controlJump = false;
+                Player.controlQuickHeal = false;
+                Player.controlQuickMana = false;
+                Player.controlUseItem = false;
+                Player.controlHook = false;
+                Player.controlDownHold = false;
+                Player.controlMount = false;
+                Player.controlTorch = false;
+                Player.gravControl = false;
+                Player.gravControl2 = false;
+            }
         }
 
         public override void PostUpdateMiscEffects()
@@ -270,7 +281,16 @@ namespace gvmod.Common.Players
             }
             if (IsUsingSpecialAbility)
             {
-                Septima.Abilities[ActiveSlots[slotToUse]]?.Effects();
+                Special special = Septima.Abilities[ActiveSlots[slotToUse]];
+                special?.Effects();
+                if (special.IsOffensive)
+                {
+                    cantMove = true;
+                }
+                if (special.GivesIFrames)
+                {
+                    SpecialInvincibility = true;
+                }
             }
 
             if (IsOverheated)
@@ -296,22 +316,6 @@ namespace gvmod.Common.Players
             } else
             {
                 IsRecharging = false;
-            }
-        }
-
-        public override void SetControls()
-        {
-            if (cantMove)
-            {
-                Player.controlJump = false;
-                Player.controlLeft = false;
-                Player.controlRight = false;
-                Player.controlDown = false;
-                Player.controlUp = false;
-                Player.controlHook = false;
-                Player.controlUseItem = false;
-                Player.controlUseTile = false;
-                Player.controlMount = false;
             }
         }
 
@@ -353,7 +357,6 @@ namespace gvmod.Common.Players
             }
             Septima.Updates();
             Septima.MiscEffects();
-
         }
 
         private void FigureAvailability()

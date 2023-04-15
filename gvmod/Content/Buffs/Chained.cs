@@ -15,6 +15,7 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
+            player.GetModPlayer<ChainedPlayer>().Chained = true;
         }
     }
 }

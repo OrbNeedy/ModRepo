@@ -17,7 +17,7 @@ Mods: {
 			ElectricSphere.DisplayName: Electric Sphere
 			ElectricBolt.DisplayName: Electric Bolt
 			DullahanProjectile.DisplayName: Dullahan Bolt
-			ChainTip.DisplayName: Chain Tip
+			ChainTip.DisplayName: Chain
 			ChainMeteor.DisplayName: Chain Meteor
 			LolaPetProjectile.DisplayName: Lola
 			ElectricWhipProjectile.DisplayName: Electric Whip
@@ -29,6 +29,9 @@ Mods: {
 			SeptimaBolt.DisplayName: Septima Bolt
 			Shock.DisplayName: Shock
 			Thunder.DisplayName: Thunder
+			Beowulf.DisplayName: Beowulf Bullet
+			GreedSnatcher.DisplayName: Greed Snatcher
+			PhotonLaser.DisplayName: Photon Laser
 		}
 
 		Items: {
@@ -280,6 +283,43 @@ Mods: {
 				Tooltip: ""
 				DisplayName: Arcanum Converter
 			}
+
+			Border: {
+				DisplayName: Border
+				Tooltip:
+					'''
+					A gun that shoots special bullets to penetrate Prevasion.
+					Right click to switch to Greed Snatcher bullets, which disables the target's septima 
+					for a while if they have a septima.
+					Greed Snatcher requires a special type of bullet to be used, and is always shot as a 
+					burst of three bullets.
+					Greed Snatcher doesn't disable special skills.
+					'''
+			}
+
+			BeowulfBullet: {
+				DisplayName: Beowulf Bullet
+				Tooltip: Bullets that can penetrate Prevasion, used by the border and upgrades.
+			}
+
+			GreedSnatcherBullet: {
+				DisplayName: Greed Snatcher Bullet
+				Tooltip: Bullets that can inflict chaff, used by the border and upgrades.
+			}
+
+			Border2: {
+				DisplayName: Border II
+				Tooltip:
+					'''
+					An upgrade of the Border that shoots Photon Lasers instead of Beowulf bullets.
+					Photon Lasers do not use ammo.
+					Right click to switch to Greed Snatcher bullets, which disables the target's septima 
+					for a while if they have a septima.
+					Greed Snatcher requires a special type of bullet to be used, and is always shot as a 
+					burst of three bullets.
+					Greed Snatcher doesn't disable special skills.
+					'''
+			}
 		}
 
 		Buffs: {
@@ -341,6 +381,15 @@ Mods: {
 			AnthemBuff: {
 				Description: Your septima is being amplified by a muse.
 				DisplayName: Anthem
+			}
+
+			Chaff: {
+				DisplayName: Chaff
+				Description:
+					'''
+					Can't regenerate SP. Can be cleared with a skill that instantly 
+					recovers all SP.
+					'''
 			}
 		}
 

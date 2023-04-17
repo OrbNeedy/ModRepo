@@ -11,6 +11,8 @@ using System;
 using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
+using gvmod.Content.Projectiles;
+using System.Linq;
 
 namespace gvmod.Common.Players
 {
@@ -75,6 +77,9 @@ namespace gvmod.Common.Players
         private bool cantMove;
         public bool SpecialInvincibility { get; private set; }
 
+        private List<int> projectileGlobalPrevasionPenetration { get; set; }
+        private List<int> npcGlobalPrevasionPenetration { get; set; }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -99,6 +104,9 @@ namespace gvmod.Common.Players
             SPUpgrades = new bool[3] {false, false, false};
             PowerLevel = 1;
             slotToUse = 0;
+
+            projectileGlobalPrevasionPenetration = new List<int> { };
+            npcGlobalPrevasionPenetration = new List<int> { };
         }
 
         public override void LoadData(TagCompound tag)
@@ -183,14 +191,6 @@ namespace gvmod.Common.Players
                     AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 0;
-                    if (special.IsOffensive)
-                    {
-                        cantMove = true;
-                    }
-                    if (special.GivesIFrames)
-                    {
-                        SpecialInvincibility = true;
-                    }
                 }
             }
             if (KeybindSystem.special2.JustPressed)
@@ -211,14 +211,6 @@ namespace gvmod.Common.Players
                     AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 2;
-                    if (special.IsOffensive)
-                    {
-                        cantMove = true;
-                    }
-                    if (special.GivesIFrames)
-                    {
-                        SpecialInvincibility = true;
-                    }
                 }
             }
             if (KeybindSystem.special4.JustPressed)
@@ -229,14 +221,6 @@ namespace gvmod.Common.Players
                     AbilityPower -= (special.ApUsage * APUsageModifier);
                     special.SpecialTimer = 0;
                     slotToUse = 3;
-                    if (special.IsOffensive)
-                    {
-                        cantMove = true;
-                    }
-                    if (special.GivesIFrames)
-                    {
-                        SpecialInvincibility = true;
-                    }
                 }
             }
         }
@@ -430,7 +414,14 @@ namespace gvmod.Common.Players
         {
             if (Player == Main.LocalPlayer)
             {
-                return Septima.OnPrevasion(info);
+                if (projectileGlobalPrevasionPenetration.Contains(info.DamageSource.SourceProjectileType) || 
+                    npcGlobalPrevasionPenetration.Contains(info.DamageSource.SourceNPCIndex))
+                {
+                    Main.NewText("Penetrates all prevasion");
+                } else
+                {
+                    return Septima.OnPrevasion(info);
+                }
             }
             return base.FreeDodge(info);
         }

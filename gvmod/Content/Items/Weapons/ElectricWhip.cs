@@ -10,8 +10,6 @@ namespace gvmod.Content.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Electric Whip");
-			// Tooltip.SetDefault("A whip charged with electric energy.");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 

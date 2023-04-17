@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.GameInput;
+﻿using Terraria.GameInput;
 using Terraria.ModLoader;
 
 namespace gvmod.Common.Players

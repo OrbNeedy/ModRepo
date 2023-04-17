@@ -15,10 +15,6 @@ namespace gvmod.Content.Projectiles
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
         private Color color;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Dullahan bolt");
-        }
 
         public override void SetDefaults()
         {

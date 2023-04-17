@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Ammo
 {
-    public class HairDart : ModItem
+    public class BeowulfBullet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -14,16 +14,16 @@ namespace gvmod.Content.Items.Ammo
 
         public override void SetDefaults()
         {
-            Item.width = 14;
-            Item.height = 10;
+            Item.width = 16;
+            Item.height = 6;
 
-            Item.damage = 1;
-            Item.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
+            Item.damage = 10;
+            Item.DamageType = DamageClass.Ranged;
 
             Item.maxStack = 9999;
             Item.consumable = true;
-            Item.knockBack = 2f;
-            Item.value = Item.sellPrice(0, 0, 0, 10);
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 0, 0, 30);
             Item.rare = ItemRarityID.Green;
 
             Item.ammo = Item.type;
@@ -31,8 +31,15 @@ namespace gvmod.Content.Items.Ammo
 
         public override void AddRecipes()
         {
-            CreateRecipe(99)
-                .AddRecipeGroup(RecipeGroupID.IronBar)
+            CreateRecipe(132)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+                .AddIngredient(ItemID.Ruby)
+                .AddTile(TileID.Anvils)
+                .Register();
+
+            CreateRecipe(132)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+                .AddIngredient(ItemID.Diamond)
                 .AddTile(TileID.Anvils)
                 .Register();
         }

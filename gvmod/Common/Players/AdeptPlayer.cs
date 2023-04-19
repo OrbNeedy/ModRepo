@@ -13,6 +13,7 @@ using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using gvmod.Content.Projectiles;
 using System.Linq;
+using Terraria.WorldBuilding;
 
 namespace gvmod.Common.Players
 {
@@ -105,8 +106,13 @@ namespace gvmod.Common.Players
             PowerLevel = 1;
             slotToUse = 0;
 
-            projectileGlobalPrevasionPenetration = new List<int> { };
-            npcGlobalPrevasionPenetration = new List<int> { };
+            projectileGlobalPrevasionPenetration = new List<int> { ProjectileID.SaucerDeathray, 
+                ProjectileID.PhantasmalDeathray, ProjectileID.VortexLaser, ProjectileID.FairyQueenSunDance, 
+                ProjectileID.EyeBeam, ProjectileID.HeatRay, ProjectileID.DeathSickle,
+                ModContent.ProjectileType<Beowulf>(), ModContent.ProjectileType<PhotonLaser>(), 
+                ModContent.ProjectileType<GreedSnatcher>()
+            };
+            npcGlobalPrevasionPenetration = new List<int> { NPCID.MoonLordLeechBlob };
         }
 
         public override void LoadData(TagCompound tag)
@@ -248,13 +254,6 @@ namespace gvmod.Common.Players
 
         public override void PostUpdateMiscEffects()
         {
-            if (SeptimalPower <= 0 && TimeSincePrimary <= 10)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    Dust.NewDust(Player.position, 10, 10, DustID.Electric, 0, 0);
-                }
-            }
             if (IsUsingPrimaryAbility && CanUsePrimary)
             {
                 Septima.FirstAbilityEffects();
@@ -295,7 +294,7 @@ namespace gvmod.Common.Players
             {
                 RechargeTimer--;
                 SPRegenModifier = MaxSeptimalPower2 / 60;
-                TimeSincePrimary = 60;
+                TimeSincePrimary = 0;
                 IsRecharging = true;
             } else
             {
@@ -414,13 +413,20 @@ namespace gvmod.Common.Players
         {
             if (Player == Main.LocalPlayer)
             {
-                if (projectileGlobalPrevasionPenetration.Contains(info.DamageSource.SourceProjectileType) || 
-                    npcGlobalPrevasionPenetration.Contains(info.DamageSource.SourceNPCIndex))
+                if (Septima.PrePrevasion(info))
                 {
-                    Main.NewText("Penetrates all prevasion");
+                    if (projectileGlobalPrevasionPenetration.Contains(info.DamageSource.SourceProjectileType) ||
+                        npcGlobalPrevasionPenetration.Contains(info.DamageSource.SourceNPCIndex))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return Septima.OnPrevasion(info);
+                    }
                 } else
                 {
-                    return Septima.OnPrevasion(info);
+                    return false;
                 }
             }
             return base.FreeDodge(info);
@@ -436,6 +442,12 @@ namespace gvmod.Common.Players
                 }
             }
             return base.ImmuneTo(damageSource, cooldownCounter, dodgeable);
+        }
+
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            Septima.OnHit(ref modifiers);
+            base.ModifyHurt(ref modifiers);
         }
 
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
@@ -514,14 +526,10 @@ namespace gvmod.Common.Players
 
         public void UpdateSeptimalPower()
         {
-            if (SeptimalPower <= 0)
+            if (SeptimalPower <= 0 && !IsOverheated)
             {
-                if (!IsOverheated)
-                {
-                    OnOverheat();
-                }
-                IsOverheated = true;
-                SeptimalPower = 0;
+                OnOverheat();
+                overheat(60);
             }
             if (SeptimalPower >= MaxSeptimalPower2)
             {
@@ -580,10 +588,10 @@ namespace gvmod.Common.Players
             if (IsUsingPrimaryAbility && !IsOverheated && !(IsUsingSecondaryAbility || IsUsingSpecialAbility))
             {
                 if (SeptimalPower > 0) SeptimalPower -= (Septima.SpBaseUsage * SPUsageModifier);
-                TimeSincePrimary = 0;
+                TimeSincePrimary = 60;
             }
-            if (!IsUsingPrimaryAbility || IsOverheated || IsUsingSecondaryAbility || IsUsingSpecialAbility) TimeSincePrimary++;
-            if (TimeSincePrimary >= 60)
+            if (!IsUsingPrimaryAbility || IsOverheated || IsUsingSecondaryAbility || IsUsingSpecialAbility) TimeSincePrimary--;
+            if (TimeSincePrimary <= 0)
             {
                 if (!IsOverheated)
                 {
@@ -593,7 +601,7 @@ namespace gvmod.Common.Players
                 {
                     SeptimalPower += (Septima.SpBaseOverheatRegen * SPRegenOverheatModifier);
                 }
-                TimeSincePrimary = 60;
+                TimeSincePrimary = 0;
             }
         }
 
@@ -620,6 +628,20 @@ namespace gvmod.Common.Players
             foreach (Special special in Septima.Abilities)
             {
                 special.Update();
+            }
+        }
+
+        public void overheat(int additionalTime = 0)
+        {
+            if (!IsOverheated)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Dust.NewDust(Player.position, 10, 10, DustID.Electric, 0, 0);
+                }
+                TimeSincePrimary = additionalTime;
+                SeptimalPower = -1;
+                IsOverheated = true;
             }
         }
 

@@ -123,7 +123,7 @@ namespace gvmod.UI.Bars
 
         public override void Update(GameTime gameTime)
         {
-            Player player = Main.CurrentPlayer;
+            Player player = Main.LocalPlayer;
             if (area.ContainsPoint(Main.MouseScreen))
             {
                 player.mouseInterface = true;

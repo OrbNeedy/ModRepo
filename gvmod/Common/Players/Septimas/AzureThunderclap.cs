@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
-using Terraria.DataStructures;
 using System;
+using Microsoft.VisualBasic;
+using Terraria.WorldBuilding;
+using gvmod.Content.Buffs;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -36,16 +38,38 @@ namespace gvmod.Common.Players.Septimas
         public override Color ClearColor => new Color(77, 175, 232);
         public override Color MainColor => new Color(44, 143, 205);
         public override Color DarkColor => new Color(12, 112, 179);
-        
-        public override List<int> RegularProjectileResistances => new List<int> { ProjectileID.MagnetSphereBolt,
-            ProjectileID.MartianTurretBolt, ProjectileID.Electrosphere, ProjectileID.ElectrosphereMissile,
-            ProjectileID.MagnetSphereBall, ProjectileID.VortexLightning, ProjectileID.VortexVortexLightning,
-            ProjectileID.VortexVortexPortal, ModContent.ProjectileType<ElectricSphere>(),
-            ModContent.ProjectileType<ElectricSword>(), ModContent.ProjectileType<ChainTip>(),
-            ModContent.ProjectileType<ChainMeteor>(), ModContent.ProjectileType<Thunder>(),
-            ModContent.ProjectileType<ElectricBolt>()};
 
-        public override List<int> RegularProjectileVulnerabilites => new List<int> { };
+        public override Dictionary<int, float> ProjectileInteractions => new Dictionary<int, float>
+        {
+            [ProjectileID.MagnetSphereBolt] = 1,
+            [ProjectileID.MartianTurretBolt] = 2,
+            [ProjectileID.Electrosphere] = 1,
+            [ProjectileID.ElectrosphereMissile] = 1,
+            [ProjectileID.MagnetSphereBall] = 1,
+            [ProjectileID.VortexLightning] = 1,
+            [ProjectileID.VortexVortexLightning] = 1,
+            [ProjectileID.VortexVortexPortal] = 1,
+            [ProjectileID.CultistBossLightningOrb] = 0.5f,
+            [ProjectileID.CultistBossLightningOrbArc] = 0.5f,
+            [ProjectileID.DD2LightningBugZap] = 1.5f,
+            [ModContent.ProjectileType<ElectricSphere>()] = -0.5f,
+            [ModContent.ProjectileType<ElectricSword>()] = -0.5f,
+            [ModContent.ProjectileType<GloriousSword>()] = -1f,
+            [ModContent.ProjectileType<ChainTip>()] = -0.5f,
+            [ModContent.ProjectileType<ChainMeteor>()] = -0.5f,
+            [ModContent.ProjectileType<Thunder>()] = -0.5f,
+            [ModContent.ProjectileType<ElectricBolt>()] = -0.5f,
+            [ProjectileID.WaterBolt] = -1.5f,
+            [ProjectileID.WaterStream] = -1,
+            [ProjectileID.WaterGun] = -1,
+            [ProjectileID.InfluxWaver] = -1,
+            [ProjectileID.EyeBeam] = -1.5f
+        };
+
+        public override Dictionary<int, float> NPCInteractions => new Dictionary<int, float> {
+            [NPCID.WaterSphere] = -1.5f,
+            [NPCID.DetonatingBubble] = -1f
+        };
 
         public override void InitializeAbilitiesList()
         {
@@ -85,7 +109,7 @@ namespace gvmod.Common.Players.Septimas
         {
             if (Player.wet)
             {
-                SpBaseUsage = Adept.MaxSeptimalPower;
+                Adept.overheat(60);
                 return;
             }
             else
@@ -141,20 +165,95 @@ namespace gvmod.Common.Players.Septimas
             }
         }
 
+        public override bool PrePrevasion(Player.HurtInfo info)
+        {
+            if (info.DamageSource.TryGetCausingEntity(out Entity entity))
+            {
+                if (entity is Projectile projectile)
+                {
+                    if (ProjectileInteractions.TryGetValue(projectile.type, out float interactions))
+                    {
+                        switch (interactions)
+                        {
+                            case < 0:
+                                if (interactions == -1.5f)
+                                {
+                                    Adept.overheat(60);
+                                }
+                                return false;
+                            default:
+                                return true;
+                        }
+                    }
+                }
+                else if (entity is NPC npc)
+                {
+                    if (NPCInteractions.TryGetValue(npc.type, out float interactions))
+                    {
+                        switch (interactions)
+                        {
+                            case < 0:
+                                if (interactions == -1.5f)
+                                {
+                                    Adept.overheat(60);
+                                }
+                                return false;
+                            default:
+                                return true;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         public override bool OnPrevasion(Player.HurtInfo info)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2)*2 / 5))
+            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2) * 1/5))
             {
                 Main.NewText("Prevasion");
                 Adept.TimeSincePrimary = 0;
                 Adept.IsRecharging = false;
                 Adept.RechargeTimer = 0;
-                Player.immune = true;
-                Player.AddImmuneTime(ImmunityCooldownID.General, 60);
                 return true;
             }
             return false;
+        }
+
+        public override void OnHit(ref Player.HurtModifiers modifiers)
+        {
+            if (modifiers.DamageSource.TryGetCausingEntity(out Entity entity))
+            {
+                if (entity is Projectile projectile)
+                {
+                    if (NPCInteractions.TryGetValue(projectile.type, out float interactions))
+                    {
+                        switch (interactions)
+                        {
+                            case -1.5f:
+                                Adept.overheat(60);
+                                return;
+                            default:
+                                return;
+                        }
+                    }
+                }
+                else if (entity is NPC npc)
+                {
+                    if (NPCInteractions.TryGetValue(npc.type, out float interactions))
+                    {
+                        switch (interactions)
+                        {
+                            case -1.5f:
+                                Adept.overheat(60);
+                                return;
+                            default:
+                                return;
+                        }
+                    }
+                }
+            }
         }
 
         public override void MorbAttack(int timer)

@@ -16,7 +16,7 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            // Chaffed Player
+            player.GetModPlayer<ChaffedPlayer>().Chaffed = true;
         }
     }
 }

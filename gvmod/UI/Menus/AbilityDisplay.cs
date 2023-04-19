@@ -48,7 +48,7 @@ namespace gvmod.UI.Menus
                     Main.hoverItemName = assignedSpecial.Name;
                 }
             }
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             if (assignedSpecial != null && assignedSpecial is not None)
             {
                 if (!assignedSpecial.InCooldown)
@@ -78,7 +78,7 @@ namespace gvmod.UI.Menus
 
         public override void Update(GameTime gameTime)
         {
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             assignedSpecial = adept.Septima.Abilities[specialIndex];
             if (assignedSpecial != null)
             {

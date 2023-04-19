@@ -33,10 +33,12 @@ namespace gvmod.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            // Also check if the septima is not Carrera's when the septima is added
-            if (target.GetModPlayer<AdeptPlayer>().Septima != null)
+            // Also check if the septima is not Carrera's, when the septima is added
+            AdeptPlayer adept = target.GetModPlayer<AdeptPlayer>();
+            if (adept.Septima != null)
             {
-                target.AddBuff(ModContent.BuffType<Chaff>(), 60);
+                adept.overheat(0);
+                target.AddBuff(ModContent.BuffType<Chaff>(), 300);
             }
             base.OnHitPlayer(target, info);
         }

@@ -119,7 +119,7 @@ namespace gvmod.UI.Menus
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             if (adept.Septima.Name == "Human") Deactivate();
         }
 
@@ -151,7 +151,7 @@ namespace gvmod.UI.Menus
 
         private void OnClickRightArrow(UIMouseEvent evt, UIElement listeningElement)
         {
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex < posibleList.Count - 1)
             {
@@ -165,7 +165,7 @@ namespace gvmod.UI.Menus
 
         private void OnClickLeftArrow(UIMouseEvent evt, UIElement listeningElement)
         {
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex > 0)
             {
@@ -180,7 +180,7 @@ namespace gvmod.UI.Menus
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            var adept = Main.CurrentPlayer.GetModPlayer<AdeptPlayer>();
+            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             if (!CheckPlayerAbilities(adept) || Main.dedServ)
             {
                 specialOption.specialIndex = 0;

@@ -12,8 +12,9 @@ namespace gvmod.Common.Players
         public AdeptPlayer Adept { get; }
         public AdeptMuse Muse { get; }
 
-        public abstract List<int> RegularProjectileResistances { get; }
-        public abstract List<int> RegularProjectileVulnerabilites { get; }
+        // Key is the id, Value is the type of interaction
+        public abstract Dictionary<int, float> ProjectileInteractions { get; }
+        public abstract Dictionary<int, float> NPCInteractions { get; }
 
         public abstract string Name { get; }
 
@@ -59,7 +60,27 @@ namespace gvmod.Common.Players
         
         public abstract void SecondAbility();
 
+        /// <summary> 
+        /// <para>Runs before prevasion.</para>
+        /// </summary>
+        /// <returns>False to skip <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/> and instead return false.</returns>
+        
+        public abstract bool PrePrevasion(Player.HurtInfo info);
+
+        /// <summary> 
+        /// <para>Runs before damage is taken, is skipped if the projectile or NPC is in any of the 
+        /// <seealso cref="AdeptPlayer.projectileGlobalPrevasionPenetration"/>, 
+        /// <seealso cref="AdeptPlayer.projectileGlobalPrevasionIgnore"/>, 
+        /// <seealso cref="AdeptPlayer.npcGlobalPrevasionPenetration"/>, 
+        /// <seealso cref="AdeptPlayer.npcGlobalPrevasionIgnore"/> lists.</para>
+        /// </summary>
+        /// <returns>True to ignore damage for this attack.</returns>
         public abstract bool OnPrevasion(Player.HurtInfo info);
+
+        /// <summary> 
+        /// <para>Runs before damage is taken, does not run if <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/> returns true.</para>
+        /// </summary>
+        public abstract void OnHit(ref Player.HurtModifiers modifiers);
 
         // This method will not run if timer is less than 1, so take that in mind when making attacks
         public abstract void MorbAttack(int timer);

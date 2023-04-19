@@ -24,7 +24,7 @@ namespace gvmod.Content.Items.Weapons
         public override void SetDefaults()
         {
             Item.DamageType = DamageClass.Ranged;
-            Item.damage = 78;
+            Item.damage = 82;
             Item.knockBack = 8;
             Item.rare = ItemRarityID.Orange;
 
@@ -33,10 +33,10 @@ namespace gvmod.Content.Items.Weapons
             Item.shootSpeed = 16;
 
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
+            Item.useTime = 8;
+            Item.useAnimation = 8;
             // Laser sound candidates: 
-            Item.UseSound = SoundID.Item12; // Item14; // Item33; // Item91;
+            Item.UseSound = SoundID.Item14; // Item33; // Item91; // Item12; // origin
             Item.noMelee = true;
             Item.autoReuse = true;
         }
@@ -69,6 +69,10 @@ namespace gvmod.Content.Items.Weapons
                     type = ModContent.ProjectileType<GreedSnatcher>();
                     damage *= 4;
                     damage /= 5;
+                } else
+                {
+                    damage *= 7;
+                    damage /= 5;
                 }
             }
             base.ModifyShootStats(player, ref position, ref velocity, ref type, ref damage, ref knockback);
@@ -79,7 +83,7 @@ namespace gvmod.Content.Items.Weapons
             if (!greedSnatcher)
             {
                 Item.useAmmo = ModContent.ItemType<GreedSnatcherBullet>();
-                Item.UseSound = SoundID.Shatter;
+                Item.UseSound = SoundID.DD2_EtherianPortalOpen;
                 Item.useAnimation = 15;
                 Item.useTime = 5;
                 Item.reuseDelay = 20;
@@ -89,9 +93,9 @@ namespace gvmod.Content.Items.Weapons
             else
             {
                 Item.useAmmo = 0;
-                Item.UseSound = SoundID.Item12; // Item14; // Item33; // Item91;
-                Item.useAnimation = 10;
-                Item.useTime = 10;
+                Item.UseSound = SoundID.Item14; // Item33; // Item91; // Item12; // origin
+                Item.useAnimation = 8;
+                Item.useTime = 8;
                 Item.reuseDelay = 0;
                 greedSnatcher = false;
                 Main.NewText("Switched to Photon laser.");

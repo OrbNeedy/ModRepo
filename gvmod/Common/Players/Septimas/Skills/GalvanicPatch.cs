@@ -12,7 +12,7 @@ namespace gvmod.Common.Players.Septimas.Skills
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 25;
+            SpecialDuration = 30;
         }
 
         public override int UnlockLevel => 3;
@@ -33,7 +33,7 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override void Attack()
         {
-            float maxLife = Player.statLifeMax;
+            float maxLife = Player.statLifeMax + Player.statLifeMax2;
             float denominator = SpecialDuration;
             float ammount = maxLife / (4 * denominator);
             if (BeingUsed)

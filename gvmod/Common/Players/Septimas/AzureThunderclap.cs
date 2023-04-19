@@ -66,7 +66,8 @@ namespace gvmod.Common.Players.Septimas
             [ProjectileID.EyeBeam] = -1.5f
         };
 
-        public override Dictionary<int, float> NPCInteractions => new Dictionary<int, float> {
+        public override Dictionary<int, float> NPCInteractions => new Dictionary<int, float> 
+        {
             [NPCID.WaterSphere] = -1.5f,
             [NPCID.DetonatingBubble] = -1f
         };
@@ -78,6 +79,7 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new Astrasphere(Player, Adept, "T"));
             Abilities.Add(new GalvanicPatch(Player, Adept, "T"));
             Abilities.Add(new Sparkcaliburg(Player, Adept, "T"));
+            Abilities.Add(new SplitSecond(Player, Adept, "T"));
             Abilities.Add(new GalvanicRenewal(Player, Adept, "T"));
             Abilities.Add(new VoltaicChains(Player, Adept, "T"));
             if (Adept.PowerLevel >= 2)
@@ -181,6 +183,12 @@ namespace gvmod.Common.Players.Septimas
                                     Adept.overheat(60);
                                 }
                                 return false;
+                            case > 1:
+                                if (interactions >= 1.5f)
+                                {
+                                    Adept.SeptimalPower += 50;
+                                }
+                                return false;
                             default:
                                 return true;
                         }
@@ -196,6 +204,12 @@ namespace gvmod.Common.Players.Septimas
                                 if (interactions == -1.5f)
                                 {
                                     Adept.overheat(60);
+                                }
+                                return false;
+                            case > 1:
+                                if (interactions >= 1.5f)
+                                {
+                                    Adept.SeptimalPower += 50;
                                 }
                                 return false;
                             default:
@@ -227,12 +241,18 @@ namespace gvmod.Common.Players.Septimas
             {
                 if (entity is Projectile projectile)
                 {
-                    if (NPCInteractions.TryGetValue(projectile.type, out float interactions))
+                    if (ProjectileInteractions.TryGetValue(projectile.type, out float interactions))
                     {
                         switch (interactions)
                         {
                             case -1.5f:
                                 Adept.overheat(60);
+                                return;
+                            case 1 or 0.5f:
+                                modifiers.IncomingDamageMultiplier *= 0.5f;
+                                return;
+                            case > 1:
+                                modifiers.IncomingDamageMultiplier *= 0;
                                 return;
                             default:
                                 return;
@@ -247,6 +267,9 @@ namespace gvmod.Common.Players.Septimas
                         {
                             case -1.5f:
                                 Adept.overheat(60);
+                                return;
+                            case 1 or 0.5f:
+                                modifiers.IncomingDamageMultiplier *= 0.5f;
                                 return;
                             default:
                                 return;

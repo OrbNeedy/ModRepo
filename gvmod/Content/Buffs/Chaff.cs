@@ -14,6 +14,11 @@ namespace gvmod.Content.Buffs
             Main.buffNoTimeDisplay[Type] = false;
         }
 
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+            npc.defense /= 5;
+        }
+
         public override void Update(Player player, ref int buffIndex)
         {
             player.GetModPlayer<ChaffedPlayer>().Chaffed = true;

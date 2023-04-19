@@ -82,8 +82,8 @@ namespace gvmod.Content.Items.Weapons
             {
                 Item.useAmmo = ModContent.ItemType<BeowulfBullet>();
                 Item.UseSound = SoundID.Item11;
-                Item.useAnimation = 15;
-                Item.useTime = 15;
+                Item.useAnimation = 14;
+                Item.useTime = 14;
                 Item.reuseDelay = 0;
                 greedSnatcher = false;
                 Main.NewText("Switched to Beowulf bullets.");

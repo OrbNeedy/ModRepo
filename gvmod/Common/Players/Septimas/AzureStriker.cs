@@ -7,10 +7,7 @@ using System.Collections.Generic;
 using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
-using Terraria.DataStructures;
 using System;
-using gvmod.Content.Buffs;
-using Terraria.WorldBuilding;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -84,6 +81,10 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new VoltaicChains(Player, Adept, "S"));
             Abilities.Add(new GloriousStrizer(Player, Adept, "S"));
             Abilities.Add(new SeptimalSurge(Player, Adept, "S"));
+            Abilities.Add(new SeptimalShield(Player, Adept, "S"));
+            Abilities.Add(new InfiniteSurge(Player, Adept, "S"));
+            Abilities.Add(new AlchemicalField(Player, Adept, "S"));
+            Abilities.Sort(SortAbilities);
         }
 
         public override void OnOverheat()

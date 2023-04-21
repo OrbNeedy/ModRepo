@@ -88,6 +88,10 @@ namespace gvmod.Common.Players.Septimas
             }
             Abilities.Add(new GloriousStrizer(Player, Adept, "T"));
             Abilities.Add(new SeptimalSurge(Player, Adept, "T"));
+            Abilities.Add(new SeptimalShield(Player, Adept, "S"));
+            Abilities.Add(new InfiniteSurge(Player, Adept, "S"));
+            Abilities.Add(new AlchemicalField(Player, Adept, "S"));
+            Abilities.Sort(SortAbilities);
         }
 
         public override void OnOverheat()

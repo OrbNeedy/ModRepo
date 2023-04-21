@@ -398,7 +398,7 @@ namespace gvmod.Common.Players
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if ((muse.HasMirrorShard || muse.HasWholeMirror || muse.HasDjinnLamp) && muse.AnthemLevel <= 0)
+            if ((muse.HasAMuseItem) && muse.AnthemLevel <= 0)
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
                 Player.statLife += fullHealth;

@@ -52,6 +52,9 @@ namespace gvmod.Common.Players
 
         public override void ResetEffects()
         {
+            HasMirrorShard = false;
+            HasWholeMirror = false;
+            HasDjinnLamp = false;
             AnthemBuff = false;
             AnthemLevel = 0;
             HasAMuseItem = false;

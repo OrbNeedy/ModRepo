@@ -1,52 +1,43 @@
-﻿using Terraria;
+﻿using gvmod.Content.Buffs;
 using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria;
 
 namespace gvmod.Common.Players.Septimas.Skills
 {
-    internal class GalvanicRenewal : Special
+    public class InfiniteSurge : Special
     {
-        public GalvanicRenewal(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
+        public InfiniteSurge(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 2;
             SpecialCooldownTime = 600;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 30;
+            SpecialDuration = 60;
         }
 
-        public override int UnlockLevel => 35;
+        public override int UnlockLevel => 27;
 
         public override bool IsOffensive => false;
 
         public override bool GivesIFrames => true;
 
-        public override string Name => "Galvanic Renewal";
+        public override string Name => "Infinite Surge";
 
         public override void Effects()
         {
             if (BeingUsed)
             {
-                Dust.NewDust(Player.Center, 10, 10, DustID.GreenTorch);
+                Dust.NewDust(Player.Center, 10, 10, DustID.BlueTorch);
             }
         }
 
         public override void Attack()
         {
-            float maxLife = Player.statLifeMax + Player.statLifeMax2;
-            float denominator = SpecialDuration;
-            float ammount = maxLife / denominator;
-            if (ammount <= 0)
-            {
-                ammount = 1;
-            }
-            if (Player.GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField)
-            {
-                ammount *= 2;
-            }
             if (BeingUsed)
             {
-                Player.Heal((int)ammount);
+                Player.AddBuff(ModContent.BuffType<InfiniteSurgeBuff>(), 1800);
             }
         }
 

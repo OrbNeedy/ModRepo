@@ -6,6 +6,15 @@ namespace gvmod.Common.GlobalNPCs
 {
     public class NPCExpLoot : GlobalNPC
     {
+        public override void OnKill(NPC npc)
+        {
+            if (Main.player[npc.lastInteraction].GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField)
+            {
+                npc.value *= 2;
+            }
+            base.OnKill(npc);
+        }
+
         public override void HitEffect(NPC npc, NPC.HitInfo hit)
         {
             if (!npc.friendly && !npc.immortal)
@@ -20,6 +29,7 @@ namespace gvmod.Common.GlobalNPCs
                 if (Main.expertMode) amount *= 1.2f;
                 if (Main.masterMode) amount *= 1.5f;
                 if (Main.hardMode) amount *= 2f;
+                if (Main.player[npc.lastInteraction].GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField) amount *= 2;
                 if (lastplayer != null)
                 {
                     lastplayer.Experience += (int)amount;

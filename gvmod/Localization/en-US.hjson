@@ -391,6 +391,21 @@ Mods: {
 					recovers all SP.
 					'''
 			}
+
+			AlchemicalFieldBuff: {
+				DisplayName: Alchemical Field Buff
+				Description: Mods.gvmod.Buffs.AlchemicalFieldBuff.Description
+			}
+
+			InfiniteSurgeBuff: {
+				DisplayName: Infinite Surge Buff
+				Description: Mods.gvmod.Buffs.InfiniteSurgeBuff.Description
+			}
+
+			SeptimalShieldBuff: {
+				DisplayName: Septimal Shield Buff
+				Description: Mods.gvmod.Buffs.SeptimalShieldBuff.Description
+			}
 		}
 
 		Keybinds: {

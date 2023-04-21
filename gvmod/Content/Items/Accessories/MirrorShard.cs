@@ -27,6 +27,7 @@ namespace gvmod.Content.Items.Accessories
 		{
 			var muse = player.GetModPlayer<AdeptMuse>();
 			muse.HasMirrorShard = true;
+			muse.HasAMuseItem = true;
 		}
 	}
 }

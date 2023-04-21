@@ -3,6 +3,7 @@ using Terraria;
 using gvmod.Common.Players.Septimas.Skills;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
+using System.Linq;
 
 namespace gvmod.Common.Players
 {
@@ -17,6 +18,41 @@ namespace gvmod.Common.Players
         public abstract Dictionary<int, float> NPCInteractions { get; }
 
         public abstract string Name { get; }
+
+        public static int SortAbilities(Special special1, Special special2)
+        {
+            if (special1 == null || special1 is None)
+            {
+                if (special2 == null || special1 is None)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                if (special2 == null || special2 is None)
+                {
+                    return 1;
+                }
+                else
+                {
+                    int retval = special1.UnlockLevel.CompareTo(special2.UnlockLevel);
+
+                    if (retval != 0)
+                    {
+                        return retval;
+                    }
+                    else
+                    {
+                        return special1.UnlockLevel.CompareTo(special2.UnlockLevel);
+                    }
+                }
+            }
+        }
 
         public int SecondaryTimer { get; set; }
         public int SecondaryCooldownTime { get; set; }

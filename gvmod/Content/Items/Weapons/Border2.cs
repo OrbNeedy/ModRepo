@@ -24,8 +24,8 @@ namespace gvmod.Content.Items.Weapons
         public override void SetDefaults()
         {
             Item.DamageType = DamageClass.Ranged;
-            Item.damage = 82;
-            Item.knockBack = 8;
+            Item.damage = 68;
+            Item.knockBack = 2;
             Item.rare = ItemRarityID.Orange;
 
             Item.shoot = ModContent.ProjectileType<PhotonLaser>();
@@ -35,8 +35,7 @@ namespace gvmod.Content.Items.Weapons
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useTime = 8;
             Item.useAnimation = 8;
-            // Laser sound candidates: 
-            Item.UseSound = SoundID.Item14; // Item33; // Item91; // Item12; // origin
+            Item.UseSound = SoundID.Item33;
             Item.noMelee = true;
             Item.autoReuse = true;
         }
@@ -67,8 +66,6 @@ namespace gvmod.Content.Items.Weapons
                 {
                     velocity *= 0.4f;
                     type = ModContent.ProjectileType<GreedSnatcher>();
-                    damage *= 4;
-                    damage /= 5;
                 } else
                 {
                     damage *= 7;
@@ -93,7 +90,7 @@ namespace gvmod.Content.Items.Weapons
             else
             {
                 Item.useAmmo = 0;
-                Item.UseSound = SoundID.Item14; // Item33; // Item91; // Item12; // origin
+                Item.UseSound = SoundID.Item33;
                 Item.useAnimation = 8;
                 Item.useTime = 8;
                 Item.reuseDelay = 0;
@@ -107,7 +104,7 @@ namespace gvmod.Content.Items.Weapons
         {
             CreateRecipe()
                 .AddIngredient<Border>()
-                // Something else to make sure you can't skip straight to this upgrade
+                // Something else to make sure you can't skip straight to this upgrade with platforms
                 .AddIngredient(ItemID.LihzahrdPowerCell, 5)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

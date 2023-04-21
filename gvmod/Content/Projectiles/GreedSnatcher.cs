@@ -42,5 +42,11 @@ namespace gvmod.Content.Projectiles
             }
             base.OnHitPlayer(target, info);
         }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(ModContent.BuffType<Chaff>(), 600);
+            base.OnHitNPC(target, hit, damageDone);
+        }
     }
 }

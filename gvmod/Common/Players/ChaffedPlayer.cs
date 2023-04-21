@@ -24,9 +24,9 @@ namespace gvmod.Common.Players
 
         public override void PreUpdate()
         {
-            AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
             if (Chaffed)
             {
+                AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
                 adept.SeptimalPower = 0;
                 adept.IsOverheated = true;
             }

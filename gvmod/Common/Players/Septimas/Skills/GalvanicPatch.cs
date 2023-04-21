@@ -36,6 +36,14 @@ namespace gvmod.Common.Players.Septimas.Skills
             float maxLife = Player.statLifeMax + Player.statLifeMax2;
             float denominator = SpecialDuration;
             float ammount = maxLife / (4 * denominator);
+            if (ammount <= 0)
+            {
+                ammount = 1;
+            }
+            if (Player.GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField)
+            {
+                ammount *= 2;
+            }
             if (BeingUsed)
             {
                 Main.NewText("Healing: " + ammount);

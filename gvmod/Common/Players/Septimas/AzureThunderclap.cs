@@ -8,14 +8,14 @@ using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using System;
-using Microsoft.VisualBasic;
-using Terraria.WorldBuilding;
-using gvmod.Content.Buffs;
 
 namespace gvmod.Common.Players.Septimas
 {
     internal class AzureThunderclap : Septima
     {
+        private bool crashing = false;
+        private int crashMeter = 0;
+        private int maxCrashMeter = 90;
         private int secondaryDuration = 5;
         private int visualProjectileTimer = 12;
         private List<Tag> taggedNPCs = new List<Tag>();
@@ -379,6 +379,64 @@ namespace gvmod.Common.Players.Septimas
                 } else
                 {
                     globalTag.Shocked = false;
+                }
+            }
+        }
+
+        public void FlashfieldCrashUpdate()
+        {
+            if (!Adept.IsUsingPrimaryAbility || !Adept.CanUsePrimary)
+            {
+                crashing = false;
+            }
+
+            if (crashing)
+            {
+                crashMeter++;
+            }
+            else
+            {
+                if (Adept.IsUsingPrimaryAbility && Adept.CanUsePrimary)
+                {
+                    crashMeter--;
+                }
+                else
+                {
+                    crashMeter -= 2;
+                }
+            }
+
+            if (crashMeter >= maxCrashMeter)
+            {
+                Adept.overheat(20);
+                crashMeter = 0;
+                crashing = false;
+            }
+        }
+
+        public void FlashfieldCrashCheck()
+        {
+            foreach (Player player in Main.player)
+            {
+                // The target is not the player
+                if (player == Player) continue;
+
+                // The target is in range
+                if (!player.WithinRange(Player.Center, 704)) continue;
+
+                // The target's septima is Azure Thunderclap or Azure Striker
+                AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+                if (adept.Septima is AzureThunderclap || adept.Septima is AzureStriker)
+                {
+                    // The target can use and is using it's primary ability, flashfield
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        crashing = true;
+                    }
+                }
+                else
+                {
+                    continue;
                 }
             }
         }

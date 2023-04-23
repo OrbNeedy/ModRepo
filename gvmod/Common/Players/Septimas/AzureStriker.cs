@@ -13,6 +13,9 @@ namespace gvmod.Common.Players.Septimas
 {
     public class AzureStriker : Septima
     {
+        private bool crashing = false;
+        private int crashMeter = 0;
+        private int maxCrashMeter = 90;
         private int secondaryDuration = 15;
         private int visualProjectileTimer = 14;
         private bool isFalling = false;
@@ -49,6 +52,7 @@ namespace gvmod.Common.Players.Septimas
             [ProjectileID.CultistBossLightningOrb] = 0.5f,
             [ProjectileID.CultistBossLightningOrbArc] = 0.5f,
             [ProjectileID.DD2LightningBugZap] = 1.5f,
+            [ModContent.ProjectileType<FlashfieldStriker>()] = -0.5f,
             [ModContent.ProjectileType<ElectricSphere>()] = -0.5f,
             [ModContent.ProjectileType<ElectricSword>()] = -0.5f,
             [ModContent.ProjectileType<GloriousSword>()] = -1f,
@@ -137,6 +141,8 @@ namespace gvmod.Common.Players.Septimas
                     tag.ShockIframes = 6;
                 }
             }
+
+            FlashfieldCrashCheck();
         }
 
         public override void SecondAbilityEffects()
@@ -303,6 +309,7 @@ namespace gvmod.Common.Players.Septimas
 
         public override void Updates()
         {
+            FlashfieldCrashUpdate();
             UpdateTaggedNPCs();
             CheckEvolution();
             UpdateEvolution();
@@ -375,6 +382,61 @@ namespace gvmod.Common.Players.Septimas
                 } else
                 {
                     globalTag.Shocked = false;
+                }
+            }
+        }
+
+        public void FlashfieldCrashUpdate()
+        {
+            if (!Adept.IsUsingPrimaryAbility || !Adept.CanUsePrimary)
+            {
+                crashing = false;
+            }
+
+            if (crashing)
+            {
+                crashMeter++;
+            } else
+            {
+                if (Adept.IsUsingPrimaryAbility && Adept.CanUsePrimary)
+                {
+                    crashMeter--;
+                } else
+                {
+                    crashMeter -= 2;
+                }
+            }
+
+            if (crashMeter >= maxCrashMeter)
+            {
+                Adept.overheat(20);
+                crashMeter = 0;
+                crashing = false;
+            }
+        }
+
+        public void FlashfieldCrashCheck()
+        {
+            foreach (Player player in Main.player)
+            {
+                // The target is not the player
+                if (player == Player) continue;
+
+                // The target is in range
+                if (!player.WithinRange(Player.Center, 704)) continue;
+
+                // The target's septima is Azure Thunderclap or Azure Striker
+                AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+                if (adept.Septima is AzureThunderclap || adept.Septima is AzureStriker)
+                {
+                    // The target can use and is using it's primary ability, flashfield
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        crashing = true;
+                    }
+                } else
+                {
+                    continue;
                 }
             }
         }

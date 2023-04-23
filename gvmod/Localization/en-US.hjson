@@ -41,7 +41,7 @@ Mods: {
 			}
 
 			ElectricWhip: {
-				Tooltip: ""
+				Tooltip: A whip that electrifies the target.
 				DisplayName: Electric Whip
 			}
 
@@ -101,13 +101,21 @@ Mods: {
 			}
 
 			TrueQuillLegs: {
-				Tooltip: ""
+				Tooltip:
+					'''
+					Improved with the finest cloth, stolen from a madman.
+					Increases all septima damage, movement speed, and decreases SP usage.
+					'''
 				DisplayName: True Quill Legs
 			}
 
 			TrueQuillBody: {
-				Tooltip: ""
-				DisplayName: True Quill Body
+				Tooltip:
+					'''
+					It's been upgraded with the best cloth stolen from the cultist.
+					Increases all septima damage and reduces SP usage.
+					'''
+				DisplayName: True Quill Breastplate
 			}
 
 			SumeragiTophat: {

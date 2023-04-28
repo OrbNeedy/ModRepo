@@ -29,6 +29,7 @@ namespace gvmod.Common.Players.Septimas
             SpBaseRegen = 2f;
             SpBaseOverheatRegen = 1f;
             ApBaseRegen = (1f / 4020f);
+            InitializeAbilitiesList();
         }
 
         public override string Name => "Azure Striker";
@@ -395,6 +396,7 @@ namespace gvmod.Common.Players.Septimas
 
             if (crashing)
             {
+                Dust.NewDust(Player.Center, 12, 12, DustID.AncientLight);
                 crashMeter++;
             } else
             {
@@ -419,7 +421,7 @@ namespace gvmod.Common.Players.Septimas
         {
             foreach (Player player in Main.player)
             {
-                // The target is not the player
+                // The target is not the player itself
                 if (player == Player) continue;
 
                 // The target is in range
@@ -433,6 +435,7 @@ namespace gvmod.Common.Players.Septimas
                     if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         crashing = true;
+                        Dust.NewDust((player.Center + Player.Center) / 2, 12, 12, DustID.AncientLight);
                     }
                 } else
                 {

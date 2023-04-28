@@ -7,7 +7,6 @@ namespace gvmod.Content
     {
         public override void SetDefaultStats(Player player)
         {
-            // DisplayName.SetDefault("Septima damage");
             player.GetCritChance<SeptimaDamageClass>() += 0.05f;
         }
 

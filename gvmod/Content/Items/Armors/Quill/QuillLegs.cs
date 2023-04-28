@@ -2,21 +2,20 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.GameContent.Creative;
-using gvmod.Common.Players;
+using Terraria.Localization;
 
 namespace gvmod.Content.Items.Armors.Quill
 {
     [AutoloadEquip(EquipType.Legs)]
     public class QuillLegs : ModItem
     {
+        private float increaseInSpeed = 10;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Protective Leggins");
-            /* Tooltip.SetDefault("Your legs feel more powerful.\n" +
-                "Increses movement speed by 10%."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSpeed);
 
         public override void SetDefaults()
         {
@@ -29,7 +28,7 @@ namespace gvmod.Content.Items.Armors.Quill
 
         public override void UpdateEquip(Player player)
         {
-            player.moveSpeed += 0.1f;
+            player.moveSpeed += (increaseInSpeed/100f);
         }
 
         public override void AddRecipes()

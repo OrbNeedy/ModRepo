@@ -29,6 +29,7 @@ namespace gvmod.Common.Players.Septimas
             SpBaseRegen = 2.5f;
             SpBaseOverheatRegen = 1f;
             ApBaseRegen = (1f / 3600f);
+            InitializeAbilitiesList();
         }
 
         public override string Name => "Azure Thunderclap";
@@ -392,6 +393,7 @@ namespace gvmod.Common.Players.Septimas
 
             if (crashing)
             {
+                Dust.NewDust(Player.Center, 12, 12, DustID.AncientLight);
                 crashMeter++;
             }
             else

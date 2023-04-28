@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Quill
@@ -9,6 +10,7 @@ namespace gvmod.Content.Items.Armors.Quill
     [AutoloadEquip(EquipType.Body)]
     public class QuillBody : ModItem
     {
+        private float increaseInSeptimaDamage = 10;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Protective Breastplate");
@@ -17,6 +19,8 @@ namespace gvmod.Content.Items.Armors.Quill
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSeptimaDamage);
 
         public override void SetDefaults()
         {
@@ -30,10 +34,11 @@ namespace gvmod.Content.Items.Armors.Quill
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.1f;
-            adept.SecondaryDamageEquipMult += 0.1f;
-            adept.SpecialDamageEquipMult += 0.1f;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
+            float increase = (increaseInSeptimaDamage / 100f);
+            adept.PrimaryDamageEquipMult += increase;
+            adept.SecondaryDamageEquipMult += increase;
+            adept.SpecialDamageEquipMult += increase;
+            player.GetDamage<SeptimaDamageClass>() += increase;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

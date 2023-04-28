@@ -2,8 +2,6 @@
 using Terraria;
 using gvmod.Common.Players.Septimas.Skills;
 using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using System.Linq;
 
 namespace gvmod.Common.Players
 {
@@ -14,8 +12,8 @@ namespace gvmod.Common.Players
         public AdeptMuse Muse { get; }
 
         // Key is the id, Value is the type of interaction
-        public abstract Dictionary<int, float> ProjectileInteractions { get; }
-        public abstract Dictionary<int, float> NPCInteractions { get; }
+        public virtual Dictionary<int, float> ProjectileInteractions { get => new Dictionary<int, float>(); }
+        public virtual Dictionary<int, float> NPCInteractions { get => new Dictionary<int, float>(); }
 
         public abstract string Name { get; }
 
@@ -80,28 +78,56 @@ namespace gvmod.Common.Players
             VelocityMultiplier = new Vector2(1, 1);
         }
 
-        public abstract void InitializeAbilitiesList();
+        public virtual void InitializeAbilitiesList()
+        {
+            Abilities.Clear();
+            Abilities.Add(new None(Player, Adept, "S"));
+        }
 
-        public abstract void OnOverheat();
+        public virtual void OnOverheat()
+        {
 
-        public abstract void OnRecovery();
+        }
 
-        public abstract void DuringOverheat();
+        public virtual void OnRecovery()
+        {
 
-        public abstract void FirstAbilityEffects();
+        }
 
-        public abstract void FirstAbility();
+        public virtual void DuringOverheat()
+        {
 
-        public abstract void SecondAbilityEffects();
+        }
+
+        public virtual void FirstAbilityEffects()
+        {
+
+        }
+
+        public virtual void FirstAbility()
+        {
+
+        }
+
+        public virtual void SecondAbilityEffects()
+        {
+
+        }
         
-        public abstract void SecondAbility();
+        public virtual void SecondAbility()
+        {
+
+        }
 
         /// <summary> 
         /// <para>Runs before prevasion.</para>
         /// </summary>
         /// <returns>False to skip <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/> and instead return false.</returns>
         
-        public abstract bool PrePrevasion(Player.HurtInfo info);
+        public virtual bool PrePrevasion(Player.HurtInfo info)
+        {
+            return true;
+        }
 
         /// <summary> 
         /// <para>Runs before damage is taken, is skipped if the projectile or NPC is in any of the 
@@ -111,19 +137,34 @@ namespace gvmod.Common.Players
         /// <seealso cref="AdeptPlayer.npcGlobalPrevasionIgnore"/> lists.</para>
         /// </summary>
         /// <returns>True to ignore damage for this attack.</returns>
-        public abstract bool OnPrevasion(Player.HurtInfo info);
+        public virtual bool OnPrevasion(Player.HurtInfo info)
+        {
+            return false;
+        }
 
         /// <summary> 
         /// <para>Runs before damage is taken, does not run if <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/> returns true.</para>
         /// </summary>
-        public abstract void OnHit(ref Player.HurtModifiers modifiers);
+        public virtual void OnHit(ref Player.HurtModifiers modifiers)
+        {
+            
+        }
 
         // This method will not run if timer is less than 1, so take that in mind when making attacks
-        public abstract void MorbAttack(int timer);
+        public virtual void MorbAttack(int timer)
+        {
 
-        public abstract void MiscEffects();
+        }
 
-        public abstract void Updates();
+        public virtual void MiscEffects()
+        {
+
+        }
+
+        public virtual void Updates()
+        {
+
+        }
 
         public List<Special> AvaliableSpecials()
         {
@@ -168,8 +209,14 @@ namespace gvmod.Common.Players
             return specials;
         }
 
-        public abstract void CheckEvolution();
+        public virtual void CheckEvolution()
+        {
 
-        public abstract void UpdateEvolution();
+        }
+
+        public virtual void UpdateEvolution()
+        {
+
+        }
     }
 }

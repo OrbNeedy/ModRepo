@@ -27,8 +27,7 @@ namespace gvmod.Common.GlobalNPCs
         {
             if (Chaff)
             {
-                modifiers.FinalDamage *= 1.35f;
-                modifiers.FinalDamage += 25;
+                modifiers.FinalDamage *= 1.6f;
             }
         }
 
@@ -36,8 +35,7 @@ namespace gvmod.Common.GlobalNPCs
         {
             if (Chaff)
             {
-                modifiers.FinalDamage *= 1.25f;
-                modifiers.FinalDamage += 15;
+                modifiers.FinalDamage *= 1.45f;
             }
         }
 

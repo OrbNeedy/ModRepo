@@ -12,8 +12,6 @@ using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using gvmod.Content.Projectiles;
-using System.Linq;
-using Terraria.WorldBuilding;
 
 namespace gvmod.Common.Players
 {

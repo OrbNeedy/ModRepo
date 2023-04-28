@@ -20,11 +20,6 @@ namespace gvmod.Common.Systems
             _abilityMenu.SetState(abilityMenu);
         }
 
-        public override void OnWorldUnload()
-        {
-            abilityMenu.ResetDisplays();
-        }
-
         public override void UpdateUI(GameTime gameTime)
         {
             if (_abilityMenu?.CurrentState != null)

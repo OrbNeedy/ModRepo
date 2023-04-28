@@ -119,62 +119,109 @@ Mods: {
 			}
 
 			SumeragiTophat: {
-				Tooltip: ""
-				DisplayName: Sumeragi Tophat
+				Tooltip:
+					'''
+					A hat Sumeragi highups use when going on diplomatic missions.
+					Increases SP recover and septima damage.
+					'''
+				DisplayName: Sumeragi tophat
 			}
 
 			SumeragiMask: {
-				Tooltip: ""
+				Tooltip: 
+					'''
+					A mask to conceal Sumeragi agents' identity when dealing with secret
+					missions.
+					Increases SP recover and septima damage.
+					'''
 				DisplayName: Sumeragi Mask
 			}
 
 			SumeragiLegs: {
-				Tooltip: ""
-				DisplayName: Sumeragi Legs
+				Tooltip: 
+					'''
+					Made to be used in the battlefield, still feel absurdly comfortable.
+					Increases septima damage and movement speed.
+					'''
+				DisplayName: Sumeragi uniform leggins
 			}
 
 			SumeragiBody: {
-				Tooltip: ""
-				DisplayName: Sumeragi Body
+				Tooltip: 
+					'''
+					Made to resist the harshest environment while allowing great movement.
+					Increases septima damage and reduces SP usage.
+					'''
+				DisplayName: Sumeragi uniform jacket
 			}
 
 			SumeragiBeret: {
-				Tooltip: ""
+				Tooltip: 
+					'''
+					A hat used during warfare, it enhances the user's septima.
+					Increases SP recover and septima damage.
+					'''
 				DisplayName: Sumeragi Beret
 			}
 
 			QuillLegs: {
-				Tooltip: ""
-				DisplayName: Quill Legs
+				Tooltip: 
+					'''
+					Your legs feel more powerful.
+					Increses movement speed by {0}%.
+					'''
+				DisplayName: Protective Leggins
 			}
 
 			QuillBody: {
-				Tooltip: ""
-				DisplayName: Quill Body
+				Tooltip: 
+					'''
+					It slightly amplifies your septima.
+					Increases all septima damge by {0}%.
+					'''
+				DisplayName: Protective Chestplate
 			}
 
 			ProtectiveLegs: {
-				Tooltip: ""
-				DisplayName: Protective Legs
+				Tooltip:
+					'''
+					Easy to move with these.
+					Increses movement speed by {0}%.
+					'''
+				DisplayName: Protective Leggins
 			}
 
 			ProtectiveBody: {
-				Tooltip: ""
-				DisplayName: Protective Body
+				Tooltip: 
+					'''
+					It feels surprisingly comfy.
+					Increases all septima damge by {0}%.
+					'''
+				DisplayName: Protective Chestplate
 			}
 
 			PowerLegs: {
-				Tooltip: ""
-				DisplayName: Power Legs
+				Tooltip: 
+					'''
+					Made to increase your physical abilities, with no regard for your comfort.
+					Increases all septima damage, movement speed, and all SP usage.
+					'''
+				DisplayName: Power Armored Pants
 			}
 
 			PowerBody: {
-				Tooltip: ""
-				DisplayName: Power Body
+				Tooltip: 
+					'''
+					Greatly amplifies your septima, but doesn't feel as comfy.
+					Increases all septima damage and SP usage.
+					'''
+				DisplayName: Power Breastplate
 			}
 
 			OrichalcumHead: {
-				Tooltip: ""
+				Tooltip: 
+					'''
+					'''
 				DisplayName: Orichalcum Head
 			}
 

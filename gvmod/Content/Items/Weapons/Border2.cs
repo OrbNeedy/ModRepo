@@ -24,7 +24,7 @@ namespace gvmod.Content.Items.Weapons
         public override void SetDefaults()
         {
             Item.DamageType = DamageClass.Ranged;
-            Item.damage = 68;
+            Item.damage = 78;
             Item.knockBack = 2;
             Item.rare = ItemRarityID.Orange;
 
@@ -68,8 +68,7 @@ namespace gvmod.Content.Items.Weapons
                     type = ModContent.ProjectileType<GreedSnatcher>();
                 } else
                 {
-                    damage *= 7;
-                    damage /= 5;
+                    damage = (int)(damage * 1.15);
                 }
             }
             base.ModifyShootStats(player, ref position, ref velocity, ref type, ref damage, ref knockback);

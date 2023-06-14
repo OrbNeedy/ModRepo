@@ -53,10 +53,10 @@ namespace gvmod.Common.Players
         {
             if (improved)
             {
-                regen *= 1.2f;
+                regen *= 1.3f;
             } else if (edenType)
             {
-                regen *= 1.15f;
+                regen *= 1.2f;
             }
         }
     }

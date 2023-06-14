@@ -11,10 +11,6 @@ namespace gvmod.Content.Projectiles
     internal class Thunder : ModProjectile
     {
         private Asset<Texture2D> thunder = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/RightThunder");
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Thunder");
-        }
 
         public override void SetDefaults()
         {

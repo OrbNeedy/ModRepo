@@ -3,6 +3,7 @@ using gvmod.Content.Items.Armors.Protective;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Improved
@@ -10,6 +11,7 @@ namespace gvmod.Content.Items.Armors.Improved
     [AutoloadEquip(EquipType.Body)]
     public class ImprovedBody : ModItem
     {
+        private float increaseInDamage = 12;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Improved Breastplate");
@@ -18,6 +20,8 @@ namespace gvmod.Content.Items.Armors.Improved
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage);
 
         public override void SetDefaults()
         {
@@ -31,10 +35,11 @@ namespace gvmod.Content.Items.Armors.Improved
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.12f;
-            adept.SecondaryDamageEquipMult += 0.12f;
-            adept.SpecialDamageEquipMult += 0.12f;
-            player.GetDamage<SeptimaDamageClass>() += 0.12f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

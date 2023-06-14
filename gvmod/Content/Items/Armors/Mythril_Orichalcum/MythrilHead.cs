@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
@@ -9,6 +10,8 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
     [AutoloadEquip(EquipType.Head)]
     public class MythrilHead : ModItem
     {
+        private float increaseInDamage = 15;
+        private float increaseInSPRecovery = 50;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Mythril crown");
@@ -17,6 +20,8 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSPRecovery);
 
         public override void SetDefaults()
         {
@@ -30,11 +35,13 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.15f;
-            adept.SecondaryDamageEquipMult += 0.15f;
-            adept.SpecialDamageEquipMult += 0.15f;
-            adept.SPRegenOverheatModifier += 0.25f;
-            player.GetDamage<SeptimaDamageClass>() += 0.15f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalSPRecoveryIncrease = increaseInSPRecovery / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
+            adept.SPRegenOverheatModifier += totalSPRecoveryIncrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Cobalt_Palladium
@@ -9,14 +10,15 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
     [AutoloadEquip(EquipType.Head)]
     public class PalladiumHead : ModItem
     {
+        private float increaseInDamage = 10;
+        private float increaseInSPRegen = 15;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Paladium glasses");
-            /* Tooltip.SetDefault("Glasses with a paladium frame, the lenses are purely aesthetic.\n" +
-                "Increases all septima damage by 10% and increases SP regen."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSPRegen);
 
         public override void SetDefaults()
         {
@@ -30,11 +32,13 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.1f;
-            adept.SecondaryDamageEquipMult += 0.1f;
-            adept.SpecialDamageEquipMult += 0.1f;
-            adept.SPRegenModifier += 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalRegenIncrease = increaseInSPRegen / 100f;
+            adept.PrimaryDamageEquipMult += increaseInDamage;
+            adept.SecondaryDamageEquipMult += increaseInDamage;
+            adept.SpecialDamageEquipMult += increaseInDamage;
+            player.GetDamage<SeptimaDamageClass>() += increaseInDamage;
+            adept.SPRegenModifier += increaseInSPRegen;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

@@ -1,12 +1,11 @@
-﻿using gvmod.Common.Players;
-using gvmod.Content.Buffs;
+﻿using Terraria.GameContent.Creative;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
+using gvmod.Content.Buffs;
 
 namespace gvmod.Content.Items.Accessories
 {
-    public class ForbiddenConverter : ModItem
+    public class SuperMagnet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -15,15 +14,14 @@ namespace gvmod.Content.Items.Accessories
 
         public override void SetDefaults()
         {
-            Item.width = 26;
-            Item.height = 56;
+            Item.width = 16;
+            Item.height = 26;
             Item.accessory = true;
         }
 
         public override void UpdateEquip(Player player)
         {
-            ConversionPlayer converter = player.GetModPlayer<ConversionPlayer>();
-            converter.Forbidden = true;
+            player.buffImmune[ModContent.BuffType<Chaff>()] = true;
         }
     }
 }

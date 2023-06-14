@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Adamantite_Titanium
@@ -9,14 +10,14 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
     [AutoloadEquip(EquipType.Head)]
     public class TitaniumHead : ModItem
     {
+        private float increaseInDamage = 20;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Titanium hairclip");
-            /* Tooltip.SetDefault("Might not be helpful if your hair isn't long enough.\n" +
-                "25% increased main attack damage and septimal damage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage);
 
         public override void SetDefaults()
         {
@@ -27,12 +28,15 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
             Item.defense = 10;
         }
 
-        public override void UpdateEquip(Player player)
-        {
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.25f;
-            player.GetDamage<SeptimaDamageClass>() += 0.25f;
-        }
+            public override void UpdateEquip(Player player)
+            {
+                AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+                float totalIncrease = increaseInDamage / 100f;
+                adept.PrimaryDamageEquipMult += totalIncrease;
+                adept.SecondaryDamageEquipMult += totalIncrease;
+                adept.SpecialDamageEquipMult += totalIncrease;
+                player.GetDamage<SeptimaDamageClass>() += totalIncrease;
+            }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {

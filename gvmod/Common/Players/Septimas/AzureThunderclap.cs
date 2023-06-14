@@ -8,6 +8,7 @@ using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using System;
+using gvmod.Content;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -137,7 +138,7 @@ namespace gvmod.Common.Players.Septimas
                 float tagMultiplier = (float)((tag.Level * 0.75) + 0.25);
                 if (tag.ShockIframes == 0)
                 {
-                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, false);
+                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
                     tag.ShockIframes = 8;
                 }
             }

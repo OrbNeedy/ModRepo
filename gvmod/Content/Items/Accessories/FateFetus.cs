@@ -9,16 +9,14 @@ namespace gvmod.Content.Items.Accessories
 {
     public class FateFetus : ModItem
     {
-        public static readonly int apConsumeChance = 50;
+        private float apConsumeChance = 50;
+        private float damageIncrease = 20;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Fate in a pod");
-            /* Tooltip.SetDefault(); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(apConsumeChance);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(apConsumeChance, damageIncrease);
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -33,7 +31,20 @@ namespace gvmod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+            float totalChance = apConsumeChance / 100;
+            float totalDamageIncrease = damageIncrease / 100;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
             player.GetModPlayer<MorbPlayer>().FateFetus = true;
+            adept.SPRegenOverheatModifier *= 0.8f;
+
+            if (Main.rand.NextFloat() < totalChance)
+            {
+                adept.APUsageModifier *= 0;
+            }
         }
     }
 }

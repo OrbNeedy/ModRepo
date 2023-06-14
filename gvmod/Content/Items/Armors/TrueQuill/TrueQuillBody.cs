@@ -1,8 +1,9 @@
 ﻿using gvmod.Common.Players;
-using gvmod.Content.Items.Armors.Power;
+using gvmod.Content.Buffs;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.TrueQuill
@@ -10,14 +11,14 @@ namespace gvmod.Content.Items.Armors.TrueQuill
     [AutoloadEquip(EquipType.Body)]
     public class TrueQuillBody : ModItem
     {
+        private float decreaseInSPUsage = 30;
+        private float increaseInDamage = 12;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("True Quill Breastplate");
-            /* Tooltip.SetDefault("It's been upgraded with the best cloth stolen from the cultist.\n" +
-                "Increases all septima damage and reduces SP usage."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(decreaseInSPUsage, increaseInDamage);
 
         public override void SetDefaults()
         {
@@ -31,10 +32,14 @@ namespace gvmod.Content.Items.Armors.TrueQuill
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.1f;
-            adept.SecondaryDamageEquipMult += 0.1f;
-            adept.SpecialDamageEquipMult += 0.1f;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
+            float totalSPUseDecrease = decreaseInSPUsage / 100f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
+            adept.SPRegenModifier += totalSPUseDecrease;
+            adept.SPRegenOverheatModifier += totalSPUseDecrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -47,7 +52,8 @@ namespace gvmod.Content.Items.Armors.TrueQuill
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             player.setBonus = "Increases resistance to chaff and overheat SP recovery.";
 
-            adept.SPRegenOverheatModifier *= 1.8f;
+            adept.SPRegenOverheatModifier += 0.6f;
+            player.buffImmune[ModContent.BuffType<Chaff>()] = true;
         }
 
         public override void AddRecipes()

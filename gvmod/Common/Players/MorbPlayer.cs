@@ -27,11 +27,11 @@ namespace gvmod.Common.Players
                 adept.SPRegenOverheatModifier -= 0.5f;
                 if (!adept.IsOverheated)
                 {
-                    adept.SeptimalPower += 4f;
-                }
-                if (Main.rand.NextBool())
+                    adept.SeptimalPower += 0.5f;
+                } else
                 {
-                    adept.APUsageModifier *= 0;
+                    Player.statDefense *= 0.5f;
+                    Player.endurance *= 0.8f;
                 }
                 TheAttackInQuestion();
             }

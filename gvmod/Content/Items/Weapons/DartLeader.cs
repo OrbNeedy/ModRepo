@@ -16,18 +16,19 @@ namespace gvmod.Content.Items.Weapons
 	public class DartLeader : ModItem
     {
         //Naga, Mizuchi, Technos, Orochi, Vasuki, and Dullahan respectively
-        public bool[] Upgrades { get; set; } = new bool[6] { false, false, false, false, false, false };
+        public bool[] Upgrades { get; set; } = new bool[7] { false, false, false, false, false, false, false };
         private int ai0;
         private int ai1;
         private int orochiTimer;
         private static Asset<Texture2D> glowmask;
 
-        private static readonly string[] upgradeDescriptions = new string[6] { "\nNaga: Adds a piercing effect and increases speed.", 
+        private static readonly string[] upgradeDescriptions = new string[7] { "\nNaga: Adds a piercing effect and increases speed.", 
 			"\nMizuchi: Adds a slight homing effect to the darts.",  
 			"\nTechnos: Adds two extra darts when shooting.",
 			"\nOrochi: Deploys a drone when shooting that shoots extra darts, these darts \ndon't inherit other upgrades.", 
 			"\nVasuki: After hitting an enemy, the enemy shoots an extra dart to the next \nnearest enemy, improves homing if paired with Mizuchi.",
-			"\nDullahan: Increases damage and rate of fire."};
+			"\nDullahan: Increases damage and rate of fire.", 
+            "\nOuroboros: 50% chance not to consume ammo."};
 		private string tooltip;
 		public override void SetStaticDefaults()		
 		{
@@ -112,6 +113,10 @@ namespace gvmod.Content.Items.Weapons
             {
                 Upgrades[5] = tag.GetBool("Dullahan");
             }
+            if (tag.ContainsKey("Ouroboros"))
+            {
+                Upgrades[6] = tag.GetBool("Ouroboros");
+            }
         }
 
 		public override void SaveData(TagCompound tag)
@@ -122,6 +127,7 @@ namespace gvmod.Content.Items.Weapons
             tag["Orochi"] = Upgrades[3];
             tag["Vasuki"] = Upgrades[4];
             tag["Dullahan"] = Upgrades[5];
+            tag["Ouroboros"] = Upgrades[6];
         }
 
 		public override void UpdateInventory(Player player)
@@ -194,8 +200,18 @@ namespace gvmod.Content.Items.Weapons
 			}
             base.ModifyTooltips(tooltips);
 		}
+        public override bool CanConsumeAmmo(Item ammo, Player player)
+        {
+            if (Upgrades[6])
+            {
+                return Main.rand.NextFloat() >= 0.5f;
+            } else
+            {
+                return true;
+            }
+        }
 
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
             if (Upgrades[0]) ai0++;
             if (Upgrades[3] && orochiTimer == 0)

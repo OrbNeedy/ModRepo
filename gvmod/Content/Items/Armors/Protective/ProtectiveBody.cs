@@ -13,10 +13,6 @@ namespace gvmod.Content.Items.Armors.Protective
         private float increaseInSeptimaDamage = 5;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Protective Breastplate");
-            /* Tooltip.SetDefault("It feels surprisingly comfy.\n" +
-                "Increases all septima damge by 5%."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 

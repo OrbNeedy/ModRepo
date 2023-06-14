@@ -1,0 +1,436 @@
+Projectiles: {
+	Thunder.DisplayName: Thunder
+	Shock.DisplayName: Shock
+	SeptimaBolt.DisplayName: Septima Bolt
+	PhotonLaser.DisplayName: Photon Laser
+	OrochiDrone.DisplayName: Orochi Drone
+	LightningCreeper.DisplayName: Lightning Creeper
+	HairDartProjectile.DisplayName: Dart
+	GreedSnatcher.DisplayName: Greed Snatcher
+	GloriousSword.DisplayName: Glorious Sword
+	FlashfieldStriker.DisplayName: Flashfield Striker
+	ElectricWhipProjectile.DisplayName: Electric Whip
+	ElectricSword.DisplayName: Electric Sword
+	ElectricSphere.DisplayName: Electric Sphere
+	ElectricBolt.DisplayName: Electric Bolt
+	DullahanProjectile.DisplayName: Dullahan
+	ChainTip.DisplayName: Chain Tip
+	ChainMeteor.DisplayName: Chain Meteor
+	Beowulf.DisplayName: Beowulf
+	LolaPetProjectile.DisplayName: Lola
+}
+
+Items: {
+	LolaPetItem: {
+		Tooltip: Summons a friendly bot that will follow you around.
+		DisplayName: Repaired Battle Pod
+	}
+
+	ElectricWhip: {
+		Tooltip: A whip that releases an electric discharge upon use.
+		DisplayName: Electric Whip
+	}
+
+	DartLeader: {
+		Tooltip: ""
+		DisplayName: Dart Leader
+	}
+
+	Border2: {
+		Tooltip:
+			'''
+			A gun that shoots photon lasers made with a certain light septima.
+			Right click to switch bullets, allowing you to use Greed Snatcher.
+			'''
+		DisplayName: Border II
+	}
+
+	Border: {
+		Tooltip:
+			'''
+			A gun that shoots special bullets, capable of penetrating prevasion.
+			Right click to switch bullets, allowing you to use Greed Snatcher.
+			'''
+		DisplayName: Border
+	}
+
+	VasukiBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Vasuki Bolt
+	}
+
+	TechnosBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Technos Bolt
+	}
+
+	OrochiBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Orochi Bolt
+	}
+
+	OuroborosBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Ouroboros Bolt
+	}
+
+	NagaBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Naga Bolt
+	}
+
+	MizuchiBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Mizuchi Bolt
+	}
+
+	DullahanBolt: {
+		Tooltip:
+			'''
+			An upgrade to the Dart Leader, will only change the first 
+			Dart Leader in the inventory.
+			'''
+		DisplayName: Dullahan Bolt
+	}
+
+	TrueQuillLegs: {
+		Tooltip: Increases all septima damage by {0}%, movement speed by {1}%, and decreases SP usage by {2}%.
+		DisplayName: True Quill Leggins
+	}
+
+	TrueQuillBody: {
+		Tooltip: Increases all septima damage by {0}% and reduces SP usage by {1}%.
+		DisplayName: True Quill Breastplate
+	}
+
+	SumeragiTophat: {
+		Tooltip: Increases SP recover by {0}% and septima damage by {1}%.
+		DisplayName: Sumeragi Tophat
+	}
+
+	SumeragiMask: {
+		Tooltip: Increases SP recover by {0}% and septima damage by {1}%.
+		DisplayName: Sumeragi Mask
+	}
+
+	SumeragiLegs: {
+		Tooltip: Increases septima damage by {0}% and movement speed by {1}%.
+		DisplayName: Sumeragi Uniform Pants
+	}
+
+	SumeragiBody: {
+		Tooltip: Increases septima damage by {0}% and reduces SP usage by {1}%.
+		DisplayName: Sumeragi Uniform Jacket
+	}
+
+	SumeragiBeret: {
+		Tooltip: Increases SP recovery by {0}% and septima damage by {1}%.
+		DisplayName: Sumeragi Beret
+	}
+
+	QuillLegs: {
+		Tooltip: Increses movement speed by {0}%.
+		DisplayName: Quill Leggins
+	}
+
+	QuillBody: {
+		Tooltip: Increases all septima damage by {0}%.
+		DisplayName: Quill Chestplate
+	}
+
+	ProtectiveLegs: {
+		Tooltip: Increses movement speed by {0}%.
+		DisplayName: Protective Leggins
+	}
+
+	ProtectiveBody: {
+		Tooltip: Increases all septima damge by {0}%.
+		DisplayName: Protective Chestplate
+	}
+
+	PowerLegs: {
+		Tooltip: Increases all septima damage by {0}%, movement speed by {1}%, and SP usage by {2}%.
+		DisplayName: Power Armored Pants
+	}
+
+	PowerBody: {
+		Tooltip: Increases all septima damage by {0}% and SP usage by {1}.
+		DisplayName: Power Breastplate
+	}
+
+	OrichalcumHead: {
+		Tooltip: Increases all septima damage by {0}% and increases movement speed when overheated by {1}%.
+		DisplayName: Orichalcum Fedora
+	}
+
+	MythrilHead: {
+		Tooltip: Increases all septima damage by {0}% and increases SP recovery while overheated by {1}%.
+		DisplayName: Mythril Crown
+	}
+
+	ImprovedLegs: {
+		Tooltip: Increses movement speed by {0}% and reduces SP usage by {1}%.
+		DisplayName: Improved Leggins
+	}
+
+	ImprovedBody: {
+		Tooltip: Increases all septima damage by {0}%.
+		DisplayName: Improved Breastplate
+	}
+
+	HallowedHead: {
+		Tooltip: Increases SP usage by {0}% and increases all septima damage by {1}%.
+		DisplayName: Hallowed Hardhat
+	}
+
+	PalladiumHead: {
+		Tooltip: Increases all septima damage by {0}% and increases SP regen by {1}%.
+		DisplayName: Palladium Glasses
+	}
+
+	CobaltHead: {
+		Tooltip: Increases all septima damage by {0}% and reduces SP usage by {1}%.
+		DisplayName: Cobalt Headband
+	}
+
+	ChlorophyteHead: {
+		Tooltip: Decreases SP usage by {0}% and increases Septima damage by {1}%.
+		DisplayName: Chlorophyte Tophat
+	}
+
+	TitaniumHead: {
+		Tooltip: "{0}% increased septimal damage."
+		DisplayName: Titanium Hairclip
+	}
+
+	AdamantiteHead: {
+		Tooltip: Increases max SP by {0} and all SP recovery by {1}%.
+		DisplayName: Adamantite Bow
+	}
+
+	HairDart: {
+		Tooltip:
+			'''
+			A dart made out of metal and hair, used as ammo for the Dart Leader.
+			Calling it a "Hair Dart" is way too uncool.
+			'''
+		DisplayName: Bolt
+	}
+
+	GreedSnatcherBullet: {
+		Tooltip:
+			'''
+			Bullets made with a certain magnet septima.
+			Targets hit will be inflicted with Chaff.
+			'''
+		DisplayName: Greed Snatcher Bullet
+	}
+
+	BeowulfBullet: {
+		Tooltip: Bullets made to penetrate prevasion.
+		DisplayName: Beowulf Bullet
+	}
+
+	TrueGlaive: {
+		Tooltip:
+			'''
+			This is a glaive with enhanced properties, allowing the user 
+			to undergo an improved Armed Phenomenon transformation.
+			Also known as Binding Brand.
+			'''
+		DisplayName: True Glaive
+	}
+
+	SuperMagnet: {
+		Tooltip: Makes you immune to Chaff.
+		DisplayName: Super magnet
+	}
+
+	SpecialConverter: {
+		Tooltip: Recover AP upon picking up Mana or Health.
+		DisplayName: Special Converter
+	}
+
+	SecretConverter: {
+		Tooltip: Recover SP upon picking up Mana or Health.
+		DisplayName: Secret Converter
+	}
+
+	SealingGlasses: {
+		Tooltip:
+			'''
+			Glasses that enhance your control over your own septima by 
+			sealing a part of it.
+			Decreased damage and SP usage.
+			50% chance to not use AP.
+			'''
+		DisplayName: Sunglasses of lightning
+	}
+
+	MirrorShard: {
+		Tooltip:
+			'''
+			The power of the muse inside resurrects the user once after
+			dying, with enhanced septima control.
+			'''
+		DisplayName: Mirror Shard
+	}
+
+	Grimoire: {
+		Tooltip:
+			'''
+			Allows you to use the sealed power of the muse and undergo an Armed 
+			Phenomenon transformation that priorizes recovery.
+			'''
+		DisplayName: Grimoire
+	}
+
+	Glaive: {
+		Tooltip:
+			'''
+			Modified Sumeragi technology that seals your septima and allows you to 
+			undergo an Armed Phenomenon transformation.
+			Your version doesn't permanently seal an adept's septima.
+			'''
+		DisplayName: Glaive
+	}
+
+	ForbiddenConverter: {
+		Tooltip: Recover SP upon picking up Health
+		DisplayName: Forbidden Converter
+	}
+
+	FateFetus: {
+		Tooltip:
+			'''
+			Gives a passive SP regeneration independent of modifications and {0}% chance to not
+			consume any AP, increases septima damage by {1}%. Decreases overheat SP regeneration 
+			and releases an attack upon recovering from overheat.
+			'''
+		DisplayName: Fate in a pod
+	}
+
+	FalconQuill: {
+		Tooltip:
+			'''
+			Allows you to make a contract with Sumeragi and undergo an Armed Phenomenon 
+			transformation that priorizes constant offense.
+			'''
+		DisplayName: Falcon Quill
+	}
+
+	ArcanumConverter: {
+		Tooltip: Recover SP upon picking up Mana
+		DisplayName: Arcanum Converter
+	}
+}
+
+Buffs: {
+	LolaPetBuff: {
+		Description: After repairing her, she's calling you boss now.
+		DisplayName: Lola
+	}
+
+	VoltaicElectrocution: {
+		Description: Very painful electrocution.
+		DisplayName: Voltaic Electrocution
+	}
+
+	SeptimalSurgeBuff: {
+		Description: Your septima is reaching it's limits.
+		DisplayName: Septimal Surge Buff
+	}
+
+	SeptimalShieldBuff: {
+		Description: Your septima is making your body stronger.
+		DisplayName: Septimal Shield Buff
+	}
+
+	InfiniteSurgeBuff: {
+		Description: Your septima has surpassed it's bounds.
+		DisplayName: Infinite Surge Buff
+	}
+
+	GoodElectrified: {
+		Description: Thanks for the recharge.
+		DisplayName: Good Electrified
+	}
+
+	Chained: {
+		Description: You have been pierced by a chain
+		DisplayName: Chained
+	}
+
+	Chaff: {
+		Description: Your septima was separated forcefully from your body.
+		DisplayName: Chaff
+	}
+
+	ArmedPhenomenon3: {
+		Description: Mods.gvmod.Buffs.ArmedPhenomenon3.Description
+		DisplayName: Armed Phenomenon3
+	}
+
+	ArmedPhenomenon2B: {
+		Description: Mods.gvmod.Buffs.ArmedPhenomenon2B.Description
+		DisplayName: Armed Phenomenon2 B
+	}
+
+	ArmedPhenomenon2A: {
+		Description: Mods.gvmod.Buffs.ArmedPhenomenon2A.Description
+		DisplayName: Armed Phenomenon2 A
+	}
+
+	ArmedPhenomenon: {
+		Description: Mods.gvmod.Buffs.ArmedPhenomenon.Description
+		DisplayName: Armed Phenomenon
+	}
+
+	AnthemBuff: {
+		Description: The song of the muse has resurrected you with newfound strength.
+		DisplayName: Anthem Buff
+	}
+
+	AlchemicalFieldBuff: {
+		Description:
+			'''
+			Your septima affects the environment, giving you double 
+			experience, and enemies drop more money.
+			'''
+		DisplayName: Alchemical Field Buff
+	}
+}
+
+Keybinds: {
+	"Ability menu(Soon).DisplayName": Ability menu( Soon)
+	"Fourth special ability.DisplayName": Fourth special ability
+	"Third special ability.DisplayName": Third special ability
+	"Second special ability.DisplayName": Second special ability
+	"First special ability.DisplayName": First special ability
+	"Secondary septimal ability/cooldown time.DisplayName": Secondary septimal ability/cooldown time
+	"Primary septimal ability.DisplayName": Primary septimal ability
+}

@@ -18,7 +18,12 @@ namespace gvmod.Common.Players
 
         public override void NaturalLifeRegen(ref float regen)
         {
-            if (PowerShortage) regen *= -0.8f;
+            if (PowerShortage) regen *= -1;
+        }
+
+        public override void UpdateLifeRegen()
+        {
+            if (PowerShortage) Player.lifeRegen *= -1;
         }
     }
 }

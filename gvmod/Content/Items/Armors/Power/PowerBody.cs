@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Power
@@ -9,14 +10,14 @@ namespace gvmod.Content.Items.Armors.Power
     [AutoloadEquip(EquipType.Body)]
     public class PowerBody : ModItem
     {
+        private float increaseInDamage = 25;
+        private float increaseInSPUse = 30;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Power Breastplate");
-            /* Tooltip.SetDefault("Greatly amplifies your septima, but doesn't feel as comfy.\n" +
-                "Increases all septima damage and SP usage."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSPUse);
 
         public override void SetDefaults()
         {
@@ -30,12 +31,14 @@ namespace gvmod.Content.Items.Armors.Power
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPUsageModifier += 0.3f;
-            adept.SPRegenModifier -= 0.03f;
-            adept.PrimaryDamageEquipMult += 0.15f;
-            adept.SecondaryDamageEquipMult += 0.15f;
-            adept.SpecialDamageEquipMult += 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.15f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalSPUseIncrease = increaseInSPUse / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
+            adept.SPUsageModifier += totalSPUseIncrease;
+            adept.SPRegenModifier -= totalSPUseIncrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -54,18 +57,16 @@ namespace gvmod.Content.Items.Armors.Power
             } else
             {
                 player.statDefense += 8;
-                player.endurance += 0.05f;
+                player.endurance += 0.1f;
 
-                player.moveSpeed += 0.2f;
-                player.maxRunSpeed += 2;
+                player.moveSpeed += 0.25f;
+                player.maxRunSpeed += 4;
                 
                 adept.PrimaryDamageEquipMult += 0.2f;
                 adept.SecondaryDamageEquipMult += 0.2f;
                 adept.SpecialDamageEquipMult += 0.2f;
-                player.GetDamage<SeptimaDamageClass>() += 0.2f;
+                player.GetDamage<SeptimaDamageClass>() += 0.3f;
             }
-            adept.SPUsageModifier += 0.5f;
-            adept.SPRegenModifier -= 0.1f;
         }
 
         public override void AddRecipes()

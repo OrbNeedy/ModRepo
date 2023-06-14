@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Hallowed
@@ -9,6 +10,8 @@ namespace gvmod.Content.Items.Armors.Hallowed
     [AutoloadEquip(EquipType.Head)]
     public class HallowedHead : ModItem
     {
+        private float increaseInDamage = 50;
+        private float increaseInSPUse = 35;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Hallowed hardhat");
@@ -17,6 +20,8 @@ namespace gvmod.Content.Items.Armors.Hallowed
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSPUse, increaseInDamage);
 
         public override void SetDefaults()
         {
@@ -30,11 +35,13 @@ namespace gvmod.Content.Items.Armors.Hallowed
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPUsageModifier += 0.5f;
-            adept.PrimaryDamageEquipMult += 0.35f;
-            adept.SecondaryDamageEquipMult += 0.35f;
-            adept.SpecialDamageEquipMult += 0.35f;
-            player.GetDamage<SeptimaDamageClass>() += 0.35f;
+            float totalSPUseIncrease = increaseInSPUse / 100f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            adept.SPUsageModifier += totalSPUseIncrease;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

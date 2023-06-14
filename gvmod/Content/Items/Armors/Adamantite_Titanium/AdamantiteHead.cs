@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Adamantite_Titanium
@@ -9,14 +10,18 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
     [AutoloadEquip(EquipType.Head)]
     public class AdamantiteHead : ModItem
     {
+        private int increaseInSP = 80;
+        private float increaseInSPRecovery = 35;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Adamantite bow");
             /* Tooltip.SetDefault("Even boys look good with bows, manly even.\n" +
-                "Increases SP by 80 and all SP recovery by 35%."); */
+                "Increases max SP by 80 and all SP recovery by 35%."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSP, increaseInSPRecovery);
 
         public override void SetDefaults()
         {
@@ -30,9 +35,10 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPRegenModifier *= 1.35f;
-            adept.SPRegenOverheatModifier *= 1.35f;
-            adept.MaxSeptimalPower2 += 80;
+            float totalIncrease = 1 + (increaseInSPRecovery / 100f);
+            adept.SPRegenModifier *= totalIncrease;
+            adept.SPRegenOverheatModifier *= totalIncrease;
+            adept.MaxSeptimalPower2 += increaseInSP;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

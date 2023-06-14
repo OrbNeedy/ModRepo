@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Power
@@ -9,14 +10,15 @@ namespace gvmod.Content.Items.Armors.Power
     [AutoloadEquip(EquipType.Legs)]
     public class PowerLegs : ModItem
     {
+        private float increaseInDamage = 12;
+        private float increaseInSpeed = 20;
+        private float increaseInSPUse = 20;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Power armored pants");
-            /* Tooltip.SetDefault("Made to increase your physical abilities, with no regard for your comfort.\n" +
-                "Increases all septima damage, movement speed, and all SP usage."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSpeed, increaseInSPUse);
 
         public override void SetDefaults()
         {
@@ -30,13 +32,16 @@ namespace gvmod.Content.Items.Armors.Power
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPUsageModifier += 0.2f;
-            adept.SPRegenModifier -= 0.02f;
-            adept.PrimaryDamageEquipMult += 0.15f;
-            adept.SecondaryDamageEquipMult += 0.15f;
-            adept.SpecialDamageEquipMult += 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.15f;
-            player.moveSpeed += 0.2f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalSpeedIncrease = increaseInSpeed / 100f;
+            float totalSPUseIncrease = increaseInSPUse / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
+            player.moveSpeed += totalSpeedIncrease;
+            adept.SPUsageModifier += totalSPUseIncrease;
+            adept.SPRegenModifier -= totalSPUseIncrease;
         }
 
         public override void AddRecipes()

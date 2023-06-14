@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
@@ -9,6 +10,8 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
     [AutoloadEquip(EquipType.Head)]
     public class OrichalcumHead : ModItem
     {
+        private float increaseInDamage = 15;
+        private float increaseInSpeed = 35;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Orichalcum fedora");
@@ -17,6 +20,8 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSpeed);
 
         public override void SetDefaults()
         {
@@ -30,13 +35,15 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.15f;
-            adept.SecondaryDamageEquipMult += 0.15f;
-            adept.SpecialDamageEquipMult += 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.15f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalSpeedIncrease = increaseInSpeed / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
             if (adept.IsOverheated)
             {
-                player.moveSpeed += 0.25f;
+                player.moveSpeed += totalSpeedIncrease;
             }
         }
 

@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Cobalt_Palladium
@@ -9,6 +10,8 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
     [AutoloadEquip(EquipType.Head)]
     public class CobaltHead : ModItem
     {
+        private float increaseInDamage = 10;
+        private float decreaseInSPUse = 15;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Cobalt headband");
@@ -17,6 +20,8 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, decreaseInSPUse);
 
         public override void SetDefaults()
         {
@@ -30,11 +35,13 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.1f;
-            adept.SecondaryDamageEquipMult += 0.1f;
-            adept.SpecialDamageEquipMult += 0.1f;
-            adept.SPUsageModifier -= 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
+            float totalIncrease = increaseInDamage / 100f;
+            float totalDecrease = decreaseInSPUse / 100f;
+            adept.PrimaryDamageEquipMult += totalIncrease;
+            adept.SecondaryDamageEquipMult += totalIncrease;
+            adept.SpecialDamageEquipMult += totalIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalIncrease;
+            adept.SPUsageModifier -= totalDecrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

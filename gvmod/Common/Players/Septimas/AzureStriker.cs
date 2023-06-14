@@ -8,6 +8,7 @@ using gvmod.Common.Players.Septimas.Skills;
 using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using System;
+using gvmod.Content;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -64,8 +65,7 @@ namespace gvmod.Common.Players.Septimas
             [ProjectileID.WaterBolt] = -1.5f,
             [ProjectileID.WaterStream] = -1,
             [ProjectileID.WaterGun] = -1,
-            [ProjectileID.InfluxWaver] = -1,
-            [ProjectileID.EyeBeam] = -1.5f
+            [ProjectileID.InfluxWaver] = -1
         };
 
         public override Dictionary<int, float> NPCInteractions => new Dictionary<int, float>
@@ -138,7 +138,7 @@ namespace gvmod.Common.Players.Septimas
                 float tagMultiplier = (float)((tag.Level * 0.75));
                 if (tag.ShockIframes == 0)
                 {
-                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, false);
+                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
                     tag.ShockIframes = 6;
                 }
             }
@@ -419,10 +419,16 @@ namespace gvmod.Common.Players.Septimas
 
         public void FlashfieldCrashCheck()
         {
+            // The player has pvp on
+            if (!Player.hostile) return;
+
             foreach (Player player in Main.player)
             {
                 // The target is not the player itself
                 if (player == Player) continue;
+
+                // The target has pvp active an is from an opposite team
+                if (!player.InOpposingTeam(Player) || !player.hostile)
 
                 // The target is in range
                 if (!player.WithinRange(Player.Center, 704)) continue;
@@ -431,11 +437,12 @@ namespace gvmod.Common.Players.Septimas
                 AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
                 if (adept.Septima is AzureThunderclap || adept.Septima is AzureStriker)
                 {
-                    // The target can use and is using it's primary ability, flashfield
+                    // The target can use and is using flashfield
                     if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         crashing = true;
                         Dust.NewDust((player.Center + Player.Center) / 2, 12, 12, DustID.AncientLight);
+                        Dust.NewDust(Player.Center, 12, 12, DustID.AncientLight);
                     }
                 } else
                 {

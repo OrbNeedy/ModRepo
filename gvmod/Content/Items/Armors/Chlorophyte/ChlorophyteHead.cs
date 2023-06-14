@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Chlorophyte
@@ -9,14 +10,15 @@ namespace gvmod.Content.Items.Armors.Chlorophyte
     [AutoloadEquip(EquipType.Head)]
     public class ChlorophyteHead : ModItem
     {
+        private float decreaseInSPUse = 60;
+        private float increaseInDamage = 10;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Chlorophyte tophat");
-            /* Tooltip.SetDefault("Makes you more calmed.\n" +
-                "Decreases SP usage and increases Septima damage."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(decreaseInSPUse, increaseInDamage);
 
         public override void SetDefaults()
         {
@@ -30,11 +32,13 @@ namespace gvmod.Content.Items.Armors.Chlorophyte
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPUsageModifier -= 0.6f;
-            adept.PrimaryDamageEquipMult += 0.1f;
-            adept.SecondaryDamageEquipMult += 0.1f;
-            adept.SpecialDamageEquipMult += 0.1f;
-            player.GetDamage<SeptimaDamageClass>() += 0.1f;
+            float totalDecrease = decreaseInSPUse / 100f;
+            float totalIncrease = increaseInDamage / 100f;
+            adept.SPUsageModifier -= totalDecrease;
+            adept.PrimaryDamageEquipMult += totalIncrease;
+            adept.SecondaryDamageEquipMult += totalIncrease;
+            adept.SpecialDamageEquipMult += totalIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalIncrease;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

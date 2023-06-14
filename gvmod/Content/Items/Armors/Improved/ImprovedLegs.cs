@@ -3,6 +3,7 @@ using gvmod.Content.Items.Armors.Protective;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.Improved
@@ -10,6 +11,8 @@ namespace gvmod.Content.Items.Armors.Improved
     [AutoloadEquip(EquipType.Legs)]
     public class ImprovedLegs : ModItem
     {
+        private float increaseInSpeed = 15;
+        private float decreaseInSPUse = 20;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Protective Leggins");
@@ -18,6 +21,8 @@ namespace gvmod.Content.Items.Armors.Improved
 
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSpeed, decreaseInSPUse);
 
         public override void SetDefaults()
         {
@@ -31,8 +36,10 @@ namespace gvmod.Content.Items.Armors.Improved
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.SPUsageModifier *= 0.8f;
+            float totalMoveIncrease = increaseInSpeed / 100f;
+            float totalSPUseDecrease = decreaseInSPUse / 100f;
             player.moveSpeed += 0.15f;
+            adept.SPUsageModifier -= 0.8f;
         }
 
         public override void AddRecipes()

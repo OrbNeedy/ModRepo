@@ -3,6 +3,7 @@ using gvmod.Content.Items.Armors.Power;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Armors.TrueQuill
@@ -10,14 +11,15 @@ namespace gvmod.Content.Items.Armors.TrueQuill
     [AutoloadEquip(EquipType.Legs)]
     public class TrueQuillLegs : ModItem
     {
+        private float increaseInDamage = 8;
+        private float increaseInSpeed = 20;
+        private float decreaseInSPUsage = 15;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("True Quill legs");
-            /* Tooltip.SetDefault("Improved with the finest cloth, stolen from a madman.\n" +
-                "Increases all septima damage, movement speed, and decreases SP usage."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInDamage, increaseInSpeed, decreaseInSPUsage);
 
         public override void SetDefaults()
         {
@@ -31,11 +33,15 @@ namespace gvmod.Content.Items.Armors.TrueQuill
         public override void UpdateEquip(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            adept.PrimaryDamageEquipMult += 0.15f;
-            adept.SecondaryDamageEquipMult += 0.15f;
-            adept.SpecialDamageEquipMult += 0.15f;
-            player.GetDamage<SeptimaDamageClass>() += 0.15f;
-            player.moveSpeed += 0.2f;
+            float totalDamageIncrease = increaseInDamage / 100f;
+            float totalSpeedIncrease = increaseInSpeed / 100f;
+            float totalSPUseDecrease = decreaseInSPUsage / 100f;
+            adept.PrimaryDamageEquipMult += totalDamageIncrease;
+            adept.SecondaryDamageEquipMult += totalDamageIncrease;
+            adept.SpecialDamageEquipMult += totalDamageIncrease;
+            player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
+            player.moveSpeed += totalSpeedIncrease;
+            adept.SPUsageModifier -= totalSPUseDecrease;
         }
 
         public override void AddRecipes()

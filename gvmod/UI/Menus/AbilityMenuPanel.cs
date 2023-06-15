@@ -16,16 +16,30 @@ namespace gvmod.UI.Menus
         private Color gradientA;
         private Color gradientB;
         private float quotient;
+        private bool hidden;
         public bool CanMove { get; set; }
 
         public AbilityMenuPanel(Asset<Texture2D> texture) : base(texture)
         {
             gradientA = new Color(255, 222, 60); // The color on the left
             gradientB = new Color(255, 162, 0); // The color on the right
+            hidden = false;
+        }
+
+        public override void OnDeactivate()
+        {
+            hidden = true;
+        }
+
+        public override void OnActivate()
+        {
+            hidden = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (hidden) return;
+
             base.Draw(spriteBatch);
 
             Rectangle hitbox = GetInnerDimensions().ToRectangle();

@@ -22,6 +22,7 @@ namespace gvmod.UI.Menus
         private UIImageButton selectionLeft;
         private SpecialOption specialOption;
         private UIText level;
+        public bool hidden = false;
         private int editingSlot = 0;
         private bool selecting = false;
         private bool canMove = true;
@@ -121,11 +122,24 @@ namespace gvmod.UI.Menus
         {
             base.Draw(spriteBatch);
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-            if (adept.Septima.Name == "Human") Deactivate();
+        }
+
+        public override void OnDeactivate()
+        {
+            Main.NewText("Deactivated main menu");
+            selecting = false;
+            hidden = true;
+        }
+
+        public override void OnActivate()
+        {
+            Main.NewText("Activated main menu");
+            hidden = false;
         }
 
         private void OnSlotClick(UIMouseEvent evt, UIElement listeningElement, int i)
         {
+            if (hidden) return;
             canMove = false;
             if (!selecting)
             {
@@ -136,6 +150,7 @@ namespace gvmod.UI.Menus
 
         private void OnOptionClick(UIMouseEvent evt, UIElement listeningElement)
         {
+            if (hidden) return;
             canMove = false;
             if (selecting)
             {

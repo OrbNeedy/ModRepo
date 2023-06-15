@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using gvmod.UI.Menus;
 using System.Collections.Generic;
+using Terraria.GameInput;
 
 namespace gvmod.Common.Systems
 {
@@ -22,6 +23,17 @@ namespace gvmod.Common.Systems
 
         public override void UpdateUI(GameTime gameTime)
         {
+            if (KeybindSystem.abilityMenu.JustPressed)
+            {
+                Main.NewText("Pressed");
+                if (abilityMenu.hidden)
+                {
+                    abilityMenu.Activate();
+                } else
+                {
+                    abilityMenu.Deactivate();
+                }
+            }
             if (_abilityMenu?.CurrentState != null)
             {
                 _abilityMenu?.Update(gameTime);

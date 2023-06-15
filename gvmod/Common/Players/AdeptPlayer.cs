@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using gvmod.Content.Projectiles;
+using gvmod.UI.Menus;
 
 namespace gvmod.Common.Players
 {

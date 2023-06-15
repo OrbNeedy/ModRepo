@@ -427,6 +427,7 @@ Buffs: {
 
 Keybinds: {
 	"Ability menu(Soon).DisplayName": Ability menu( Soon)
+	"Ability menu.DisplayName": Ability menu
 	"Fourth special ability.DisplayName": Fourth special ability
 	"Third special ability.DisplayName": Third special ability
 	"Second special ability.DisplayName": Second special ability

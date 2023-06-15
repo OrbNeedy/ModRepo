@@ -20,7 +20,7 @@ namespace gvmod.Common.Systems
 			special2 = KeybindLoader.RegisterKeybind(Mod, "Second special ability", "J");
 			special3 = KeybindLoader.RegisterKeybind(Mod, "Third special ability", "K");
 			special4 = KeybindLoader.RegisterKeybind(Mod, "Fourth special ability", "L");
-			abilityMenu = KeybindLoader.RegisterKeybind(Mod, "Ability menu(Soon)", "P");
+			abilityMenu = KeybindLoader.RegisterKeybind(Mod, "Ability menu", "P");
 		}
 
 		public override void Unload()

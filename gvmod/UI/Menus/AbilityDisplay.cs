@@ -15,6 +15,7 @@ namespace gvmod.UI.Menus
         public int specialIndex { get; set; }
         public Special assignedSpecial { get; set; }
         private int assignedSlot;
+        private bool hidden;
         private Texture2D activeAbility;
         private Texture2D[] apCost = new Texture2D[4];
         private Texture2D empty;
@@ -32,6 +33,17 @@ namespace gvmod.UI.Menus
 
             empty = texture.Value;
 
+            hidden = false;
+        }
+
+        public override void OnDeactivate()
+        {
+            hidden = true;
+        }
+
+        public override void OnActivate()
+        {
+            hidden = false;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -98,12 +110,21 @@ namespace gvmod.UI.Menus
                 {
                     color = Color.White;
                 }
+
+                if (hidden)
+                {
+                    color.A = 122;
+                } else
+                {
+                    color.A = 255;
+                }
             }
         }
 
         public override void MouseOver(UIMouseEvent evt)
         {
-            base.MouseOver(evt);
+            if (!hidden) base.MouseOver(evt);
+
             if (assignedSpecial == null || assignedSpecial is None)
             {
                 Main.hoverItemName = "Empty";
@@ -112,6 +133,7 @@ namespace gvmod.UI.Menus
             {
                 Main.hoverItemName = assignedSpecial.Name;
             }
+            color.A = 255;
         }
     }
 }

@@ -55,7 +55,10 @@ namespace gvmod.Content.Items.Armors.Chlorophyte
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.ChlorophyteBar, 12)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
         }
     }
 }

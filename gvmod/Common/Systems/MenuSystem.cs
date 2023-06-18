@@ -25,7 +25,6 @@ namespace gvmod.Common.Systems
         {
             if (KeybindSystem.abilityMenu.JustPressed)
             {
-                Main.NewText("Pressed");
                 if (abilityMenu.hidden)
                 {
                     abilityMenu.Activate();

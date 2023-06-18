@@ -56,7 +56,7 @@ namespace gvmod.Common.Players
         public float SecondaryDamageEquipMult { get; set; }
         public float SpecialDamageEquipMult { get; set; }
 
-        public float APUsageModifier { get; set; }
+        public float APConsumeChance { get; set; }
         public float SPUsageModifier { get; set; }
         public float APRegenModifier { get; set; }
         public float SPRegenModifier { get; set; }
@@ -186,47 +186,37 @@ namespace gvmod.Common.Players
             if (KeybindSystem.secondaryAbility.JustPressed)
             {
                 IsUsingSecondaryAbility = true;
-                Main.NewText("Cooldown: " + TimeSinceSecondary);
             }
+
             if (KeybindSystem.special1.JustPressed)
             {
                 Special special = Septima.Abilities[ActiveSlots[0]];
-                if (FigureSpecialAvailability(special))
-                {
-                    AbilityPower -= (special.ApUsage * APUsageModifier);
-                    special.SpecialTimer = 0;
-                    slotToUse = 0;
-                }
+                UseSpecial(special, 0);
             }
             if (KeybindSystem.special2.JustPressed)
             {
                 Special special = Septima.Abilities[ActiveSlots[1]];
-                if (FigureSpecialAvailability(special))
-                {
-                    AbilityPower -= (special.ApUsage * APUsageModifier);
-                    special.SpecialTimer = 0;
-                    slotToUse = 1;
-                }
+                UseSpecial(special, 1);
             }
             if (KeybindSystem.special3.JustPressed)
             {
                 Special special = Septima.Abilities[ActiveSlots[2]];
-                if (FigureSpecialAvailability(special))
-                {
-                    AbilityPower -= (special.ApUsage * APUsageModifier);
-                    special.SpecialTimer = 0;
-                    slotToUse = 2;
-                }
+                UseSpecial(special, 2);
             }
             if (KeybindSystem.special4.JustPressed)
             {
                 Special special = Septima.Abilities[ActiveSlots[3]];
-                if (FigureSpecialAvailability(special))
-                {
-                    AbilityPower -= (special.ApUsage * APUsageModifier);
-                    special.SpecialTimer = 0;
-                    slotToUse = 3;
-                }
+                UseSpecial(special, 3);
+            }
+        }
+
+        private void UseSpecial(Special special, int slot = 0)
+        {
+            if (FigureSpecialAvailability(special))
+            {
+                if (Main.rand.NextFloat() >= APConsumeChance) AbilityPower -= (special.ApUsage);
+                special.SpecialTimer = 0;
+                slotToUse = slot;
             }
         }
 
@@ -575,7 +565,7 @@ namespace gvmod.Common.Players
         public void ResetResources()
         {
             MaxSeptimalPower2 = MaxSeptimalPower;
-            APUsageModifier = 1;
+            APConsumeChance = 1;
             SPUsageModifier = 1;
             APRegenModifier = 1;
             SPRegenModifier = 1;

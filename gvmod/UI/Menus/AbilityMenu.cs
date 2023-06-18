@@ -126,14 +126,12 @@ namespace gvmod.UI.Menus
 
         public override void OnDeactivate()
         {
-            Main.NewText("Deactivated main menu");
             selecting = false;
             hidden = true;
         }
 
         public override void OnActivate()
         {
-            Main.NewText("Activated main menu");
             hidden = false;
         }
 

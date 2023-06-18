@@ -11,7 +11,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         private int meteorIndex;
         public VoltaicChainsMeteor(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
-            ApUsage = 2;
+            ApUsage = 3;
             SpecialCooldownTime = 1200;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;

@@ -1,5 +1,4 @@
 ﻿using gvmod.Common.Players;
-using gvmod.Content.Buffs;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
@@ -15,8 +14,8 @@ namespace gvmod.Content.Items.Accessories
 
         public override void SetDefaults()
         {
-            Item.width = 26;
-            Item.height = 56;
+            Item.width = 16;
+            Item.height = 20;
             Item.accessory = true;
         }
 

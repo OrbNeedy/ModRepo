@@ -60,8 +60,7 @@ namespace gvmod.Common.GlobalNPCs
                 reincarnation = false;
             }
         }
-
-        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        public override void ModifyNPCLoot(NPC npc, Terraria.ModLoader.NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.ByCondition(new CanDropMirrorPiece(), ModContent.ItemType<MirrorShard>(), 1, 1, 1));
         }
@@ -79,7 +78,7 @@ namespace gvmod.Common.GlobalNPCs
                         }
                         break;
                     case NPCID.EyeofCthulhu:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedBoss1)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
@@ -87,92 +86,97 @@ namespace gvmod.Common.GlobalNPCs
                     case NPCID.EaterofWorldsHead:
                     case NPCID.EaterofWorldsBody:
                     case NPCID.EaterofWorldsTail:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedBoss2)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.BrainofCthulhu:
-                        if (NPC.downedSlimeKing)
-                        {
-                            NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
-                        }
-                        break;
-                    case NPCID.SkeletronHead:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedBoss2)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.QueenBee:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedQueenBee)
+                        {
+                            NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
+                        }
+                        break;
+                    case NPCID.SkeletronHead:
+                        if (NPC.downedBoss3)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.WallofFlesh:
-                        if (NPC.downedSlimeKing)
+                        if (Main.hardMode)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.TheDestroyer:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedMechBoss1)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.Retinazer:
                     case NPCID.Spazmatism:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedMechBoss2)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.SkeletronPrime:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedMechBoss3)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.Plantera:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedPlantBoss)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.Golem:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedGolemBoss)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.DukeFishron:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedFishron)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.CultistBoss:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedAncientCultist)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
+                    case NPCID.LunarTowerNebula:
+                    case NPCID.LunarTowerSolar:
+                    case NPCID.LunarTowerStardust:
+                    case NPCID.LunarTowerVortex:
+                        break;
                     case NPCID.MoonLordCore:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedMoonlord)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
                         break;
                     case NPCID.QueenSlimeBoss:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedQueenSlime)
                         {
+                            NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }
-                        NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         break;
                     case NPCID.HallowBoss:
-                        if (NPC.downedSlimeKing)
+                        if (NPC.downedEmpressOfLight)
                         {
                             NPC.NewNPC(npc.GetSource_FromThis(), (int)npc.Center.X, (int)npc.Center.Y, npc.type, ai0: 298);
                         }

@@ -14,9 +14,6 @@ namespace gvmod.Content.Items.Armors.Hallowed
         private float increaseInSPUse = 35;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Hallowed hardhat");
-            /* Tooltip.SetDefault("If you find something better that could be put in this slot, please tell me.\n" +
-                "Increases SP usage and greatly increases all Septima attack."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
@@ -59,7 +56,10 @@ namespace gvmod.Content.Items.Armors.Hallowed
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.HallowedBar, 12)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
         }
     }
 }

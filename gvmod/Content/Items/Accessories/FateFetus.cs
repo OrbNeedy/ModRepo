@@ -43,7 +43,7 @@ namespace gvmod.Content.Items.Accessories
 
             if (Main.rand.NextFloat() < totalChance)
             {
-                adept.APUsageModifier *= 0;
+                adept.APConsumeChance -= totalChance;
             }
         }
     }

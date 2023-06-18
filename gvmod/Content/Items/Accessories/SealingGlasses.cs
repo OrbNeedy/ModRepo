@@ -9,12 +9,6 @@ namespace gvmod.Content.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Sunglasses of lightning");
-			/* Tooltip.SetDefault("25% reduced septimal damage\n"
-							 + "50% reduced SP usage\n"
-							 + "90% chance not to consume AP when using a special ability\n"
-							 + "\"Hasta la vista, GV\""); */
-
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -28,13 +22,17 @@ namespace gvmod.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
 			var adept = player.GetModPlayer<AdeptPlayer>();
-			player.GetDamage(ModContent.GetInstance<SeptimaDamageClass>()) *= 0.75f;
-			adept.PrimaryDamageEquipMult *= 0.75f;
-			adept.SecondaryDamageEquipMult *= 0.75f;
-			adept.SpecialDamageEquipMult *= 0.75f;
-			// For developing purposes, it negates SP and AP usage.
+            player.GetDamage(ModContent.GetInstance<SeptimaDamageClass>()) -= 0.1f;
+            player.GetDamage(ModContent.GetInstance<SeptimaDamageClass>()) *= 0.8f;
+			adept.PrimaryDamageEquipMult -= 0.1f;
+			adept.SecondaryDamageEquipMult -= 0.1f;
+			adept.SpecialDamageEquipMult -= 0.1f;
+			adept.PrimaryDamageEquipMult *= 0.8f;
+			adept.SecondaryDamageEquipMult *= 0.8f;
+			adept.SpecialDamageEquipMult *= 0.8f;
+			// For developing purposes, it negates SP usage.
 			adept.SPUsageModifier *= 0f;
-			adept.APUsageModifier *= 0f;
+			adept.APConsumeChance -= 1f;
         }
     }
 }

@@ -148,10 +148,15 @@ namespace gvmod.Common.Players.Septimas
         {
             if (SecondaryTimer <= 5 && Adept.SecondaryInUse)
             {
-                for (int i = 0; i < 7; i++)
+                switch (Adept.PowerLevel)
                 {
-                    Dust.NewDust(new Vector2(Player.Center.X, Player.position.Y + Player.height), 10, 10, DustID.MartianSaucerSpark, 46);
-                    Dust.NewDust(new Vector2(Player.Center.X, Player.position.Y + Player.height), 10, 10, DustID.MartianSaucerSpark, -46);
+                    case 1:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            Dust.NewDust(new Vector2(Player.Center.X, Player.position.Y + Player.height), 10, 10, DustID.MartianSaucerSpark, 46);
+                            Dust.NewDust(new Vector2(Player.Center.X, Player.position.Y + Player.height), 10, 10, DustID.MartianSaucerSpark, -46);
+                        }
+                        break;
                 }
             }
         }
@@ -167,7 +172,8 @@ namespace gvmod.Common.Players.Septimas
                         Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(-10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
                         break;
                     case 2:
-                        //Capsule thing
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(70, 58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(100 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(-70, 58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(100 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
                         break;
                 }
             }
@@ -354,9 +360,9 @@ namespace gvmod.Common.Players.Septimas
 
         public override void UpdateEvolution()
         {
-            if (Adept.PowerLevel == 2)
+            if (Adept.PowerLevel >= 2)
             {
-                secondaryDuration = 20;
+                secondaryDuration = 90;
             }
         }
 

@@ -1,5 +1,7 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content.Buffs;
+using gvmod.Content.Items.Armors.Quill;
+using gvmod.Content.Items.Drops;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -58,7 +60,12 @@ namespace gvmod.Content.Items.Armors.TrueQuill
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+                .AddIngredient<LunaticCloth>(4)
+                .AddIngredient(ItemID.ChlorophyteOre, 8)
+                .AddIngredient<QuillBody>()
+                .AddTile(TileID.LunarCraftingStation)
+                .Register();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Content.Items.Drops;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -42,7 +43,11 @@ namespace gvmod.Content.Items.Armors.Sumeragi
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient<PulsarFragment>(15)
+            .AddIngredient(ItemID.LunarBar, 12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

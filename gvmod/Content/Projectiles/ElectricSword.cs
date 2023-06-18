@@ -1,10 +1,6 @@
-﻿using gvmod.Common.Configs.CustomDataTypes;
-using gvmod.Common.GlobalNPCs;
-using gvmod.Common.Players;
-using Microsoft.CodeAnalysis;
+﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
 using System;
-using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -15,10 +11,8 @@ namespace gvmod.Content.Projectiles
     {
         private int phase;
         private int counter;
-        private Vector2 position;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Luxcaliburg");
         }
 
         public override void SetDefaults()
@@ -41,7 +35,6 @@ namespace gvmod.Content.Projectiles
         {
             phase = 1;
             counter = 0;
-            position = Vector2.Zero;
             if (Projectile.ai[1] == 2)
             {
                 Projectile.timeLeft = 600;

@@ -58,7 +58,10 @@ namespace gvmod.Content.Items.Armors.Cobalt_Palladium
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.PalladiumBar, 12)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

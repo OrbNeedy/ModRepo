@@ -4,13 +4,13 @@ Projectiles: {
 	SeptimaBolt.DisplayName: Septima Bolt
 	PhotonLaser.DisplayName: Photon Laser
 	OrochiDrone.DisplayName: Orochi Drone
-	LightningCreeper.DisplayName: Lightning Creeper
+	LightningCreeper.DisplayName: Lightning Sweep
 	HairDartProjectile.DisplayName: Dart
 	GreedSnatcher.DisplayName: Greed Snatcher
-	GloriousSword.DisplayName: Glorious Sword
-	FlashfieldStriker.DisplayName: Flashfield Striker
+	GloriousSword.DisplayName: Glorious Strize
+	FlashfieldStriker.DisplayName: Flashfield
 	ElectricWhipProjectile.DisplayName: Electric Whip
-	ElectricSword.DisplayName: Electric Sword
+	ElectricSword.DisplayName: Luxcaliburg
 	ElectricSphere.DisplayName: Electric Sphere
 	ElectricBolt.DisplayName: Electric Bolt
 	DullahanProjectile.DisplayName: Dullahan
@@ -18,6 +18,7 @@ Projectiles: {
 	ChainMeteor.DisplayName: Chain Meteor
 	Beowulf.DisplayName: Beowulf
 	LolaPetProjectile.DisplayName: Lola
+	CapsuleSphere.DisplayName: Thunder Pulser
 }
 
 Items: {
@@ -347,6 +348,21 @@ Items: {
 		Tooltip: Recover SP upon picking up Mana
 		DisplayName: Arcanum Converter
 	}
+
+	LunaticCloth: {
+		DisplayName: Lunatic Cloth
+		Tooltip: ""
+	}
+
+	PulsarFragment: {
+		DisplayName: Pulsar Fragment
+		Tooltip: ""
+	}
+
+	SpiritualStone: {
+		DisplayName: Spiritual Stone
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -435,3 +451,5 @@ Keybinds: {
 	"Secondary septimal ability/cooldown time.DisplayName": Secondary septimal ability/cooldown time
 	"Primary septimal ability.DisplayName": Primary septimal ability
 }
+
+Tiles.SpiritualStone.MapEntry: Spiritual Stone

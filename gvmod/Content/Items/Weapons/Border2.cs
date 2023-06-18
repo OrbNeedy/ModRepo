@@ -103,7 +103,7 @@ namespace gvmod.Content.Items.Weapons
         {
             CreateRecipe()
                 .AddIngredient<Border>()
-                // Something else to make sure you can't skip straight to this upgrade with platforms
+                .AddIngredient(ItemID.ShroomiteBar, 7)
                 .AddIngredient(ItemID.LihzahrdPowerCell, 5)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

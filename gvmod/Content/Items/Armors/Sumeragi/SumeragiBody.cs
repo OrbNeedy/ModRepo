@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Content.Items.Drops;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -37,12 +38,16 @@ namespace gvmod.Content.Items.Armors.Sumeragi
             adept.SecondaryDamageEquipMult += totalDamageIncrease;
             adept.SpecialDamageEquipMult += totalDamageIncrease;
             player.GetDamage<SeptimaDamageClass>() += totalDamageIncrease;
-            adept.APUsageModifier -= totalSPUseDecrease;
+            adept.APConsumeChance -= totalSPUseDecrease;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient<PulsarFragment>(20)
+            .AddIngredient(ItemID.LunarBar, 16)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

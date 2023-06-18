@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -71,7 +72,10 @@ namespace gvmod.Content.Items.Armors.Power
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient<SpiritualStone>(14)
+            .AddTile(ItemID.MythrilAnvil)
+            .Register();
         }
     }
 }

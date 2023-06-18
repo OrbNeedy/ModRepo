@@ -60,7 +60,10 @@ namespace gvmod.Content.Items.Armors.Mythril_Orichalcum
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.OrichalcumBar, 12)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
         }
     }
 }

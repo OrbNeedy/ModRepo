@@ -14,9 +14,6 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
         private float increaseInSPRecovery = 35;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Adamantite bow");
-            /* Tooltip.SetDefault("Even boys look good with bows, manly even.\n" +
-                "Increases max SP by 80 and all SP recovery by 35%."); */
             ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
@@ -49,13 +46,16 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
         public override void UpdateArmorSet(Player player)
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-            player.setBonus = "25% chance not to consume AP.";
-            if (Main.rand.NextBool(1, 4)) adept.APUsageModifier *= 0f;
+            player.setBonus = "20% chance not to consume AP.";
+            adept.APConsumeChance -= 0.2f;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.AdamantiteBar, 12)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
         }
     }
 }

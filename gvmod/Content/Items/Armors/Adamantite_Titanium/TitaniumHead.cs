@@ -46,12 +46,15 @@ namespace gvmod.Content.Items.Armors.Adamantite_Titanium
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Attacking generates a defensive barrier of titanium shards.";
-            player.hasTitaniumStormBuff = true;
+            player.onHitTitaniumStorm = true;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+            .AddIngredient(ItemID.TitaniumBar, 13)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
         }
     }
 }

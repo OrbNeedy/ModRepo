@@ -15,7 +15,7 @@ namespace gvmod.Content.Items.Weapons
 {
 	public class DartLeader : ModItem
     {
-        //Naga, Mizuchi, Technos, Orochi, Vasuki, and Dullahan respectively
+        // Naga, Mizuchi, Technos, Orochi, Vasuki, Dullahan, and Ouroboros respectively
         public bool[] Upgrades { get; set; } = new bool[7] { false, false, false, false, false, false, false };
         private int ai0;
         private int ai1;
@@ -249,7 +249,11 @@ namespace gvmod.Content.Items.Weapons
 
         public override void AddRecipes()
 		{
-			CreateRecipe(1)
+			CreateRecipe()
+                .AddRecipeGroup(RecipeGroupID.IronBar, 10)
+                .AddIngredient(ItemID.Granite, 5)
+                .AddIngredient(ItemID.Marble, 5)
+                .AddTile(TileID.Anvils)
 				.Register();
 		}
 	}

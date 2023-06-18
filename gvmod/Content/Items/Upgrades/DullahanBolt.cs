@@ -60,5 +60,10 @@ namespace gvmod.Content.Items.Upgrades
             }
             return true;
         }
+
+        public override void AddRecipes()
+        {
+
+        }
     }
 }

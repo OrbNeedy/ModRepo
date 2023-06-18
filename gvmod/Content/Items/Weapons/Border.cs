@@ -90,5 +90,15 @@ namespace gvmod.Content.Items.Weapons
             }
             return false;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Revolver)
+                .AddRecipeGroup("GoldBar", 7)
+                .AddIngredient(ItemID.IllegalGunParts)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 }

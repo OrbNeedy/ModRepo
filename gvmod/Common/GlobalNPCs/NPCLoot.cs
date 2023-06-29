@@ -38,7 +38,6 @@ namespace gvmod.Common.GlobalNPCs
                     break;
                 case NPCID.LunarTowerNebula:
                 case NPCID.LunarTowerSolar:
-                case NPCID.LunarTowerStardust:
                 case NPCID.LunarTowerVortex:
                     if (Main.expertMode || Main.masterMode)
                     {

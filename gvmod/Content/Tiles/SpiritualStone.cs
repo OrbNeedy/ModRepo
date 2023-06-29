@@ -19,6 +19,8 @@ namespace gvmod.Content.Tiles
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = false;
 
+            TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(152, 171, 198), name);
 

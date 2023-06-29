@@ -74,7 +74,7 @@ namespace gvmod.Content.Items.Armors.Power
         {
             CreateRecipe()
             .AddIngredient<SpiritualStone>(14)
-            .AddTile(ItemID.MythrilAnvil)
+            .AddTile(TileID.MythrilAnvil)
             .Register();
         }
     }

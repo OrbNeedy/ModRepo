@@ -1,10 +1,12 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content.Buffs;
+using gvmod.Content.Items.Placeable;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
@@ -67,6 +69,21 @@ namespace gvmod.Content.Items.Accessories
                 SpriteEffects.None,
                 0f
             );
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<SpiritualStone>(24)
+            .AddIngredient(ItemID.IronBroadsword)
+            .AddTile(TileID.Anvils)
+            .Register();
+
+            CreateRecipe()
+            .AddIngredient<SpiritualStone>(24)
+            .AddIngredient(ItemID.LeadBroadsword)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

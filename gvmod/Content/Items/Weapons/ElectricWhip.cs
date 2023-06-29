@@ -30,11 +30,5 @@ namespace gvmod.Content.Items.Weapons
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
 		}
-
-		public override void AddRecipes()
-		{
-			Recipe recipe = CreateRecipe();
-			recipe.Register();
-		}
 	}
 }

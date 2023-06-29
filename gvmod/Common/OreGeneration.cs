@@ -17,7 +17,7 @@ namespace gvmod.Common
 
             if (TaskIndex != -1)
             {
-                tasks.Insert(TaskIndex + 1,new OreGenerationPass("A world of nightmares never seen before", 100f));
+                tasks.Insert(TaskIndex + 1,new OreGenerationPass("A world of nightmares never seen before", 200f));
             }
         }
     }
@@ -31,7 +31,7 @@ namespace gvmod.Common
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "Spiritualizing stones";
-            for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * 1E-04); k++)
+            for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * 8E-03); k++)
             {
                 int x = WorldGen.genRand.Next(0, Main.maxTilesX);
                 int y = WorldGen.genRand.Next((int)GenVars.worldSurfaceHigh, Main.maxTilesY);

@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.GameContent.Creative;
 using Terraria.Localization;
+using gvmod.Content.Items.Placeable;
 
 namespace gvmod.Content.Items.Armors.Protective
 {
@@ -33,7 +34,12 @@ namespace gvmod.Content.Items.Armors.Protective
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+                .AddRecipeGroup("IronBar", 5)
+                .AddRecipeGroup("GoldBar", 5)
+                .AddIngredient<SpiritualStone>(3)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

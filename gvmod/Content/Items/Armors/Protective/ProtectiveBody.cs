@@ -1,4 +1,5 @@
 ﻿using gvmod.Common.Players;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -51,7 +52,12 @@ namespace gvmod.Content.Items.Armors.Protective
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+                .AddRecipeGroup("IronBar", 7)
+                .AddRecipeGroup("GoldBar", 7)
+                .AddIngredient<SpiritualStone>(5)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

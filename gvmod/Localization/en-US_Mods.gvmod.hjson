@@ -154,7 +154,7 @@ Items: {
 	}
 
 	QuillLegs: {
-		Tooltip: Increses movement speed by {0}%.
+		Tooltip: Increses movement speed by {0}% and reduces SP usage by {1}%.
 		DisplayName: Quill Leggins
 	}
 
@@ -194,7 +194,7 @@ Items: {
 	}
 
 	ImprovedLegs: {
-		Tooltip: Increses movement speed by {0}% and reduces SP usage by {1}%.
+		Tooltip: Increses movement speed by {0}%.
 		DisplayName: Improved Leggins
 	}
 

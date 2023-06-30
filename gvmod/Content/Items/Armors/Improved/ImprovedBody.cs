@@ -1,5 +1,6 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content.Items.Armors.Protective;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -11,13 +12,9 @@ namespace gvmod.Content.Items.Armors.Improved
     [AutoloadEquip(EquipType.Body)]
     public class ImprovedBody : ModItem
     {
-        private float increaseInDamage = 12;
+        private float increaseInDamage = 10;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Improved Breastplate");
-            /* Tooltip.SetDefault("Improved with special minerals.\n" +
-                "Increases all septima damage by 12%."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
@@ -29,7 +26,7 @@ namespace gvmod.Content.Items.Armors.Improved
             Item.height = 22;
             Item.value = Item.sellPrice(0, 0, 10, 0);
             Item.rare = ItemRarityID.Green;
-            Item.defense = 17;
+            Item.defense = 10;
         }
 
         public override void UpdateEquip(Player player)
@@ -49,15 +46,22 @@ namespace gvmod.Content.Items.Armors.Improved
 
         public override void UpdateArmorSet(Player player)
         {
-            APSPPlayer apsp = player.GetModPlayer<APSPPlayer>();
-            player.setBonus = "Dealing damage increases current AP and SP.";
-            apsp.ApAdded += 1;
-            apsp.SpAdded += 1;
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+            player.setBonus = "Increases defense and speed when not overheated.";
+            if (!adept.IsOverheated)
+            {
+                player.statDefense += 8;
+                player.moveSpeed += 0.1f;
+            }
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+                .AddIngredient<ProtectiveBody>()
+                .AddIngredient<SpiritualStone>(8)
+                .AddRecipeGroup("CrimtaneBar", 8)
+                .Register();
         }
     }
 }

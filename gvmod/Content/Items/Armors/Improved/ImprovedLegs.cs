@@ -1,5 +1,6 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content.Items.Armors.Protective;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -11,18 +12,13 @@ namespace gvmod.Content.Items.Armors.Improved
     [AutoloadEquip(EquipType.Legs)]
     public class ImprovedLegs : ModItem
     {
-        private float increaseInSpeed = 15;
-        private float decreaseInSPUse = 20;
+        private float increaseInSpeed = 10;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Protective Leggins");
-            /* Tooltip.SetDefault("Thunder thights.\n" +
-                "Increses movement speed by 15% and reduces SP usage."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSpeed, decreaseInSPUse);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(increaseInSpeed);
 
         public override void SetDefaults()
         {
@@ -30,21 +26,22 @@ namespace gvmod.Content.Items.Armors.Improved
             Item.height = 18;
             Item.value = Item.sellPrice(0, 0, 10, 0);
             Item.rare = ItemRarityID.Green;
-            Item.defense = 13;
+            Item.defense = 7;
         }
 
         public override void UpdateEquip(Player player)
         {
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             float totalMoveIncrease = increaseInSpeed / 100f;
-            float totalSPUseDecrease = decreaseInSPUse / 100f;
-            player.moveSpeed += 0.15f;
-            adept.SPUsageModifier -= 0.8f;
+            player.moveSpeed += totalMoveIncrease;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(1).Register();
+            CreateRecipe()
+                .AddIngredient<ProtectiveLegs>()
+                .AddIngredient<SpiritualStone>(5)
+                .AddRecipeGroup("CrimtaneBar", 5)
+                .Register();
         }
     }
 }

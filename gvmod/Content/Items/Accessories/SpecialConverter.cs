@@ -2,6 +2,7 @@
 using gvmod.Content.Buffs;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
@@ -24,6 +25,15 @@ namespace gvmod.Content.Items.Accessories
         {
             ConversionPlayer converter = player.GetModPlayer<ConversionPlayer>();
             converter.Special = true;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<ArcanumConverter>()
+            .AddIngredient<ForbiddenConverter>()
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

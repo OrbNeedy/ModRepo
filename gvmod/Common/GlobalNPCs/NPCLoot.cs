@@ -1,4 +1,5 @@
-﻿using gvmod.Content.Items.Drops;
+﻿using gvmod.Content.Items.Accessories;
+using gvmod.Content.Items.Drops;
 using gvmod.Content.Items.Upgrades;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -13,6 +14,9 @@ namespace gvmod.Common.GlobalNPCs
         {
             switch (npc.type)
             {
+                case NPCID.Tim:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ArcanumConverter>(), 5, 1, 1));
+                    break;
                 case NPCID.CultistArcherBlue:
                 case NPCID.CultistDevote:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<LunaticCloth>(), 1, 2, 6));

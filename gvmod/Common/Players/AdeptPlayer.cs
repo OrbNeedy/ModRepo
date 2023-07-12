@@ -214,7 +214,9 @@ namespace gvmod.Common.Players
         {
             if (FigureSpecialAvailability(special))
             {
-                if (Main.rand.NextFloat() >= APConsumeChance) AbilityPower -= (special.ApUsage);
+                if (APConsumeChance < 0.2) APConsumeChance = 0.2f;
+                bool consumeAP = (Main.rand.NextFloat() < APConsumeChance);
+                if (consumeAP) AbilityPower -= (special.ApUsage);
                 special.SpecialTimer = 0;
                 slotToUse = slot;
             }

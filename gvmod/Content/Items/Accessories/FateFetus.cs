@@ -1,7 +1,9 @@
 ﻿using gvmod.Common.Players;
-using System.Collections.Generic;
+using gvmod.Content.Items.Drops;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -17,10 +19,6 @@ namespace gvmod.Content.Items.Accessories
         }
 
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(apConsumeChance, damageIncrease);
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-        }
 
         public override void SetDefaults()
         {
@@ -45,6 +43,17 @@ namespace gvmod.Content.Items.Accessories
             {
                 adept.APConsumeChance -= totalChance;
             }
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Glass, 10)
+                .AddIngredient<Fetus>()
+                .AddIngredient<SpiritualStone>(40)
+                .AddIngredient(ItemID.LunarBar, 12)
+                .AddTile(TileID.LunarCraftingStation)
+                .Register();
         }
     }
 }

@@ -17,9 +17,6 @@ namespace gvmod.Content.Items.Accessories
         private Color bodyColor = Color.White;
         public override void SetStaticDefaults()
         {
-            /* Tooltip.SetDefault("Transforms the player into an armed phenomenon, incresing their \n"
-                             + "capabilities."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
         public override void Load()
@@ -74,16 +71,11 @@ namespace gvmod.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<SpiritualStone>(24)
-            .AddIngredient(ItemID.IronBroadsword)
-            .AddTile(TileID.Anvils)
-            .Register();
-
-            CreateRecipe()
-            .AddIngredient<SpiritualStone>(24)
-            .AddIngredient(ItemID.LeadBroadsword)
-            .AddTile(TileID.Anvils)
-            .Register();
+                .AddIngredient<SpiritualStone>(20)
+                .AddRecipeGroup("BloodButcherer", 1)
+                .AddRecipeGroup("GoldBar", 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

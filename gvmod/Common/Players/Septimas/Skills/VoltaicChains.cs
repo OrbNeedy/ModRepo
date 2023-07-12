@@ -119,6 +119,7 @@ namespace gvmod.Common.Players.Septimas.Skills
                 case 1:
                     baseDamage = 50;
                     break;
+                case 3:
                 case 2:
                     baseDamage = 75;
                     if (extend < 2)

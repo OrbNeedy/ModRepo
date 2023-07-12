@@ -11,9 +11,6 @@ namespace gvmod.Content.Projectiles
     {
         private int phase;
         private int counter;
-        public override void SetStaticDefaults()
-        {
-        }
 
         public override void SetDefaults()
         {
@@ -35,9 +32,14 @@ namespace gvmod.Content.Projectiles
         {
             phase = 1;
             counter = 0;
-            if (Projectile.ai[1] == 2)
+            switch (Projectile.ai[1])
             {
-                Projectile.timeLeft = 600;
+                case 3:
+                    Projectile.timeLeft = 100;
+                    break;
+                case 2:
+                    Projectile.timeLeft = 600;
+                    break;
             }
 
             switch (Projectile.ai[0])
@@ -115,10 +117,55 @@ namespace gvmod.Content.Projectiles
                     }
                     MovementAI(player);
                     break;
+                case 3:
+                    GvMove(player);
+                    break;
                 default:
                     if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
                         Projectile.timeLeft = 2;
+                    }
+                    break;
+            }
+        }
+
+        private void GvMove(Player player)
+        {
+            float value = Map(counter, 30, 45, 0, (float)Math.PI);
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+            Vector2 direction = (Main.MouseWorld - Projectile.Center);
+            direction.Normalize();
+            Projectile.Center = player.Center + new Vector2(56 * player.direction, 0);
+            switch (phase)
+            {
+                case 1:
+                    Projectile.velocity.X = 0.015f * player.direction;
+                    Projectile.velocity.Y = -0.01f;
+                    if (counter >= 10)
+                    {
+                        phase++;
+                        counter = 0;
+                    }
+                    break;
+                case 2:
+                    Projectile.velocity.X = (float)Math.Sin(value*2) * 0.1f * player.direction;
+                    Projectile.velocity.Y = (float)Math.Cos(value*2) * 0.1f;
+                    if (counter == 20)
+                    {
+                        Projectile.NewProjectile(player.GetSource_FromThis(), Projectile.Center, direction * 16, ModContent.ProjectileType<SwordWave>(), (int)(Projectile.damage * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult), 8, player.whoAmI);
+                    }
+                    if (counter >= 40)
+                    {
+                        phase++;
+                        counter = 0;
+                    }
+                    break;
+                case 3:
+                    Projectile.velocity.X *= 0.1f;
+                    Projectile.velocity.Y *= 0.1f;
+                    if (counter >= 10)
+                    {
+                        Projectile.timeLeft = 0;
                     }
                     break;
             }

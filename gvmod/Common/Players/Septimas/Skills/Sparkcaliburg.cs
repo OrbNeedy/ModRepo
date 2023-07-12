@@ -157,6 +157,14 @@ namespace gvmod.Common.Players.Septimas.Skills
                         sparkcaliburgIndex3 = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(96 * -Player.direction, 0f), new Vector2(1f * -Player.direction, 0f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, -1, 1);
                     }
                     break;
+                case 3:
+                    baseDamage = 425;
+                    SpecialDuration = 90;
+                    if (!sparkcaliburgExists)
+                    {
+                        sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0.01f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, 0, 3);
+                    }
+                    break;
             }
         }
 

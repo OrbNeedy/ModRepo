@@ -1,6 +1,9 @@
 ﻿using gvmod.Content.Items.Accessories;
 using gvmod.Content.Items.Placeable;
 using gvmod.Content.Items.Weapons;
+using gvmod.Content.Pets;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,6 +18,7 @@ namespace gvmod.Common
             int[] goldChestItems = { ModContent.ItemType<SpiritualStone>(), ModContent.ItemType<ElectricWhip>() };
             int[] lockedGoldChestItems = { ModContent.ItemType<ForbiddenConverter>() };
             int[] shadowChestItems = { ModContent.ItemType<SecretConverter>() };
+            int[] specialLolaLoot = { ModContent.ItemType<LolaPetItem>() };
             for (int chestIndex = 0; chestIndex < Main.maxChests; chestIndex++)
             {
                 int chestItemsChoice = 0;
@@ -35,12 +39,23 @@ namespace gvmod.Common
                     }
                 }
             }
+
+            for (int i = 0; i < 6; i++)
+            {
+                Chest chest;
+                do
+                {
+                    chest = Main.chest[Main.rand.Next(0, Main.maxChests)];
+                } while (chest == null || Main.tile[chest.x, chest.y].TileType != TileID.Containers);
+                int chestItemsChoice = 0;
+                PutInChest(chest, ref chestItemsChoice, specialLolaLoot, false);
+            }
         }
 
         private void PutInChest(Chest chest, ref int chestItemsChoice, int[] itemPool, bool skip)
         {
             if (skip) return;
-            for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
+            for (int inventoryIndex = 0; inventoryIndex < chest.item.Length; inventoryIndex++)
             {
                 if (chest.item[inventoryIndex].type == ItemID.None)
                 {
@@ -49,6 +64,18 @@ namespace gvmod.Common
                     break;
                 }
             }
+        }
+
+        private bool LolaCheck(Chest chest)
+        {
+            for (int inventoryIndex = 0; inventoryIndex < chest.item.Length; inventoryIndex++)
+            {
+                if (chest.item[inventoryIndex].type == ModContent.ItemType<LolaPetItem>())
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

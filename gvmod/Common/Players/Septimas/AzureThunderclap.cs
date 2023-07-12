@@ -349,13 +349,13 @@ namespace gvmod.Common.Players.Septimas
                 Main.NewText("Your septima has reached new heights!", ClearColor);
             }
 
-            if (Adept.Level >= 60 && NPC.downedMoonlord &&
+            /*if (Adept.Level >= 60 && NPC.downedMoonlord &&
                 Adept.PowerLevel == 2 && Adept.UnlockedPotential)
             {
                 Adept.PowerLevel++;
                 InitializeAbilitiesList();
                 Main.NewText("Your septima has reached it's pinnacle!", ClearColor);
-            }
+            }*/
         }
 
         public override void UpdateEvolution()

@@ -32,14 +32,14 @@ namespace gvmod.Content.Items.Ammo
         public override void AddRecipes()
         {
             CreateRecipe(132)
-                .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-                .AddIngredient(ItemID.Ruby)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 5)
+                .AddIngredient(ItemID.Ruby, 2)
                 .AddTile(TileID.Anvils)
                 .Register();
 
             CreateRecipe(132)
-                .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-                .AddIngredient(ItemID.Diamond)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 5)
+                .AddIngredient(ItemID.Diamond, 2)
                 .AddTile(TileID.Anvils)
                 .Register();
         }

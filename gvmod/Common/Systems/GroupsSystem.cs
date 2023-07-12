@@ -23,6 +23,11 @@ namespace gvmod.Common.Systems
                 $"{Lang.GetItemNameValue(ItemID.CrimtaneBar)}", ItemID.CrimtaneBar, ItemID.DemoniteBar);
 
             RecipeGroup.RegisterGroup("CrimtaneBar", group3);
+
+            RecipeGroup group4 = new RecipeGroup(() => $"{Language.GetTextValue("LegacyMisc.37")} " +
+                $"{Lang.GetItemNameValue(ItemID.BloodButcherer)}", ItemID.BloodButcherer, ItemID.LightsBane);
+
+            RecipeGroup.RegisterGroup("BloodButcherer", group4);
         }
     }
 }

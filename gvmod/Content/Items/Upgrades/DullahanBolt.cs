@@ -13,8 +13,6 @@ namespace gvmod.Content.Items.Upgrades
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Dullahan Upgrade");
-            // Tooltip.SetDefault("An upgrade for Dart Leader. Only upgrades the weapon to the uppermost left of \nthe inventory. \nUse again to remove the upgrade.");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
@@ -59,11 +57,6 @@ namespace gvmod.Content.Items.Upgrades
                 }
             }
             return true;
-        }
-
-        public override void AddRecipes()
-        {
-
         }
     }
 }

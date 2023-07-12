@@ -14,7 +14,6 @@ namespace gvmod.Content.Projectiles
         private int timer;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Chain Meteor");
         }
 
         public override void SetDefaults()

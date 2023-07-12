@@ -1,8 +1,11 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content;
 using gvmod.Content.Buffs;
+using gvmod.Content.Items.Drops;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
@@ -11,9 +14,6 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            /* Tooltip.SetDefault("Transforms the player into an improved armed phenomenon, incresing their \n"
-                             + "capabilities significantly."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
@@ -30,6 +30,18 @@ namespace gvmod.Content.Items.Accessories
             {
                 player.AddBuff(ModContent.BuffType<ArmedPhenomenon2A>(), 2, true);
             }
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.SpellTome)
+                .AddIngredient<SpiritualStone>(15)
+                .AddIngredient(ItemID.SoulofSight, 5)
+                .AddIngredient(ItemID.SoulofNight, 5)
+                .AddIngredient(ItemID.SoulofLight, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

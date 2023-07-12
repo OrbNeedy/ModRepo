@@ -12,6 +12,7 @@ namespace gvmod.Content.Projectiles
         private int state;
         private int counting;
         private Vector2 axis;
+        private Vector2 truePosition;
         private Vector2 position;
         private Vector2 target;
         public override void SetStaticDefaults()
@@ -86,7 +87,19 @@ namespace gvmod.Content.Projectiles
             base.OnSpawn(source);
             Player player = Main.player[Projectile.owner];
             axis = target = player.Center;
-            position = Projectile.Center;
+            position = truePosition = Projectile.Center;
+        }
+
+        private void SimpleMovementAI()
+        {
+            Player player = Main.player[Projectile.owner];
+            target = player.Center;
+
+            if (axis.Distance(target) > 10)
+            {
+                axis += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 10;
+                position += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 10;
+            }
         }
 
         private void MovementAI()

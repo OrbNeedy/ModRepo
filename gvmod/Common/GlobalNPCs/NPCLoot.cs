@@ -14,6 +14,9 @@ namespace gvmod.Common.GlobalNPCs
         {
             switch (npc.type)
             {
+                case NPCID.Nailhead:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SuperMagnet>(), 1, 1, 8));
+                    break;
                 case NPCID.Tim:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ArcanumConverter>(), 5, 1, 1));
                     break;
@@ -39,9 +42,11 @@ namespace gvmod.Common.GlobalNPCs
                 case NPCID.CultistBoss:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<LunaticCloth>(), 1, 6, 12));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<VasukiBolt>(), 1, 1));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DragonRadiation>(), 1, 1));
                     break;
                 case NPCID.LunarTowerNebula:
                 case NPCID.LunarTowerSolar:
+                case NPCID.LunarTowerStardust:
                 case NPCID.LunarTowerVortex:
                     if (Main.expertMode || Main.masterMode)
                     {
@@ -53,6 +58,7 @@ namespace gvmod.Common.GlobalNPCs
                     break;
                 case NPCID.MoonLordCore:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DullahanBolt>(), 1, 1));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Fetus>(), 1, 1));
                     break;
             }
         }

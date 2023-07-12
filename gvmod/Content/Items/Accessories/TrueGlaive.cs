@@ -1,8 +1,11 @@
 ﻿using gvmod.Common.Players;
 using gvmod.Content;
 using gvmod.Content.Buffs;
+using gvmod.Content.Items.Drops;
+using gvmod.Content.Items.Placeable;
 using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace gvmod.Content.Items.Accessories
@@ -11,10 +14,6 @@ namespace gvmod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Binding brand");
-            /* Tooltip.SetDefault("Transforms the player into the ultimate armed phenomenon, incresing their \n"
-                             + "capabilities a lot."); */
-
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
@@ -28,6 +27,17 @@ namespace gvmod.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.AddBuff(ModContent.BuffType<ArmedPhenomenon3>(), 2, true);
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<Glaive>()
+                .AddIngredient(ItemID.ChlorophyteBar, 5)
+                .AddIngredient(ItemID.Ectoplasm, 12)
+                .AddIngredient<SpiritualStone>(27)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

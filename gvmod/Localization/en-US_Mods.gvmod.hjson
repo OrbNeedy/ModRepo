@@ -19,12 +19,13 @@ Projectiles: {
 	Beowulf.DisplayName: Beowulf
 	LolaPetProjectile.DisplayName: Lola
 	CapsuleSphere.DisplayName: Thunder Pulser
+	SwordWave.DisplayName: Sword Wave
 }
 
 Items: {
 	LolaPetItem: {
 		Tooltip: Summons a friendly bot that will follow you around.
-		DisplayName: Repaired Battle Pod
+		DisplayName: Battle Pod
 	}
 
 	ElectricWhip: {
@@ -287,7 +288,7 @@ Items: {
 			Glasses that enhance your control over your own septima by 
 			sealing a part of it.
 			Decreased damage and SP usage.
-			50% chance to not use AP.
+			{0}% chance to not use AP.
 			'''
 		DisplayName: Sunglasses of lightning
 	}
@@ -351,23 +352,33 @@ Items: {
 
 	LunaticCloth: {
 		DisplayName: Lunatic Cloth
-		Tooltip: ""
+		Tooltip: High quality pieces of clothing let your septima flow through them.
 	}
 
 	PulsarFragment: {
 		DisplayName: Pulsar Fragment
-		Tooltip: ""
+		Tooltip: Has the light of the brightest object in the universe.
 	}
 
 	SpiritualStone: {
 		DisplayName: Spiritual Stone
-		Tooltip: ""
+		Tooltip: A stone with special properties.
+	}
+
+	Fetus: {
+		DisplayName: Fetus
+		Tooltip: Barely alive, but contains immense power.
+	}
+
+	DragonRadiation: {
+		DisplayName: Dragon Radiation Container
+		Tooltip: Your septima reacts to it.
 	}
 }
 
 Buffs: {
 	LolaPetBuff: {
-		Description: After repairing her, she's calling you boss now.
+		Description: She's calling you boss now, seems affectionate.
 		DisplayName: Lola
 	}
 

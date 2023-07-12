@@ -17,7 +17,6 @@ namespace gvmod.Content.Projectiles
         private Vector2 target;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Electric Sphere");
         }
 
         public override void SetDefaults()
@@ -38,7 +37,8 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
-            AdeptPlayer adept = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>();
+            Player player = Main.player[Projectile.owner];
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
 
             float rotation = 3.5f;
             switch (Projectile.ai[0])
@@ -51,8 +51,6 @@ namespace gvmod.Content.Projectiles
                     break;
             }
 
-            position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
-
             switch (Projectile.ai[1])
             {
                 case 1:
@@ -61,6 +59,16 @@ namespace gvmod.Content.Projectiles
                         Projectile.timeLeft = 2;
                         Projectile.penetrate = 2;
                     }
+                    position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
+                    Projectile.Center = position;
+                    break;
+                case 3:
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
+                    {
+                        Projectile.timeLeft = 2;
+                        Projectile.penetrate = 2;
+                    }
+                    SimpleMovementAI();
                     break;
                 default:
                     counting++;
@@ -69,14 +77,16 @@ namespace gvmod.Content.Projectiles
                         state++;
                         counting = 0;
                     }
+                    position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
+                    Projectile.Center = position;
                     MovementAI();
                     break;
             }
-            Projectile.Center = position;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
+            Player player = Main.player[Projectile.owner];
             state = 1;
             counting = 0;
             if (Projectile.ai[1] >= 2)
@@ -84,8 +94,19 @@ namespace gvmod.Content.Projectiles
                 Projectile.penetrate = -1;
                 Projectile.timeLeft = 300;
             }
+            switch (Projectile.ai[2])
+            {
+                case 1:
+                    truePosition = player.Center + new Vector2(128);
+                    break;
+                case 2:
+                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(120));
+                    break;
+                case 3:
+                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(-120));
+                    break;
+            }
             base.OnSpawn(source);
-            Player player = Main.player[Projectile.owner];
             axis = target = player.Center;
             position = truePosition = Projectile.Center;
         }
@@ -93,13 +114,22 @@ namespace gvmod.Content.Projectiles
         private void SimpleMovementAI()
         {
             Player player = Main.player[Projectile.owner];
-            target = player.Center;
-
-            if (axis.Distance(target) > 10)
+            switch (Projectile.ai[2])
             {
-                axis += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 10;
-                position += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 10;
+                case 1:
+                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(3.5f * counting)); ;
+                    break;
+                case 2:
+                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(120 + (3.5f * counting)));
+                    break;
+                case 3:
+                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(-120 + (3.5f * counting)));
+                    break;
             }
+            Main.NewText("Projectile position: " + Projectile.Center);
+            Main.NewText("True position: " + truePosition);
+            Projectile.Center = truePosition;
+            counting++;
         }
 
         private void MovementAI()

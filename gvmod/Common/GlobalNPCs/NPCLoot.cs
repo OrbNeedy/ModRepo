@@ -25,7 +25,7 @@ namespace gvmod.Common.GlobalNPCs
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<LunaticCloth>(), 1, 2, 6));
                     break;
                 case NPCID.EyeofCthulhu:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DullahanBolt>(), 1, 1));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<NagaBolt>(), 1, 1));
                     break;
                 case NPCID.SkeletronHead:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TechnosBolt>(), 1, 1));

@@ -1,9 +1,11 @@
 ﻿using gvmod.Common.Players;
+using Humanizer;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using static Humanizer.On;
 
 namespace gvmod.Content.Projectiles
 {
@@ -213,11 +215,14 @@ namespace gvmod.Content.Projectiles
             }
         }
 
-        private float Map(float x, float in_min, float in_max, float out_min, float out_max)
+        private float Map(float x, float in_min, float in_max, float out_min, float out_max, bool clamp=false)
         {
-            if (x < in_min) x = in_min;
-            if (x > in_max) x = in_max;
-            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            float newVal = (out_max - out_min) * (100 * (x - in_min) / (in_max - in_min)) / 100;
+            if (clamp)
+            {
+                newVal = newVal < out_min ? out_min : newVal > out_max ? out_max : newVal;
+            }
+            return newVal;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

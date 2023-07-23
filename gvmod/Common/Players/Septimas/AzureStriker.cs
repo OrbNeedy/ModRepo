@@ -95,6 +95,10 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new GloriousStrizer(Player, Adept, "S"));
             Abilities.Add(new SeptimalSurge(Player, Adept, "S"));
             Abilities.Add(new SeptimalShield(Player, Adept, "S"));
+            if (Adept.PowerLevel >= 3)
+            {
+                Abilities.Add(new OctisVeto(Player, Adept, "S"));
+            }
             Abilities.Add(new InfiniteSurge(Player, Adept, "S"));
             Abilities.Add(new AlchemicalField(Player, Adept, "S"));
             Abilities.Sort(SortAbilities);
@@ -109,11 +113,6 @@ namespace gvmod.Common.Players.Septimas
             MorbPlayer morb = Player.GetModPlayer<MorbPlayer>();
             SpBaseUsage = 1f;
             morb.AttackTimer = 22;
-        }
-
-        public override void DuringOverheat()
-        {
-
         }
 
         public override void FirstAbilityEffects()
@@ -131,8 +130,7 @@ namespace gvmod.Common.Players.Septimas
             int totalFlashfieldDamage = (int)(2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult); 
             if (Adept.PowerLevel >= 3)
             {
-                totalFlashfieldDamage *= 5;
-                totalFlashfieldDamage /= 2;
+                totalFlashfieldDamage = (int)(40 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
                 if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 1);
                 if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 2);
                 if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 3);

@@ -55,19 +55,15 @@ namespace gvmod.Common.Players.Septimas.Skills
                     if (isNotFirstChain)
                     {
                         int firstChainSource = Main.projectile[firstChain].whoAmI;
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, firstChainSource, 0);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), positions.StartingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, firstChainSource, 0);
                     }
                     else
                     {
-                        firstChain = Projectile.NewProjectile(Player.GetSource_FromThis(), positions.startingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, 0, 1);
+                        firstChain = Projectile.NewProjectile(Player.GetSource_FromThis(), positions.StartingPosition, positions.GetVelocity(), ModContent.ProjectileType<ChainTip>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0, Player.whoAmI, 0, 1);
                         isNotFirstChain = true;
                     }
                 }
             }
-        }
-
-        public override void Effects()
-        {
         }
 
         public override void Update()
@@ -119,8 +115,8 @@ namespace gvmod.Common.Players.Septimas.Skills
                 case 1:
                     baseDamage = 50;
                     break;
-                case 3:
                 case 2:
+                case 3:
                     baseDamage = 75;
                     if (extend < 2)
                     {

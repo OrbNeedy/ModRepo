@@ -126,8 +126,6 @@ namespace gvmod.Content.Projectiles
                     truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(-120 + (3.5f * counting)));
                     break;
             }
-            Main.NewText("Projectile position: " + Projectile.Center);
-            Main.NewText("True position: " + truePosition);
             Projectile.Center = truePosition;
             counting++;
         }

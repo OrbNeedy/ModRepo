@@ -19,12 +19,12 @@ namespace gvmod.Content.Projectiles
         private int aiState = 1;
         private bool electrify = false;
         private Vector2 startingPosition = new Vector2(0, 0);
+        private int startingTimeleft = 0;
         private int desynchTime = Main.rand.Next(20, 60);
         private Dictionary<int, int> trappedNPCs = new Dictionary<int, int>();
         private Dictionary<int, int> entrapmentPotency = new Dictionary<int, int>();
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Voltaic chain");
         }
 
         public override void SetDefaults()
@@ -51,14 +51,15 @@ namespace gvmod.Content.Projectiles
             // Perhaps using a negative number will allow to use it for something else
             switch (Projectile.ai[1])
             {
+                // Standard Voltaic Chains
                 case 1:
-                    Projectile.timeLeft = 300;
+                    Projectile.timeLeft = startingTimeleft = 300;
                     break;
+                // When the chains stay for longer
                 case 2:
-                    Projectile.timeLeft = 1500;
+                    Projectile.timeLeft = startingTimeleft = (int)Projectile.ai[0];
                     break;
             }
-            base.OnSpawn(source);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -77,15 +78,16 @@ namespace gvmod.Content.Projectiles
                 {
                     case 0:
                         target.GetGlobalNPC<ChainedNPC>().ChainedTime = Main.projectile[(int)Projectile.ai[0]].timeLeft;
-                        trappedNPCs.Add(target.whoAmI, 0);
-                        entrapmentPotency.Add(target.whoAmI, 0);
                         break;
                     case 1:
                         target.GetGlobalNPC<ChainedNPC>().ChainedTime = Projectile.timeLeft;
-                        trappedNPCs.Add(target.whoAmI, 0);
-                        entrapmentPotency.Add(target.whoAmI, 0);
+                        break;
+                    case 2:
+                        target.GetGlobalNPC<ChainedNPC>().ChainedTime = (int)Projectile.ai[2];
                         break;
                 }
+                trappedNPCs.Add(target.whoAmI, 0);
+                entrapmentPotency.Add(target.whoAmI, 0);
             }
         }
 
@@ -122,7 +124,11 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 case 2:
-                    if (Projectile.timeLeft <= 1500)
+                    if (Projectile.timeLeft <= startingTimeleft - 20)
+                    {
+                        Projectile.velocity *= 0.25f;
+                    }
+                    if (Projectile.timeLeft <= startingTimeleft - Projectile.ai[2])
                     {
                         electrify = true;
                     }
@@ -130,8 +136,13 @@ namespace gvmod.Content.Projectiles
             }
             if (electrify)
             {
+                Main.NewText("Electricity");
                 ElectrifyAI(adept);
+            } else
+            {
+                Main.NewText("Not electricity");
             }
+            Main.NewText("Separator");
             foreach (int index in trappedNPCs.Keys)
             {
                 trappedNPCs[index]--;
@@ -143,7 +154,7 @@ namespace gvmod.Content.Projectiles
             if (electrify)
             {
                 Player player = Main.player[Projectile.owner];
-                float widthMultiplier = 80f;
+                float widthMultiplier = 50f;
                 float collisionPoint = 0f;
 
                 Rectangle chainHitboxBounds = new(0, 0, 3840, 2160);
@@ -261,6 +272,9 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 case 2:
+                    Projectile.damage = 200;
+                    break;
+                case 3:
                     Projectile.damage = 200;
                     break;
             }

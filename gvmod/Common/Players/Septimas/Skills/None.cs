@@ -25,10 +25,6 @@ namespace gvmod.Common.Players.Septimas.Skills
         {
         }
 
-        public override void Effects()
-        {
-        }
-
         public override void Update()
         {
         }

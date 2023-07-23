@@ -43,7 +43,10 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public Vector2 VelocityMultiplier { get; set; }
 
-        public abstract void Effects();
+        public virtual void Effects()
+        {
+
+        }
 
         public abstract void Attack();
 

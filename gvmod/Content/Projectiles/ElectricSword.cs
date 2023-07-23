@@ -175,7 +175,7 @@ namespace gvmod.Content.Projectiles
 
         private void MovementAI(Player player)
         {
-            float value = Map(counter, 30, 45, 0, (float)Math.PI);
+            float value = Map(counter, 30, 45, 0, (float)Math.PI, true);
             switch (phase)
             {
                 case 1:
@@ -215,12 +215,12 @@ namespace gvmod.Content.Projectiles
             }
         }
 
-        private float Map(float x, float in_min, float in_max, float out_min, float out_max, bool clamp=false)
+        private float Map(float x, float inMin, float inMax, float outMin, float outMax, bool clamp=false)
         {
-            float newVal = (out_max - out_min) * (100 * (x - in_min) / (in_max - in_min)) / 100;
+            float newVal = (outMax - outMin) * (100 * (x - inMin) / (inMax - inMin)) / 100;
             if (clamp)
             {
-                newVal = newVal < out_min ? out_min : newVal > out_max ? out_max : newVal;
+                newVal = newVal < outMin ? outMin : newVal > outMax ? outMax : newVal;
             }
             return newVal;
         }

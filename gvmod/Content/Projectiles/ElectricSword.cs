@@ -133,7 +133,7 @@ namespace gvmod.Content.Projectiles
 
         private void GvMove(Player player)
         {
-            float value = Map(counter, 30, 45, 0, (float)Math.PI);
+            float value = Map(counter, 30, 45, 0, (float)Math.PI, true);
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             Vector2 direction = (Main.MouseWorld - Projectile.Center);
             direction.Normalize();
@@ -154,7 +154,7 @@ namespace gvmod.Content.Projectiles
                     Projectile.velocity.Y = (float)Math.Cos(value*2) * 0.1f;
                     if (counter == 20)
                     {
-                        Projectile.NewProjectile(player.GetSource_FromThis(), Projectile.Center, direction * 16, ModContent.ProjectileType<SwordWave>(), (int)(Projectile.damage * adept.SpecialDamageLevelMult * adept.SpecialDamageEquipMult), 8, player.whoAmI);
+                        Projectile.NewProjectile(player.GetSource_FromThis(), Projectile.Center, direction * 16, ModContent.ProjectileType<SwordWave>(), (int)(Projectile.damage * 1.2f), 8, player.whoAmI);
                     }
                     if (counter >= 40)
                     {

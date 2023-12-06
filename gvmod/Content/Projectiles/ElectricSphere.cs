@@ -1,6 +1,6 @@
 ﻿using gvmod.Common.Players;
-using gvmod.Common.Players.Septimas;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -9,30 +9,74 @@ namespace gvmod.Content.Projectiles
 {
     internal class ElectricSphere : ModProjectile
     {
-        private int state;
-        private int counting;
-        private Vector2 axis;
-        private Vector2 truePosition;
-        private Vector2 position;
+        private int timer;
+        private Vector2 centerOfRotation;
         private Vector2 target;
-        public override void SetStaticDefaults()
-        {
-        }
+        private Vector2 positionOffset;
 
         public override void SetDefaults()
         {
+            Projectile.Size = new Vector2(42);
+            Projectile.scale = 1f;
+            Projectile.light = 1f;
+
+            Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 60;
             Projectile.knockBack = 10;
-            Projectile.Size = new Vector2(42);
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 6;
+            Projectile.penetrate = -1;
+
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
-            Projectile.penetrate = -1;
             Projectile.tileCollide = false;
-            Projectile.scale = 1f;
             Projectile.timeLeft = 2;
-            Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.ownerHitCheck = false;
-            Projectile.light = 1f;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            Player player = Main.player[Projectile.owner];
+            target = centerOfRotation = player.Center;
+            positionOffset = new Vector2(0, 172);
+            timer = 0;
+
+            // ai0 decides how it will act
+            // 0 (GV1 Astrasphere): Regular type interaction, rotate around the center of rotation and follow it
+            // 1 (GV3 Flashfield): Variation of 0, which stays while the player is using the primary ability
+            // 2 (AM3 Flashfield): Same as 1, but has a separation of 0.8 times regular
+            // 3 (GV2 Astrasphere): Same as 0, but after some time, separate from the center
+            // 4 (AM2 Astrasphere): Same as 0, but start with less separation from the center and separate faster
+            // 5 (GVEX Astrasphere): Same as 3, but has a longer time before it separates
+            switch(Projectile.ai[0])
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    positionOffset *= 0.8f;
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    positionOffset = new Vector2(0, 22);
+                    break;
+                case 5:
+                    break;
+            }
+            // ai1 decides it's initial rotation
+            switch (Projectile.ai[1])
+            {
+                case 1:
+                    positionOffset = positionOffset.RotatedBy(MathHelper.ToRadians(120));
+                    break;
+                case 2:
+                    positionOffset = positionOffset.RotatedBy(MathHelper.ToRadians(-120));
+                    break;
+                default:
+                    break;
+            }
         }
 
         public override void AI()
@@ -40,114 +84,64 @@ namespace gvmod.Content.Projectiles
             Player player = Main.player[Projectile.owner];
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
 
-            float rotation = 3.5f;
+            float rotation = 0.06108652f;
+
+            positionOffset = positionOffset.RotatedBy(rotation);
+            Projectile.Center = centerOfRotation + positionOffset;
             switch (Projectile.ai[0])
             {
-                case -1:
-                    Projectile.penetrate = 2;
+                case 0:
+                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
                     break;
-                default:
-                    Projectile.penetrate = -1;
-                    break;
-            }
-
-            switch (Projectile.ai[1])
-            {
                 case 1:
-                    if (adept.IsUsingSpecialAbility)
-                    {
-                        Projectile.timeLeft = 2;
-                        Projectile.penetrate = 2;
-                    }
-                    position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
-                    Projectile.Center = position;
-                    break;
-                case 3:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
-                    {
-                        Projectile.timeLeft = 2;
-                        Projectile.penetrate = 2;
-                    }
-                    SimpleMovementAI();
-                    break;
-                default:
-                    counting++;
-                    if ((state == 2 && counting >= 60) || (counting >= 120))
-                    {
-                        state++;
-                        counting = 0;
-                    }
-                    position = position.RotatedBy(MathHelper.ToRadians(rotation), axis);
-                    Projectile.Center = position;
-                    MovementAI();
-                    break;
-            }
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-            Player player = Main.player[Projectile.owner];
-            state = 1;
-            counting = 0;
-            if (Projectile.ai[1] >= 2)
-            {
-                Projectile.penetrate = -1;
-                Projectile.timeLeft = 300;
-            }
-            switch (Projectile.ai[2])
-            {
-                case 1:
-                    truePosition = player.Center + new Vector2(128);
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
                     break;
                 case 2:
-                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(120));
+                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
                     break;
                 case 3:
-                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(-120));
+                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
+                    SimpleMovementAI(90);
+                    break;
+                case 4:
+                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
+                    SimpleMovementAI(150, 90);
+                    break;
+                case 5:
+                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
+                    else Projectile.timeLeft = 0;
+                    SimpleMovementAI(150);
                     break;
             }
-            base.OnSpawn(source);
-            axis = target = player.Center;
-            position = truePosition = Projectile.Center;
+
+            // If ai2 is not negative, it is the index of the center projectile
+            if (Projectile.ai[2] >= 0)
+            {
+                Projectile mainProjectile = Main.projectile[(int)Projectile.ai[2]];
+                if (mainProjectile.active && mainProjectile.ModProjectile is FlashfieldStriker && mainProjectile.owner == Projectile.owner)
+                {
+                    centerOfRotation = mainProjectile.Center;
+                } 
+            }
         }
 
-        private void SimpleMovementAI()
+        private void SimpleMovementAI(int separationTime, int independent=-1)
         {
-            Player player = Main.player[Projectile.owner];
-            switch (Projectile.ai[2])
+            if (timer == independent)
             {
-                case 1:
-                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(3.5f * counting)); ;
-                    break;
-                case 2:
-                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(120 + (3.5f * counting)));
-                    break;
-                case 3:
-                    truePosition = player.Center + new Vector2(128).RotatedBy(MathHelper.ToRadians(-120 + (3.5f * counting)));
-                    break;
+                target = Main.MouseWorld;
             }
-            Projectile.Center = truePosition;
-            counting++;
-        }
 
-        private void MovementAI()
-        {
-            if (state == 2)
-            {
-                if (counting <= 1)
-                {
-                    target = Main.MouseWorld;
-                }
-                if (axis.Distance(target) > 10)
-                {
-                    axis += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
-                    position += axis.DirectionTo(target).SafeNormalize(Vector2.Zero) * 12;
-                }
-            }
-            if (state == 3)
-            {
-                position += position.DirectionFrom(axis).SafeNormalize(Vector2.Zero) * 6;
-            }
+            if (timer >= separationTime) positionOffset *= 1.025f;
+            
+            if (target.DistanceSQ(centerOfRotation) >= 40 && timer < separationTime) centerOfRotation += centerOfRotation.DirectionTo(target) * 12;
+            
+            timer++;
         }
     }
 }

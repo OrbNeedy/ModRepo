@@ -2,12 +2,9 @@
 using gvmod.Content.Items.Placeable;
 using gvmod.Content.Items.Weapons;
 using gvmod.Content.Pets;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace gvmod.Common
 {
@@ -66,7 +63,7 @@ namespace gvmod.Common
             }
         }
 
-        private bool LolaCheck(Chest chest)
+        /*private bool LolaCheck(Chest chest)
         {
             for (int inventoryIndex = 0; inventoryIndex < chest.item.Length; inventoryIndex++)
             {
@@ -76,6 +73,6 @@ namespace gvmod.Common
                 }
             }
             return false;
-        }
+        }*/
     }
 }

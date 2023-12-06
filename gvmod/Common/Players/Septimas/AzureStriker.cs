@@ -126,17 +126,32 @@ namespace gvmod.Common.Players.Septimas
 
         public override void FirstAbility()
         {
-            int totalSphereDamage = (int)(80 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
-            int totalFlashfieldDamage = (int)(2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult); 
+            int totalSphereDamage = 1 + (int)(40 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
+            int totalFlashfieldDamage = 1 + (int)(1 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.8);
+            float baseTagDamage = 2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.5f;
+            
+            switch (Adept.PowerLevel)
+            {
+                case 2:
+                    totalFlashfieldDamage = 1 + (int)(10 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.6);
+                    baseTagDamage *= 1.5f;
+                    break;
+                case 3:
+                    totalFlashfieldDamage = 1 + (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.6);
+                    baseTagDamage *= 2f;
+                    break;
+            }
+
+            if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), totalFlashfieldDamage, 0, Player.whoAmI, 0);
+            
             if (Adept.PowerLevel >= 3)
             {
-                totalFlashfieldDamage = (int)(40 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
-                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 1);
-                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 2);
-                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, -1, 3, 3);
+                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 1, 0, flashfieldIndex);
+                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 1, 1, flashfieldIndex);
+                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 1, 2, flashfieldIndex);
                 basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
             }
-            if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), totalFlashfieldDamage, 0, Player.whoAmI, -1, 0);
+
             if (Player.velocity.Y > 0)
             {
                 isFalling = true;
@@ -149,11 +164,11 @@ namespace gvmod.Common.Players.Septimas
 
             foreach (Tag tag in taggedNPCs)
             {
-                float tagMultiplier = (float)((tag.Level * 0.75));
+                float tagMultiplier = (float)((tag.Level * 0.7) + 0.2);
                 if (tag.ShockIframes == 0)
                 {
-                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
-                    tag.ShockIframes = 6;
+                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(baseTagDamage * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
+                    tag.ShockIframes = 8;
                 }
             }
 
@@ -235,7 +250,7 @@ namespace gvmod.Common.Players.Septimas
         public override bool OnPrevasion(Player.HurtInfo info)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2) / 4))
+            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2) / 15))
             {
                 if (muse.AnthemLevel < 5 && Adept.IsUsingPrimaryAbility) return false;
                 Main.NewText("Prevasion");
@@ -343,13 +358,7 @@ namespace gvmod.Common.Players.Septimas
             }
 
             Projectile flashfield = Main.projectile[flashfieldIndex];
-            if (flashfield.active && flashfield.ModProjectile is FlashfieldStriker)
-            {
-                flashfieldExists = true;
-            } else
-            {
-                flashfieldExists = false;
-            }
+            flashfieldExists = flashfield.active && flashfield.ModProjectile is FlashfieldStriker;
 
             Projectile sphere1 = Main.projectile[sphere1Index];
             if (sphere1.active && sphere1.ModProjectile is ElectricSphere && sphere1.owner == Player.whoAmI)

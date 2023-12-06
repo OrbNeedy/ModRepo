@@ -123,7 +123,8 @@ namespace gvmod.UI.Menus
 
         public override void MouseOver(UIMouseEvent evt)
         {
-            if (!hidden) base.MouseOver(evt);
+            if (hidden) return;
+            base.MouseOver(evt);
 
             if (assignedSpecial == null || assignedSpecial is None)
             {

@@ -22,14 +22,21 @@ namespace gvmod.Common.Players.Septimas
         private List<Tag> taggedNPCs = new List<Tag>();
         private int flashfieldIndex;
         private bool flashfieldExists = false;
+        private int sphere1Index;
+        private bool sphere1Exists = false;
+        private int sphere2Index;
+        private bool sphere2Exists = false;
+        private int sphere3Index;
+        private bool sphere3Exists = false;
+        private Vector2 basePosition = new Vector2(128);
 
         public AzureThunderclap(AdeptPlayer adept, AdeptMuse muse, Player player) : base(adept, muse, player)
         {
             SecondaryCooldownTime = 600;
             SpBaseUsage = 0.5f;
-            SpBaseRegen = 2.5f;
-            SpBaseOverheatRegen = 1f;
-            ApBaseRegen = (1f / 3600f);
+            SpBaseRegen = 2f;
+            SpBaseOverheatRegen = 0.5f;
+            ApBaseRegen = (1f / 3820f);
             InitializeAbilitiesList();
         }
 
@@ -128,18 +135,43 @@ namespace gvmod.Common.Players.Septimas
 
         public override void FirstAbility()
         {
-            if (!flashfieldExists)
+            int totalSphereDamage = (int)(60 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
+            int totalFlashfieldDamage = 1 + (int)(10 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.4);
+            float baseTagDamage = 3 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.2f;
+            float sizeMod = 1;
+
+            switch (Adept.PowerLevel)
             {
-                flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0f), ModContent.ProjectileType<FlashfieldStriker>(), (int)(15 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult), 12, Player.whoAmI, -1, 0);
+                case 2:
+                    sizeMod = 0.5f;
+                    totalFlashfieldDamage = 1 + (int)(25 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.2);
+                    baseTagDamage *= 1.4f;
+                    break;
+                case 3:
+                    sizeMod = 0.8f;
+                    totalFlashfieldDamage = 1 + (int)(40 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.2);
+                    baseTagDamage *= 1.8f;
+                    break;
+            }
+
+            if (!flashfieldExists) flashfieldIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<FlashfieldStriker>(), totalFlashfieldDamage, 10, Player.whoAmI, 0, ai2:sizeMod);
+
+            if (Adept.PowerLevel >= 3)
+            {
+                if (!sphere1Exists) sphere1Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition, new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 2, 0, flashfieldIndex);
+                if (!sphere2Exists) sphere2Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 2, 1, flashfieldIndex);
+                if (!sphere3Exists) sphere3Index = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + basePosition.RotatedBy(MathHelper.ToRadians(-120)), new Vector2(0f, 0f), ModContent.ProjectileType<ElectricSphere>(), totalSphereDamage, 8, Player.whoAmI, 2, 2, flashfieldIndex);
+                basePosition = new Vector2(128) * sizeMod;
+                basePosition = basePosition.RotatedBy(MathHelper.ToRadians(3.5f));
             }
 
             foreach (Tag tag in taggedNPCs)
             {
-                float tagMultiplier = (float)((tag.Level * 0.75) + 0.25);
+                float tagMultiplier = (float)(tag.Level * 0.6);
                 if (tag.ShockIframes == 0)
                 {
-                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
-                    tag.ShockIframes = 8;
+                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(baseTagDamage * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
+                    tag.ShockIframes = 12;
                 }
             }
         }
@@ -168,12 +200,15 @@ namespace gvmod.Common.Players.Septimas
                 switch (Adept.PowerLevel)
                 {
                     case 1:
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(-10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(35 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(30 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), new Vector2(Player.Center.X, Player.position.Y + Player.height), new Vector2(-10, 0), ModContent.ProjectileType<LightningCreeper>(), (int)(30 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 10, Player.whoAmI);
                         break;
                     case 2:
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(70, 58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(100 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
-                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(-70, 58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(100 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(70, -58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(80 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(-70, -58), Vector2.Zero, ModContent.ProjectileType<CapsuleSphere>(), (int)(80 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 14, Player.whoAmI);
+                        break;
+                    case 3:
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Player.Center.DirectionTo(Main.MouseWorld) * 20, ModContent.ProjectileType<ElectricBullet>(), (int)(184 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 12, Player.whoAmI);
                         break;
                 }
             }
@@ -236,7 +271,7 @@ namespace gvmod.Common.Players.Septimas
         public override bool OnPrevasion(Player.HurtInfo info)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.Damage <= ((Player.statLifeMax + Player.statLifeMax2) * 1/5))
+            if (!Adept.IsOverheated && muse.AnthemLevel >= 1 && info.SourceDamage <= ((Player.statLifeMax + Player.statLifeMax2) / 12))
             {
                 Main.NewText("Prevasion");
                 Adept.TimeSincePrimary = 0;
@@ -335,6 +370,29 @@ namespace gvmod.Common.Players.Septimas
                 flashfieldExists = false;
             }
 
+            Projectile sphere1 = Main.projectile[sphere1Index];
+            if (sphere1.active && sphere1.ModProjectile is ElectricSphere && sphere1.owner == Player.whoAmI)
+            {
+                sphere1Exists = true;
+            }
+            else
+            {
+                sphere1Exists = false;
+            }
+
+            Projectile sphere2 = Main.projectile[sphere2Index];
+            sphere2Exists = sphere2.active && sphere2.ModProjectile is ElectricSphere && sphere2.owner == Player.whoAmI;
+
+            Projectile sphere3 = Main.projectile[sphere3Index];
+            if (sphere3.active && sphere3.ModProjectile is ElectricSphere && sphere3.owner == Player.whoAmI)
+            {
+                sphere3Exists = true;
+            }
+            else
+            {
+                sphere3Exists = false;
+            }
+
             Player.velocity *= VelocityMultiplier;
         }
 
@@ -349,18 +407,18 @@ namespace gvmod.Common.Players.Septimas
                 Main.NewText("Your septima has reached new heights!", ClearColor);
             }
 
-            /*if (Adept.Level >= 60 && NPC.downedMoonlord &&
+            if (Adept.Level >= 60 && NPC.downedMoonlord &&
                 Adept.PowerLevel == 2 && Adept.UnlockedPotential)
             {
                 Adept.PowerLevel++;
                 InitializeAbilitiesList();
                 Main.NewText("Your septima has reached it's pinnacle!", ClearColor);
-            }*/
+            }
         }
 
         public override void UpdateEvolution()
         {
-            if (Adept.PowerLevel >= 2)
+            if (Adept.PowerLevel == 2)
             {
                 secondaryDuration = 90;
             }
@@ -442,10 +500,6 @@ namespace gvmod.Common.Players.Septimas
                     {
                         crashing = true;
                     }
-                }
-                else
-                {
-                    continue;
                 }
             }
         }

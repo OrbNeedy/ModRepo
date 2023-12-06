@@ -20,6 +20,11 @@ Projectiles: {
 	LolaPetProjectile.DisplayName: Lola
 	CapsuleSphere.DisplayName: Thunder Pulser
 	SwordWave.DisplayName: Sword Wave
+	ElectricPilar.DisplayName: Electric Pilar
+	SmallRazor.DisplayName: Small Razor
+	BigRazor.DisplayName: Big Razor
+	ElectricBullet.DisplayName: Electric Bullet
+	HomingElectricSphere.DisplayName: Homing Electric Sphere
 }
 
 Items: {
@@ -373,6 +378,11 @@ Items: {
 	DragonRadiation: {
 		DisplayName: Dragon Radiation Container
 		Tooltip: Your septima reacts to it.
+	}
+
+	Divider: {
+		DisplayName: Divider
+		Tooltip: ""
 	}
 }
 

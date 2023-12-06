@@ -98,6 +98,7 @@ namespace gvmod.UI.Menus
 
         public override void Update(GameTime gameTime)
         {
+            CanMove = hidden;
             base.Update(gameTime);
 
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
@@ -107,7 +108,7 @@ namespace gvmod.UI.Menus
             quotient = currentExp / maxEXP;
             quotient = Utils.Clamp(quotient, 0f, 1f);
 
-            if (ContainsPoint(Main.MouseScreen))
+            if (ContainsPoint(Main.MouseScreen) && !hidden)
             {
                 Main.LocalPlayer.mouseInterface = true;
             }

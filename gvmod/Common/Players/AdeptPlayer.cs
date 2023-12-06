@@ -12,7 +12,6 @@ using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using gvmod.Content.Projectiles;
-using gvmod.UI.Menus;
 
 namespace gvmod.Common.Players
 {
@@ -175,6 +174,10 @@ namespace gvmod.Common.Players
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            if (Player.DeadOrGhost)
+            {
+                return;
+            }
             if (KeybindSystem.primaryAbility.JustPressed)
             {
                 IsUsingPrimaryAbility = true;
@@ -315,7 +318,7 @@ namespace gvmod.Common.Players
                 SpecialInvincibility = false;
             }
             UpdateSeptimalPower();
-            MaxEXP = (int)Math.Pow(Level * 80, 1.47f);
+            MaxEXP = (int)Math.Pow(Level * 100, 1.125f);
             if (Experience >= MaxEXP)
             {
                 Level++;
@@ -337,7 +340,7 @@ namespace gvmod.Common.Players
         {
             if (!IsRecharging)
             {
-                if (!IsOverheated && (!SecondaryInUse || SecondaryInCooldown) && !IsUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned))
+                if (!IsOverheated && (!SecondaryInUse || SecondaryInCooldown) && !IsUsingSpecialAbility && !Player.HasBuff(BuffID.Stoned) && !Player.DeadOrGhost)
                 {
                     CanUsePrimary = true;
                 } else
@@ -345,7 +348,7 @@ namespace gvmod.Common.Players
                     CanUsePrimary = false;
                 }
 
-                if (!IsUsingSpecialAbility && !SecondaryInCooldown && !Player.HasBuff(BuffID.Stoned))
+                if (!IsUsingSpecialAbility && !SecondaryInCooldown && !Player.HasBuff(BuffID.Stoned) && !Player.DeadOrGhost)
                 {
                     CanUseSecondary = true;
                 }
@@ -389,7 +392,7 @@ namespace gvmod.Common.Players
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if ((muse.HasAMuseItem) && muse.AnthemLevel <= 0)
+            if (muse.HasAMuseItem && muse.AnthemLevel <= 0 && Player.HasBuff<AnthemDebuff>())
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
                 Player.statLife += fullHealth;

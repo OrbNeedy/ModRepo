@@ -153,6 +153,7 @@ namespace gvmod.Content.Items.Weapons
             Item.shootSpeed = 10;
 
             Item.useTime = 10;
+            Item.useAnimation = 10;
             ai0 = 0;
             ai1 = 0;
 
@@ -182,6 +183,7 @@ namespace gvmod.Content.Items.Weapons
                 Item.knockBack = 2;
                 Item.shoot = ModContent.ProjectileType<DullahanProjectile>();
                 Item.useTime = 6;
+                Item.useAnimation = 6;
             }
             if (Upgrades[1] && Upgrades[4])
             {
@@ -213,6 +215,11 @@ namespace gvmod.Content.Items.Weapons
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
+            int realDamage = damage;
+            if (!Upgrades[5])
+            {
+                realDamage = 1;
+            }
             if (Upgrades[0]) ai0++;
             if (Upgrades[3] && orochiTimer == 0)
             {
@@ -221,10 +228,10 @@ namespace gvmod.Content.Items.Weapons
             }
             if (Upgrades[2])
 			{
-				Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(45)), type, damage*2, knockback, player.whoAmI, ai0, ai1);
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-45)), type, damage*2, knockback, player.whoAmI, ai0, ai1);
+				Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(45)), type, realDamage, knockback, player.whoAmI, ai0, ai1);
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-45)), type, realDamage, knockback, player.whoAmI, ai0, ai1);
             }
-            Projectile.NewProjectile(source, position, velocity, type, damage * 2, knockback, player.whoAmI, ai0, ai1);
+            Projectile.NewProjectile(source, position, velocity, type, realDamage, knockback, player.whoAmI, ai0, ai1);
             return false;
 		}
 

@@ -11,10 +11,6 @@ namespace gvmod.Content.Projectiles
     {
         private Asset<Texture2D> big = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/LightningCreeper_Big",
             ReLogic.Content.AssetRequestMode.ImmediateLoad);
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Lightning creeper");
-        }
 
         public override void SetDefaults()
         {
@@ -41,9 +37,8 @@ namespace gvmod.Content.Projectiles
             if (Projectile.timeLeft == 150)
             {
                 Projectile.velocity *= -1f;
-                Projectile.Size = new Vector2(64, 24);
+                Projectile.scale = 1.5f; // Size = new Vector2(64, 24);
                 Projectile.damage *= 2;
-                Projectile.position += new Vector2(0, -12);
             }
         }
 

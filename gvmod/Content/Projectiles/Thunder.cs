@@ -38,8 +38,6 @@ namespace gvmod.Content.Projectiles
                 case 2:
                     Projectile.timeLeft = 25;
                     break;
-                case 3:
-                    break;
                 default:
                     break;
             }

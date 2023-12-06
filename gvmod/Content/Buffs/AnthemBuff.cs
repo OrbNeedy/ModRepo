@@ -4,7 +4,7 @@ using gvmod.Common.Players;
 
 namespace gvmod.Content.Buffs
 {
-    internal class AnthemBuff : ModBuff
+    public class AnthemBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -21,7 +21,15 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<AdeptMuse>().AnthemBuff = true;
+            if (player.buffTime[buffIndex] <= 1)
+            {
+                player.AddBuff(ModContent.BuffType<AnthemDebuff>(), 18000);
+            }
+
+            if (!player.HasBuff<AnthemDebuff>())
+            {
+                player.GetModPlayer<AdeptMuse>().AnthemBuff = true;
+            }
         }
     }
 }

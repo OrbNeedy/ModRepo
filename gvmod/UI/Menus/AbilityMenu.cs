@@ -137,7 +137,7 @@ namespace gvmod.UI.Menus
 
         private void OnSlotClick(UIMouseEvent evt, UIElement listeningElement, int i)
         {
-            if (hidden) return;
+            if (hidden || Main.playerInventory) return;
             canMove = false;
             if (!selecting)
             {
@@ -148,7 +148,7 @@ namespace gvmod.UI.Menus
 
         private void OnOptionClick(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (hidden) return;
+            if (hidden || Main.playerInventory) return;
             canMove = false;
             if (selecting)
             {
@@ -165,6 +165,7 @@ namespace gvmod.UI.Menus
 
         private void OnClickRightArrow(UIMouseEvent evt, UIElement listeningElement)
         {
+            if (hidden || Main.playerInventory) return;
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex < posibleList.Count - 1)
@@ -179,6 +180,7 @@ namespace gvmod.UI.Menus
 
         private void OnClickLeftArrow(UIMouseEvent evt, UIElement listeningElement)
         {
+            if (hidden || Main.playerInventory) return;
             var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
             List<Special> posibleList = adept.Septima.AvaliableSpecials();
             if (specialIndex > 0)
@@ -209,7 +211,8 @@ namespace gvmod.UI.Menus
             level.SetText(adept.Level.ToString());
             specialOption.specialIndex = posibleList[specialIndex];
 
-            if (!selectionBack.IsMouseHovering && !selectionLeft.IsMouseHovering && !selectionRight.IsMouseHovering && Main.mouseLeft)
+            if (!selectionBack.IsMouseHovering && !selectionLeft.IsMouseHovering && 
+                !selectionRight.IsMouseHovering && Main.mouseLeft && Main.playerInventory)
             {
                 selecting = false;
             }

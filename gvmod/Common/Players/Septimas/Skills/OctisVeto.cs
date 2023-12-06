@@ -11,7 +11,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         ChainPositions octis;
         int intervalCounter = 0;
         static int chainInterval = 30;
-        int chainCounter = 0;
+        int positionCounter = 0;
         private Vector2 lastPlayerPos = new Vector2(0);
         public OctisVeto(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
@@ -24,7 +24,7 @@ namespace gvmod.Common.Players.Septimas.Skills
             octis = new ChainPositions(player);
         }
 
-        public override int UnlockLevel => 50;
+        public override int UnlockLevel => 80;
 
         public override string Name => "Octis Veto";
 
@@ -38,14 +38,15 @@ namespace gvmod.Common.Players.Septimas.Skills
             {
                 if (intervalCounter == chainInterval && SpecialTimer <= 250)
                 {
-                    (Vector2, Vector2) currentPositions = octis.OctisPositions[chainCounter];
+                    (Vector2, Vector2) currentPositions = octis.OctisPositions[positionCounter];
                     Projectile.NewProjectile(Player.GetSource_FromThis(), currentPositions.Item1, octis.GetVelocity(currentPositions.Item1, currentPositions.Item2), ModContent.ProjectileType<ChainTip>(), (int)(200 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, SpecialDuration - SpecialTimer, 2, 290 - SpecialTimer);
                     intervalCounter = 0;
-                    chainCounter++;
+                    positionCounter++;
                 }
-                if (SpecialTimer >= 290)
+                if (SpecialTimer == 290)
                 {
-                    // Thunder
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, 0), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1);
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, 0), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, 1);
                 }
                 intervalCounter++; 
             }
@@ -58,7 +59,7 @@ namespace gvmod.Common.Players.Septimas.Skills
                 VelocityMultiplier = new Vector2(1f, 1f);
                 lastPlayerPos = Player.Center;
                 intervalCounter = 0;
-                chainCounter = 0;
+                positionCounter = 0;
                 octis = new ChainPositions(Player);
             }
             else

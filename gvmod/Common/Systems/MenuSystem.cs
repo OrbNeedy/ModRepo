@@ -4,7 +4,6 @@ using Terraria;
 using Terraria.ModLoader;
 using gvmod.UI.Menus;
 using System.Collections.Generic;
-using Terraria.GameInput;
 
 namespace gvmod.Common.Systems
 {
@@ -28,9 +27,11 @@ namespace gvmod.Common.Systems
                 if (abilityMenu.hidden)
                 {
                     abilityMenu.Activate();
+                    ShowUI();
                 } else
                 {
                     abilityMenu.Deactivate();
+                    HideUI();
                 }
             }
             if (_abilityMenu?.CurrentState != null)

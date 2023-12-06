@@ -15,10 +15,6 @@ namespace gvmod.Content.Projectiles
     {
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Bolt");
-        }
 
         public override void SetDefaults()
         {
@@ -36,6 +32,8 @@ namespace gvmod.Content.Projectiles
             Projectile.hostile = false;
             Projectile.tileCollide = true;
             Projectile.timeLeft = 150;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 15;
             Projectile.ownerHitCheck = false;
         }
 

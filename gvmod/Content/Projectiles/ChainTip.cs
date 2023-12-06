@@ -136,13 +136,8 @@ namespace gvmod.Content.Projectiles
             }
             if (electrify)
             {
-                Main.NewText("Electricity");
                 ElectrifyAI(adept);
-            } else
-            {
-                Main.NewText("Not electricity");
-            }
-            Main.NewText("Separator");
+            } 
             foreach (int index in trappedNPCs.Keys)
             {
                 trappedNPCs[index]--;
@@ -224,7 +219,7 @@ namespace gvmod.Content.Projectiles
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             Vector2 vector = startingPosition - Projectile.Center;
             int magnitude = (int)Math.Sqrt(Math.Pow(startingPosition.X - Projectile.Center.X, 2) + Math.Pow(startingPosition.Y - Projectile.Center.Y, 2));
@@ -236,7 +231,7 @@ namespace gvmod.Content.Projectiles
                     Dust.NewDust((unitVector * magnitude) + new Vector2(Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-6, 6)), 10, 10, DustID.BlueTorch);
                 }
             }
-            base.Kill(timeLeft);
+            base.OnKill(timeLeft);
         }
 
         public override void SendExtraAI(BinaryWriter writer)

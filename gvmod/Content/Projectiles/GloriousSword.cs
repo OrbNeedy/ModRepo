@@ -11,11 +11,6 @@ namespace gvmod.Content.Projectiles
     {
         private int phase;
         private int counter;
-        private Vector2 position;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Glorious Strizer");
-        }
 
         public override void SetDefaults()
         {

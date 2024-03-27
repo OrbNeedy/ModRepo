@@ -4,9 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace gvmod.Content.Pets
 {
@@ -35,8 +33,6 @@ namespace gvmod.Content.Pets
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Lola");
-
             Main.projPet[Projectile.type] = true;
         }
 

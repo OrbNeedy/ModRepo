@@ -14,11 +14,6 @@ namespace gvmod.Content.Buffs
             Main.buffNoTimeDisplay[Type] = false;
         }
 
-        public override bool RightClick(int buffIndex)
-        {
-            return false;
-        }
-
         public override void Update(Player player, ref int buffIndex)
         {
             if (player.buffTime[buffIndex] <= 1)
@@ -30,6 +25,11 @@ namespace gvmod.Content.Buffs
             {
                 player.GetModPlayer<AdeptMuse>().AnthemBuff = true;
             }
+        }
+
+        public override bool RightClick(int buffIndex)
+        {
+            return false;
         }
     }
 }

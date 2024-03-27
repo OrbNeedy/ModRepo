@@ -21,6 +21,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => false;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => true;
 
         public override string Name => "Septimal Surge";
@@ -37,6 +39,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         {
             if (BeingUsed)
             {
+                Player.endurance += 1f;
                 Player.AddBuff(ModContent.BuffType<SeptimalSurgeBuff>(), 1800);
             }
         }

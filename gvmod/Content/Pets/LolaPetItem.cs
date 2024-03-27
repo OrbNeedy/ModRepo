@@ -8,9 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using gvmod.Common.Players;
 using Terraria.ModLoader.IO;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace gvmod.Content.Pets
 {

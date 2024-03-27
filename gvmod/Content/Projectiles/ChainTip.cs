@@ -23,12 +23,10 @@ namespace gvmod.Content.Projectiles
         private int desynchTime = Main.rand.Next(20, 60);
         private Dictionary<int, int> trappedNPCs = new Dictionary<int, int>();
         private Dictionary<int, int> entrapmentPotency = new Dictionary<int, int>();
-        public override void SetStaticDefaults()
-        {
-        }
 
         public override void SetDefaults()
         {
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 24000;
             Projectile.light = 1f;
             Projectile.ignoreWater = true;
             Projectile.damage = 50;

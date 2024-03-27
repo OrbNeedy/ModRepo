@@ -26,6 +26,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => true;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => true;
 
         public override string Name => "Glorious Strizer";
@@ -38,23 +40,17 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
         }
 
-        public override void Effects()
+        public override void MoveOverride()
         {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
         }
 
         public override void Update()
         {
             if (!BeingUsed)
             {
-                VelocityMultiplier = new Vector2(1f, 1f);
-                kudosMultiplier = 1 + (Adept.Kudos * 0.0008f);
-                lastPlayerPos = Player.Center;
-            }
-            else
-            {
-                VelocityMultiplier *= 0f;
-                Player.Center = lastPlayerPos;
-                Player.slowFall = true;
+                kudosMultiplier = 1 + (Adept.Kudos * 0.0009f);
             }
             if (CooldownTimer < SpecialCooldownTime)
             {
@@ -82,8 +78,6 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
 
             ProjectileUpdate();
-
-            Player.velocity *= VelocityMultiplier;
         }
 
         public void ProjectileUpdate()

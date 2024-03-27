@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Drawing;
 using Terraria;
 
 namespace gvmod.Common.Configs.CustomDataTypes
@@ -45,6 +46,44 @@ namespace gvmod.Common.Configs.CustomDataTypes
                     EndingPosition = player.Center + new Vector2(Main.rand.Next(-horizontal, horizontal), -vertical);
                 }
             }
+        }
+
+        public List<(Vector2, Vector2)> SpontaneousPositionObtainer(Vector2 center)
+        {
+            int vertical = 1600;
+            int horizontal = 1600;
+            List<(Vector2, Vector2)> temporaryPairs;
+            Vector2 begin;
+
+            if (Main.rand.NextBool())
+            {
+                begin = new(horizontal, 0);
+            } else
+            {
+                begin = new(horizontal / 2, vertical / 2);
+            }
+
+            Vector2 finish = -begin;
+            if (!Main.rand.NextBool())
+            {
+                begin *= -1;
+                finish *= -1;
+            }
+            temporaryPairs = new()
+            {
+                (center + begin, center + finish)
+            };
+
+            begin = begin.RotatedBy(MathHelper.PiOver2);
+            finish = finish.RotatedBy(MathHelper.PiOver2);
+            if (!Main.rand.NextBool())
+            {
+                begin = begin.RotatedBy(MathHelper.Pi);
+                finish = finish.RotatedBy(MathHelper.Pi);
+            }
+            temporaryPairs.Add((center + begin, center + finish));
+
+            return temporaryPairs;
         }
 
         public void OctisPositionInitialize()

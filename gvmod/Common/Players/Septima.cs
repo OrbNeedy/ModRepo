@@ -21,7 +21,7 @@ namespace gvmod.Common.Players
         {
             if (special1 == null || special1 is None)
             {
-                if (special2 == null || special1 is None)
+                if (special2 == null || special2 is None)
                 {
                     return 0;
                 }
@@ -81,7 +81,33 @@ namespace gvmod.Common.Players
         public virtual void InitializeAbilitiesList()
         {
             Abilities.Clear();
-            Abilities.Add(new None(Player, Adept, "S"));
+            Abilities.Add(new None(Player, Adept));
+        }
+
+        public void MoveOverride()
+        {
+            VelocityMultiplier = new Vector2(1, 1);
+            MiscMoveOverride();
+
+            foreach (Special special in Abilities)
+            {
+                if (special.BeingUsed)
+                {
+                    special.MoveOverride();
+                    Player.velocity *= special.VelocityMultiplier;
+                }
+            }
+            Player.velocity *= VelocityMultiplier;
+        }
+
+        public virtual void PassiveStatChanges()
+        {
+
+        }
+
+        public virtual void MiscMoveOverride()
+        {
+
         }
 
         public virtual void OnOverheat()
@@ -120,10 +146,19 @@ namespace gvmod.Common.Players
         }
 
         /// <summary> 
+        /// <para>Disables the secondary under certain circunstances without changing AdeptPlayer.CanUseSecondary.</para>
+        /// </summary>
+        /// <returns>False to disable secondary, true to allow it.</returns>
+        public virtual bool CanUseSecondary()
+        {
+            return true;
+        }
+
+        /// <summary> 
         /// <para>Runs before prevasion.</para>
         /// </summary>
-        /// <returns>False to skip <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/> and instead return false.</returns>
-        
+        /// <returns>False to skip <seealso cref="Septima.OnPrevasion(Player.HurtInfo)"/>.</returns>
+
         public virtual bool PrePrevasion(Player.HurtInfo info)
         {
             return true;

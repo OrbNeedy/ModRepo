@@ -60,7 +60,7 @@ namespace gvmod.Common.Players
             HasAMuseItem = false;
         }
 
-        public override void PostUpdateBuffs()
+        public override void PreUpdateBuffs()
         {
             AdeptPlayer adept = Player.GetModPlayer<AdeptPlayer>();
             if (AnthemBuff)

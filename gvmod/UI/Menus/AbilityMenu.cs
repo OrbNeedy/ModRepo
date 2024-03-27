@@ -118,12 +118,6 @@ namespace gvmod.UI.Menus
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
-            var adept = Main.LocalPlayer.GetModPlayer<AdeptPlayer>();
-        }
-
         public override void OnDeactivate()
         {
             selecting = false;

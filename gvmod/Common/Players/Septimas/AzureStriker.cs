@@ -9,6 +9,7 @@ using gvmod.Common.Configs.CustomDataTypes;
 using gvmod.Common.GlobalNPCs;
 using System;
 using gvmod.Content;
+using Terraria.DataStructures;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -20,7 +21,7 @@ namespace gvmod.Common.Players.Septimas
         private int secondaryDuration = 15;
         private int visualProjectileTimer = 14;
         private bool isFalling = false;
-        private List<Tag> taggedNPCs = new List<Tag>();
+        private List<Tag> taggedEntities = new List<Tag>();
         private int flashfieldIndex;
         private bool flashfieldExists = false;
         private int sphere1Index;
@@ -127,17 +128,17 @@ namespace gvmod.Common.Players.Septimas
         public override void FirstAbility()
         {
             int totalSphereDamage = 1 + (int)(40 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult);
-            int totalFlashfieldDamage = 1 + (int)(1 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.8);
-            float baseTagDamage = 2 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.5f;
+            int totalFlashfieldDamage = 1 + (int)(1 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 2);
+            float baseTagDamage = 1 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 2.4f;
             
             switch (Adept.PowerLevel)
             {
                 case 2:
-                    totalFlashfieldDamage = 1 + (int)(10 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.6);
+                    totalFlashfieldDamage = 1 + (int)(5 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 2);
                     baseTagDamage *= 1.5f;
                     break;
                 case 3:
-                    totalFlashfieldDamage = 1 + (int)(20 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 1.6);
+                    totalFlashfieldDamage = 1 + (int)(18 * Adept.PrimaryDamageLevelMult * Adept.PrimaryDamageEquipMult * 2);
                     baseTagDamage *= 2f;
                     break;
             }
@@ -162,12 +163,13 @@ namespace gvmod.Common.Players.Septimas
                 Player.slowFall = false;
             }
 
-            foreach (Tag tag in taggedNPCs)
+            foreach (Tag tag in taggedEntities)
             {
                 float tagMultiplier = (float)((tag.Level * 0.7) + 0.2);
                 if (tag.ShockIframes == 0)
                 {
-                    Player.ApplyDamageToNPC(Main.npc[tag.NpcIndex], (int)(baseTagDamage * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
+                    if (tag.IsPlayer) Main.player[tag.Index].Hurt(PlayerDeathReason.ByCustomReason("Tag"), (int)(baseTagDamage * tagMultiplier), 0, true, false, -1, false, 20, 0, 0);
+                    else Player.ApplyDamageToNPC(Main.npc[tag.Index], (int)(baseTagDamage * tagMultiplier), 0, Player.direction, damageType: ModContent.GetInstance<SeptimaDamageClass>(), damageVariation: true);
                     tag.ShockIframes = 8;
                 }
             }
@@ -177,19 +179,63 @@ namespace gvmod.Common.Players.Septimas
 
         public override void SecondAbilityEffects()
         {
-            for (int i = 0; i < 20; i++)
+            switch (Adept.PowerLevel)
             {
-                float xPos = Main.rand.NextFloat(-16, 16);
-                float yPos = Main.rand.NextFloat(-500, 500);
-                Dust.NewDust(Player.Center + new Vector2(xPos, yPos), 10, 10, DustID.MartianSaucerSpark, 0, 0, 100, Color.DeepSkyBlue);
+                case 1 or 2:
+                    for (int i = 0; i < 20; i++)
+                    {
+                        float xPos = Main.rand.NextFloat(-16, 16);
+                        float yPos = Main.rand.NextFloat(-500, 500);
+                        Dust.NewDust(Player.Center + new Vector2(xPos, yPos), 10, 10, DustID.MartianSaucerSpark, 0, 0, 100,
+                            Color.DeepSkyBlue);
+                    }
+                    break;
+                case 3:
+                    if (SecondaryTimer == 1 && Adept.SecondaryInUse)
+                    {
+                        Main.NewText("Direction = " + Player.Center.DirectionTo(Main.MouseWorld));
+                        Main.NewText("Own direction = " + (Main.MouseWorld - Player.Center));
+                        Main.NewText("Distance = " + Player.Center.Distance(Main.MouseWorld));
+                        Vector2 direction = Player.Center.DirectionTo(Main.MouseWorld);
+                        int segments = (int)(Player.Center.Distance(Main.MouseWorld)/5);
+                        for (int i = 0; i < segments; i++)
+                        {
+                            float xPos = Player.Center.X + (direction.X * i * 5);
+                            float yPos = Player.Center.Y + (direction.Y * i * 5);
+                            Dust.NewDust(new(xPos, yPos), 10, 10, DustID.MartianSaucerSpark, 
+                                0, 0, 100, Color.DeepSkyBlue);
+                        }
+                    }
+                    break;
             }
+        }
+
+        public override bool CanUseSecondary()
+        {
+            if (Adept.PowerLevel >= 3)
+            {
+                Point position = Main.MouseWorld.ToTileCoordinates();
+                return !Collision.SolidTiles(position.X - 1, position.X + 1, position.Y - 2, position.Y + 1);
+            }
+            return true;
         }
 
         public override void SecondAbility()
         {
-            if (SecondaryTimer <= 1 && Adept.SecondaryInUse)
+            if (SecondaryTimer == 2 && Adept.SecondaryInUse)
             {
-                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(50 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 8, Player.whoAmI);
+                switch (Adept.PowerLevel)
+                {
+                    case 1 or 2:
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0),
+                            ModContent.ProjectileType<Thunder>(),
+                            (int)(50 * Adept.SecondaryDamageLevelMult * Adept.SecondaryDamageEquipMult), 8, 
+                            Player.whoAmI);
+                        break;
+                    case 3:
+                        Player.Center = Main.MouseWorld;
+                        break;
+                }
             }
         }
 
@@ -316,24 +362,17 @@ namespace gvmod.Common.Players.Septimas
             }
         }
 
-        public override void MiscEffects()
+        public override void MiscMoveOverride()
         {
-            if (isFalling && Adept.IsUsingPrimaryAbility && !Adept.IsOverheated)
+            if (isFalling && Adept.IsUsingPrimaryAbility && Adept.CanUsePrimary)
             {
-                VelocityMultiplier = new Vector2(1f, 0.7f);
+                VelocityMultiplier = new Vector2(1f, 0.85f);
                 Player.slowFall = true;
             }
-            else
+            if (Adept.IsUsingSecondaryAbility && Adept.CanUseSecondary)
             {
-                if (Adept.SecondaryInUse)
-                {
-                    Player.slowFall = true;
-                    VelocityMultiplier *= 0f;
-                } else
-                {
-                    VelocityMultiplier = new Vector2(1f);
-                    Player.slowFall = false;
-                }
+                VelocityMultiplier = new Vector2(0f, 0.00001f);
+                Player.slowFall = true;
             }
         }
 
@@ -389,8 +428,6 @@ namespace gvmod.Common.Players.Septimas
             {
                 sphere3Exists = false;
             }
-
-            Player.velocity *= VelocityMultiplier;
         }
 
         public override void CheckEvolution()
@@ -413,20 +450,25 @@ namespace gvmod.Common.Players.Septimas
 
         public override void UpdateEvolution()
         {
+            if (Adept.PowerLevel == 3)
+            {
+                secondaryDuration = 5;
+                SecondaryCooldownTime = 600;
+            }
         }
 
         public void UpdateTaggedNPCs()
         {
-            for (int i = 0; i < taggedNPCs.Count; i++)
+            for (int i = 0; i < taggedEntities.Count; i++)
             {
-                Tag theTagInQuestion = taggedNPCs[i];
-                TaggedNPC globalTag = Main.npc[theTagInQuestion.NpcIndex].GetGlobalNPC<TaggedNPC>();
+                Tag theTagInQuestion = taggedEntities[i];
+                TaggedNPC globalTag = Main.npc[theTagInQuestion.Index].GetGlobalNPC<TaggedNPC>();
                 theTagInQuestion.Update();
 
                 if (!theTagInQuestion.Active)
                 {
                     globalTag.Shocked = false;
-                    taggedNPCs.Remove(theTagInQuestion);
+                    taggedEntities.Remove(theTagInQuestion);
                 }
                 globalTag.TagLevel = theTagInQuestion.Level;
 
@@ -470,7 +512,7 @@ namespace gvmod.Common.Players.Septimas
             }
         }
 
-        public void FlashfieldCrashCheck()
+        public void FlashfieldCrashCheck(float flashfieldSize=1)
         {
             // The player has pvp on
             if (!Player.hostile) return;
@@ -481,10 +523,10 @@ namespace gvmod.Common.Players.Septimas
                 if (player == Player) continue;
 
                 // The target has pvp active an is from an opposite team
-                if (!player.InOpposingTeam(Player) || !player.hostile)
+                if (!player.InOpposingTeam(Player) || !player.hostile) continue;
 
                 // The target is in range
-                if (!player.WithinRange(Player.Center, 704)) continue;
+                if (!player.WithinRange(Player.Center, 704*flashfieldSize)) continue;
 
                 // The target's septima is Azure Thunderclap or Azure Striker
                 AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
@@ -506,16 +548,30 @@ namespace gvmod.Common.Players.Septimas
 
         public void AddTaggedNPC(NPC target)
         {
-            foreach (Tag tag in taggedNPCs)
+            foreach (Tag tag in taggedEntities)
             {
-                NPC theNpcInQuestion = Main.npc[tag.NpcIndex];
+                NPC theNpcInQuestion = Main.npc[tag.Index];
                 if (target == theNpcInQuestion && tag.Active)
                 {
                     tag.IncreaseTag();
                     return;
                 }
             }
-            taggedNPCs.Add(new Tag(target.whoAmI));
+            taggedEntities.Add(new Tag(target.whoAmI));
+        }
+
+        public void AddTaggedPlayer(Player target)
+        {
+            foreach (Tag tag in taggedEntities)
+            {
+                Player thePlayerInQuestion = Main.player[tag.Index];
+                if (target == thePlayerInQuestion && tag.Active)
+                {
+                    tag.IncreaseTag();
+                    return;
+                }
+            }
+            taggedEntities.Add(new Tag(target.whoAmI));
         }
     }
 }

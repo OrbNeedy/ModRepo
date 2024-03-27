@@ -25,6 +25,8 @@ Projectiles: {
 	BigRazor.DisplayName: Big Razor
 	ElectricBullet.DisplayName: Electric Bullet
 	HomingElectricSphere.DisplayName: Homing Electric Sphere
+	EmptyChain.DisplayName: Empty Chain
+	ThunderLaser.DisplayName: Thunder Laser
 }
 
 Items: {
@@ -459,6 +461,11 @@ Buffs: {
 			experience, and enemies drop more money.
 			'''
 		DisplayName: Alchemical Field Buff
+	}
+
+	AnthemDebuff: {
+		DisplayName: Anthem Debuff
+		Description: Mods.gvmod.Buffs.AnthemDebuff.Description
 	}
 }
 

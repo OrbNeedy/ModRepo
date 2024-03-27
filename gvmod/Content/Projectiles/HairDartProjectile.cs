@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,6 +14,7 @@ namespace gvmod.Content.Projectiles
     {
         public int septimaSource = 0;
         private List<int> npcsTaggedByThis;
+        private List<int> playersTaggedByThis;
 
         public override void SetDefaults()
         {
@@ -148,7 +148,7 @@ namespace gvmod.Content.Projectiles
                 }
             }
 
-            if (septima is AzureStriker striker)
+            if (septima is AzureStriker || septima is AzureThunderclap)
             {
                 foreach (int tag in npcsTaggedByThis)
                 {
@@ -157,11 +157,19 @@ namespace gvmod.Content.Projectiles
                         return;
                     }
                 }
-                striker.AddTaggedNPC(target);
+                if (septima is AzureStriker striker) striker.AddTaggedNPC(target);
+                if (septima is AzureThunderclap thunderclap) thunderclap.AddTaggedNPC(target);
                 AddTaggedNPC(target);
                 return;
             }
-            if (septima is AzureThunderclap thunderclap)
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            base.OnHitPlayer(target, info);
+            Septima septima = Main.player[Projectile.owner].GetModPlayer<AdeptPlayer>().Septima;
+
+            if (septima is AzureStriker || septima is AzureThunderclap)
             {
                 foreach (int tag in npcsTaggedByThis)
                 {
@@ -170,8 +178,9 @@ namespace gvmod.Content.Projectiles
                         return;
                     }
                 }
-                thunderclap.AddTaggedNPC(target);
-                AddTaggedNPC(target);
+                if (septima is AzureStriker striker) striker.AddTaggedPlayer(target);
+                if (septima is AzureThunderclap thunderclap) thunderclap.AddTaggedPlayer(target);
+                AddTaggedPlayer(target);
                 return;
             }
         }
@@ -206,6 +215,18 @@ namespace gvmod.Content.Projectiles
                 }
             }
             npcsTaggedByThis.Add(target.whoAmI);
+        }
+
+        public void AddTaggedPlayer(Player target)
+        {
+            foreach (int tag in playersTaggedByThis)
+            {
+                if (target.whoAmI == tag)
+                {
+                    return;
+                }
+            }
+            playersTaggedByThis.Add(target.whoAmI);
         }
     }
 }

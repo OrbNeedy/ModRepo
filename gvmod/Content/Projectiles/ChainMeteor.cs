@@ -1,5 +1,6 @@
 ﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -8,13 +9,10 @@ namespace gvmod.Content.Projectiles
 {
     public class ChainMeteor : ModProjectile
     {
-        // 1: Accumulate chains, 2: Shoot thunders, 3: Fly offscreen, 4-7: Attack pattern, 8: Either the last
-        // movement before disappearing or the enhanced finisher with a Glorious Strizer
+        // 1: Accumulate chains, 2: Shoot thunders, 3: Fly offscreen, 4-8: Attack pattern
         private int phase;
         private int timer;
-        public override void SetStaticDefaults()
-        {
-        }
+        private List<Vector2> thunderDirections;
 
         public override void SetDefaults()
         {
@@ -22,7 +20,7 @@ namespace gvmod.Content.Projectiles
             Projectile.ignoreWater = true;
             Projectile.damage = 0;
             Projectile.knockBack = 15;
-            Projectile.Size = new Vector2(192);
+            Projectile.Size = new Vector2(128);
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
@@ -37,7 +35,9 @@ namespace gvmod.Content.Projectiles
         {
             phase = 1;
             timer = 0;
-            base.OnSpawn(source);
+            float rotateTo45 = 0.7071067812f;
+            thunderDirections = new() { new(0, -1), new(-1, 0), new(-rotateTo45, rotateTo45), 
+                new(rotateTo45, -rotateTo45), new(1, 0), new(rotateTo45), new(-rotateTo45) };
         }
 
         public override void AI()
@@ -66,27 +66,54 @@ namespace gvmod.Content.Projectiles
             int velocityY = 0;
             switch (phase)
             {
-                case 1 or 2:
+                case 1:
+                    Projectile.Center = player.Center + new Vector2(0, -200);
+                    if (timer < 240 && timer%18 == 0)
+                    {
+                        Vector2 velocity = new Vector2(1, 0).RotatedByRandom(MathHelper.TwoPi);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), 
+                            Projectile.Center + (velocity * -600), velocity * 8, 
+                            ModContent.ProjectileType<EmptyChain>(), 10, 15, Projectile.owner, 0);
+                    }
                     if (timer == 240)
                     {
                         Projectile.damage = (int)(440 * adept.SpecialDamageEquipMult * adept.SpecialDamageEquipMult);
                     }
-                    if (timer >= 200)
+                    if (timer >= 300)
+                    {
+                        phase++;
+                        Projectile.Center = Main.MouseWorld + new Vector2(xPos, -yPos);
+                        timer = 0;
+                    }
+                    break;
+                case 2:
+                    if (timer % 30 == 0 && timer < 240)
+                    {
+                        Vector2 velocity;
+                        if (thunderDirections.Count <= 0)
+                        {
+                            velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi);
+                        } else
+                        {
+                            velocity = thunderDirections[0];
+                            thunderDirections.RemoveAt(0);
+                        }
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(),
+                            Projectile.Center, velocity,
+                            ModContent.ProjectileType<ThunderLaser>(), (int)(Projectile.damage*0.7), 15, 
+                            Projectile.owner, 0);
+                    }
+                    if (timer >= 240)
                     {
                         velocityY = -10;
-                    } else
+                    }
+                    else
                     {
                         Projectile.Center = player.Center + new Vector2(0, -200);
                     }
                     if (timer >= 300)
                     {
-                        if (adept.PowerLevel >= 3)
-                        {
-                            phase++;
-                        } else
-                        {
-                            phase += 2;
-                        }
+                        phase++;
                         Projectile.Center = Main.MouseWorld + new Vector2(xPos, -yPos);
                         timer = 0;
                     }
@@ -130,7 +157,6 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 case 7:
-                    // If ai0 = 1, do an enhanced finish
                     velocityY = 16;
                     if (timer >= 90)
                     {

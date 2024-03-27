@@ -21,6 +21,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => false;
 
+        public override bool StayInPlace => false;
+
         public override bool GivesIFrames => true;
 
         public override string Name => "Infinite Surge";

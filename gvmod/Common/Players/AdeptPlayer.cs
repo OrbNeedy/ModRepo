@@ -170,6 +170,8 @@ namespace gvmod.Common.Players
         {
             ActiveSlots = new List<int>() { 0, 0, 0, 0};
             Septima.InitializeAbilitiesList();
+            SecondaryInCooldown = false;
+            TimeSinceSecondary = 12000;
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
@@ -188,7 +190,7 @@ namespace gvmod.Common.Players
             }
             if (KeybindSystem.secondaryAbility.JustPressed)
             {
-                IsUsingSecondaryAbility = true;
+                IsUsingSecondaryAbility = Septima.CanUseSecondary();
             }
 
             if (KeybindSystem.special1.JustPressed)
@@ -260,14 +262,12 @@ namespace gvmod.Common.Players
             {
                 Special special = Septima.Abilities[ActiveSlots[slotToUse]];
                 special?.Effects();
-                if (special.IsOffensive)
-                {
-                    cantMove = true;
-                }
-                if (special.GivesIFrames)
-                {
-                    SpecialInvincibility = true;
-                }
+                cantMove = special.StayInPlace;
+                SpecialInvincibility = special.GivesIFrames;
+            } else
+            {
+                cantMove = false;
+                SpecialInvincibility = false;
             }
 
             if (IsOverheated)
@@ -296,7 +296,21 @@ namespace gvmod.Common.Players
             }
         }
 
-        public override void PostUpdate()
+        public override void PostUpdateEquips()
+        {
+            Septima.PassiveStatChanges();
+            if (IsUsingSpecialAbility)
+            {
+                Septima.Abilities[ActiveSlots[slotToUse]]?.StatChangeEffects();
+            }
+        }
+
+        public override void PreUpdateMovement()
+        {
+            Septima.MoveOverride();
+        }
+
+        public override void PreUpdate()
         {
             FigureAvailability();
             UpdateKudos();
@@ -392,11 +406,10 @@ namespace gvmod.Common.Players
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (muse.HasAMuseItem && muse.AnthemLevel <= 0 && Player.HasBuff<AnthemDebuff>())
+            if (muse.HasAMuseItem && muse.AnthemLevel <= 0 && !Player.HasBuff<AnthemDebuff>())
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
-                Player.statLife += fullHealth;
-                Player.HealEffect(fullHealth);
+                Player.Heal(fullHealth);
                 Player.AddBuff(ModContent.BuffType<AnthemBuff>(), 7200);
                 return false;
             }
@@ -405,6 +418,7 @@ namespace gvmod.Common.Players
 
         public override bool FreeDodge(Player.HurtInfo info)
         {
+            Kudos = 0;
             if (Player == Main.LocalPlayer)
             {
                 if (Septima.PrePrevasion(info))

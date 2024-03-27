@@ -31,6 +31,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => true;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => true;
 
         public override string Name => "Sparkcaliburg";
@@ -50,23 +52,14 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
         }
 
-        public override void Effects()
+        public override void MoveOverride()
         {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
         }
 
         public override void Update()
         {
-            if (!BeingUsed)
-            {
-                VelocityMultiplier = new Vector2(1f, 1f);
-                lastPlayerPos = Player.Center;
-            }
-            else
-            {
-                VelocityMultiplier *= 0f;
-                Player.Center = lastPlayerPos;
-                Player.slowFall = true;
-            }
             if (CooldownTimer < SpecialCooldownTime)
             {
                 CooldownTimer++;
@@ -93,8 +86,6 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
 
             ProjectileUpdate();
-            
-            Player.velocity *= VelocityMultiplier;
         }
 
         public void ProjectileUpdate()
@@ -185,6 +176,21 @@ namespace gvmod.Common.Players.Septimas.Skills
                     if (!sparkcaliburgExists)
                     {
                         sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0.01f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, 0, 2);
+                    }
+                    break;
+                case 3:
+                    baseDamage = 250;
+                    SpecialDuration = 300;
+                    SpecialCooldownTime = 900;
+                    if (SpecialTimer == 90)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, 
+                                new Vector2(20f, 0f).RotatedBy(1.570796*i), ModContent.ProjectileType<ElectricSword>(),
+                                (int)(baseDamage * (Adept.SpecialDamageLevelMult + Adept.SpecialDamageEquipMult)), 10,
+                                Player.whoAmI, 1, 4, i);
+                        }
                     }
                     break;
             }

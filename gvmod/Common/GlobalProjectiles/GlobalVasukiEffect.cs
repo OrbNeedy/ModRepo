@@ -1,9 +1,5 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System.Collections.Generic;
 using gvmod.Content.Projectiles;
 
 namespace gvmod.Common.GlobalProjectiles
@@ -13,12 +9,10 @@ namespace gvmod.Common.GlobalProjectiles
         public int SourceNPC { get; set; }
         public override bool InstancePerEntity => true;
 
-        public override void AI(Projectile projectile)
+        public override bool AppliesToEntity(Projectile entity, bool lateInstantiation)
         {
-            if (projectile.ModProjectile is HairDartProjectile || projectile.ModProjectile is DullahanProjectile)
-            {
-
-            }
+            return entity.type == ModContent.ProjectileType<HairDartProjectile>() ||
+                entity.type == ModContent.ProjectileType<DullahanProjectile>();
         }
     }
 }

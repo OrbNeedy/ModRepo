@@ -10,7 +10,6 @@ namespace gvmod.Common.Players.Septimas.Skills
     internal class Astrasphere : Special
     {
         private Vector2 basePosition;
-        private Vector2 lastPlayerPos;
         private Vector2 centerPosition;
         private Vector2 targetPosition;
         private int phase;
@@ -32,7 +31,6 @@ namespace gvmod.Common.Players.Septimas.Skills
             BeingUsed = false;
             SpecialTimer = 1;
             basePosition = new Vector2(128);
-            lastPlayerPos = player.Center;
             SpecialDuration = 120;
             centerPosition = Player.Center;
             phase = 1;
@@ -43,6 +41,8 @@ namespace gvmod.Common.Players.Septimas.Skills
         public override int UnlockLevel => 1;
 
         public override bool IsOffensive => true;
+
+        public override bool StayInPlace => true;
 
         public override bool GivesIFrames => true;
 
@@ -71,19 +71,15 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
         }
 
+        public override void MoveOverride()
+        {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
+        }
+
         public override void Update()
         {
             ProjectileUpdate();
-            if (!BeingUsed)
-            {
-                lastPlayerPos = Player.Center;
-                VelocityMultiplier = new Vector2(1f, 1f);
-            } else
-            {
-                VelocityMultiplier *= 0f;
-                Player.Center = lastPlayerPos;
-                Player.slowFall = true;
-            }
             if (CooldownTimer < SpecialCooldownTime)
             {
                 CooldownTimer++;
@@ -111,7 +107,6 @@ namespace gvmod.Common.Players.Septimas.Skills
                     basePosition = new Vector2(128);
                 }
             }
-            Player.velocity *= VelocityMultiplier;
         }
 
         public void ProjectileUpdate()

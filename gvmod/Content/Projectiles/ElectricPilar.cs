@@ -9,17 +9,18 @@ namespace gvmod.Content.Projectiles
 {
     public class ElectricPilar : ModProjectile
     {
-        private Asset<Texture2D> pillar = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/TruePilar");
-        private static float rotation = MathHelper.Pi / 50;
+        private static float rotation = 0.06298932639f;//MathHelper.TwoPi / 99;
         private int step = 0;
         private int phase = 1;
+        private Vector2 startingPosition = new(0, 0);
+        private Vector2 truePosition = new(0, 0);
 
         public override void SetDefaults()
         {
             Projectile.light = 1f;
             Projectile.damage = 180;
             Projectile.knockBack = 8;
-            Projectile.Size = new Vector2(24, 800);
+            Projectile.Size = new Vector2(20, 20);
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
@@ -32,18 +33,15 @@ namespace gvmod.Content.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            if (Projectile.ai[0] < 0)
-            {
-                Projectile.rotation = MathHelper.Pi;
-            } else
-            {
-                Projectile.rotation = 0;
-            }
+            startingPosition = Projectile.Center;
+            Projectile.velocity.SafeNormalize(Vector2.One);
+            truePosition = Projectile.velocity * 700;
+            Projectile.Center = startingPosition + truePosition;
+            Projectile.velocity = Vector2.Zero;
         }
 
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
             switch (phase)
             {
                 case 1:
@@ -54,7 +52,9 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 case 2:
-                    Projectile.rotation += rotation;
+                    Projectile.Center = truePosition + startingPosition;
+                    Projectile.velocity = startingPosition.DirectionTo(Projectile.Center).RotatedBy(MathHelper.PiOver2) * 0.0001f;
+                    truePosition = truePosition.RotatedBy(rotation);
                     if (step >= 400)
                     {
                         phase++;
@@ -73,48 +73,76 @@ namespace gvmod.Content.Projectiles
             step++;
         }
 
-        /*public override bool PreDraw(ref Color lightColor)
-        {
-            Color color = Color.White;
-            if (Projectile.ai[0] < 0) color = Color.Violet;
-            else color = Color.Yellow;
-            for (int i = 0; i <= 3; i++)
-            {
-                var position = -Main.screenPosition + new Vector2(0f, 250 * i * Projectile.ai[0]).RotatedBy(Projectile.rotation);
-                if (Projectile.ai[0] < 0) position += Projectile.BottomRight;
-                else position += Projectile.TopRight;
-                position += ((pillar.Height()/3) * i * Projectile.Center);
-                Main.EntitySpriteDraw(
-                    pillar.Value,
-                    position,
-                    null,
-                    Color.White,
-                    Projectile.rotation,
-                    pillar.Size()*i,
-                    1f,
-                    SpriteEffects.None
-                );
-            }
-            return true;
-        }*/
-
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            float widthMultiplier = 34f;
+            Player player = Main.player[Projectile.owner];
+            float widthMultiplier = 20f;
             float collisionPoint = 0f;
+            
+            Rectangle chainHitboxBounds = new(0, 0, 800, 800);
 
-            Rectangle pilarHitboxBounds = new Rectangle(0, 0, 800, 800);
+            chainHitboxBounds.X = (int)player.Center.X - chainHitboxBounds.Width / 2;
+            chainHitboxBounds.Y = (int)player.Center.Y - chainHitboxBounds.Height / 2;
 
-            pilarHitboxBounds.X = (int)Projectile.Center.X - pilarHitboxBounds.Width / 2;
-            pilarHitboxBounds.Y = (int)Projectile.Center.Y - pilarHitboxBounds.Height / 2;
+            Vector2 tip = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 root = startingPosition;
 
-            Vector2 top = Projectile.Right.RotatedBy(Projectile.rotation, Projectile.Center);
-            Vector2 bottom = Projectile.TopLeft.RotatedBy(Projectile.rotation, Projectile.Center);
-
-            if (pilarHitboxBounds.Intersects(targetHitbox)
-                && (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), top, bottom, widthMultiplier * Projectile.scale, ref collisionPoint)))
+            if (chainHitboxBounds.Intersects(targetHitbox)
+                && Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), tip, root,
+                widthMultiplier * Projectile.scale, ref collisionPoint))
             {
                 return true;
+            }
+            return base.Colliding(projHitbox, targetHitbox);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            return base.PreDraw(ref lightColor);
+        }
+
+        public override bool PreDrawExtras()
+        {
+            Asset<Texture2D> thunderTexture = ModContent.Request<Texture2D>("gvmod/Content/Projectiles/ElectricPilar");
+            Vector2 origin = startingPosition;
+            Vector2 center = Projectile.Center;
+            Vector2 directionToOrigin = origin - Projectile.Center;
+            float chainRotation = directionToOrigin.ToRotation() - MathHelper.PiOver2;
+            float distanceToOrigin = directionToOrigin.Length();
+
+            while (distanceToOrigin > 200f && !float.IsNaN(distanceToOrigin))
+            {
+                directionToOrigin /= distanceToOrigin;
+                directionToOrigin *= thunderTexture.Height();
+
+                center += directionToOrigin;
+                directionToOrigin = origin - center;
+                distanceToOrigin = directionToOrigin.Length();
+
+                SpriteEffects rotationEffect;
+                if (Projectile.spriteDirection == -1)
+                {
+                    rotationEffect = SpriteEffects.FlipHorizontally;
+                }
+                else
+                {
+                    rotationEffect = SpriteEffects.None;
+                }
+
+                Main.EntitySpriteDraw(thunderTexture.Value,
+                    center - Main.screenPosition,
+                    thunderTexture.Value.Bounds,
+                    Color.White,
+                    chainRotation,
+                    thunderTexture.Size() * 0.5f,
+                    1f,
+                    rotationEffect,
+                    0);
             }
             return false;
         }

@@ -15,7 +15,6 @@ namespace gvmod.Common.Players.Septimas.Skills
         private int baseDamage;
         private int maxExtend;
         private int extend;
-        private Vector2 lastPlayerPos = new Vector2(0);
         public VoltaicChains(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 3;
@@ -33,6 +32,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => true;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => true;
 
         public override string Name => "Voltaic Chains";
@@ -43,11 +44,17 @@ namespace gvmod.Common.Players.Septimas.Skills
             {
                 if (Type == "S")
                 {
-                    TypeSAttack();
+                    if (!TypeSAttack())
+                    {
+                        return;
+                    }
                 }
                 if (Type == "T")
                 {
-                    TypeTAttack();
+                    if (!TypeTAttack())
+                    {
+                        return;
+                    }
                 }
                 if (SpecialTimer % 20 == 0 && SpecialTimer <= 210)
                 {
@@ -66,20 +73,18 @@ namespace gvmod.Common.Players.Septimas.Skills
             }
         }
 
+        public override void MoveOverride()
+        {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
+        }
+
         public override void Update()
         {
             if (!BeingUsed)
             {
-                VelocityMultiplier = new Vector2(1f, 1f);
                 isNotFirstChain = false;
-                lastPlayerPos = Player.Center;
                 extend = maxExtend;
-            }
-            else
-            {
-                VelocityMultiplier *= 0f;
-                Player.Center = lastPlayerPos;
-                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {
@@ -105,10 +110,9 @@ namespace gvmod.Common.Players.Septimas.Skills
                     Adept.IsUsingSpecialAbility = false;
                 }
             }
-            Player.velocity *= VelocityMultiplier;
         }
 
-        private void TypeSAttack()
+        private bool TypeSAttack()
         {
             switch (Adept.PowerLevel)
             {
@@ -137,9 +141,10 @@ namespace gvmod.Common.Players.Septimas.Skills
                     }
                     break;
             }
+            return true;
         }
 
-        private void TypeTAttack()
+        private bool TypeTAttack()
         {
             switch (Adept.PowerLevel)
             {
@@ -155,7 +160,50 @@ namespace gvmod.Common.Players.Septimas.Skills
                         isNotFirstChain = false;
                     }
                     break;
+                case 3:
+                    baseDamage = 85;
+                    if (SpecialTimer == 1)
+                    {
+                        ChainPositions temporaryChainPositions = new ChainPositions(Player);
+                        int maxX = 950;
+                        int maxY = 440;
+                        List<Vector2> positions = new() { new(-maxX, -maxY), new(maxX, -maxY), new(maxX, maxY), 
+                            new(-maxX, maxY) };
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Vector2 start = positions[i];
+                            Vector2 end;
+                            if (i+1 >= positions.Count)
+                            {
+                                end = positions[0];
+                            } else
+                            {
+                                end = positions[i+1];
+                            }
+                            Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + start,
+                                temporaryChainPositions.GetVelocity(start, end),
+                                ModContent.ProjectileType<ChainTip>(),
+                                (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 
+                                0, Player.whoAmI, 420 - SpecialTimer, 2, 40);
+                        }
+                    }
+                    if (SpecialTimer % 60 == 0 && SpecialTimer <= 210)
+                    {
+                        ChainPositions temporaryChainPositions = new ChainPositions(Player);
+                        List<(Vector2, Vector2)> positions = temporaryChainPositions.
+                            SpontaneousPositionObtainer(Main.MouseWorld);
+                        foreach ((Vector2, Vector2) position in positions)
+                        {
+                            Projectile.NewProjectile(Player.GetSource_FromThis(), position.Item1,
+                                temporaryChainPositions.GetVelocity(position.Item1, position.Item2),
+                                ModContent.ProjectileType<ChainTip>(),
+                                (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 0,
+                                Player.whoAmI, 420 - SpecialTimer, 2, 60);
+                        }
+                    }
+                    return false;
             }
+            return true;
         }
     }
 }

@@ -16,43 +16,57 @@ namespace gvmod.Common.Players.Septimas.Skills
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 300;
+            SpecialDuration = 600;
         }
 
         public override int UnlockLevel => 30;
 
         public override bool IsOffensive => true;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => false;
 
         public override string Name => "Voltaic Chains Meteor";
+
+        public override void StatChangeEffects()
+        {
+            Player.endurance += 0.4f;
+            Player.statDefense += 40;
+        }
 
         public override void Attack()
         {
             if (BeingUsed && SpecialTimer == 1)
             {
-                meteorIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0); Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0);
+                ChainPositions tempPositions = new(Player);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(950, 440), 
+                    tempPositions.GetVelocity(new Vector2(0, 880), new Vector2(0, 0)), 
+                    ModContent.ProjectileType<ChainTip>(), 0, 15, Player.whoAmI, 1100, 2, 300);
+                Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(-950, -440),
+                    tempPositions.GetVelocity(new Vector2(0, 0), new Vector2(0, 880)), 
+                    ModContent.ProjectileType<ChainTip>(), 0, 15, Player.whoAmI, 1100, 2, 300);
+
+                meteorIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Vector2.Zero, 
+                    ModContent.ProjectileType<ChainMeteor>(), 0, 15, Player.whoAmI, 0); 
             }
         }
 
-        public override void Effects()
+        public override void MoveOverride()
         {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
         }
 
         public override void Update()
         {
             Projectile meteor = Main.projectile[meteorIndex];
-            if (!BeingUsed)
-            {
-                VelocityMultiplier = new Vector2(1f, 1f);
-            }
-            else
+            if (BeingUsed)
             {
                 if (!meteor.active || meteor.ModProjectile is not ChainMeteor || meteor.owner != Player.whoAmI)
                 {
                     SpecialTimer = SpecialDuration - 45;
                 }
-                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {
@@ -78,8 +92,6 @@ namespace gvmod.Common.Players.Septimas.Skills
                     Adept.IsUsingSpecialAbility = false;
                 }
             }
-
-            Player.velocity *= VelocityMultiplier;
         }
     }
 }

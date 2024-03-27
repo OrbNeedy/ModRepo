@@ -33,6 +33,8 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public abstract bool IsOffensive { get; }
 
+        public abstract bool StayInPlace { get; }
+
         public abstract bool GivesIFrames { get; }
 
         public int SpecialCooldownTime { get; set; }
@@ -43,9 +45,17 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public Vector2 VelocityMultiplier { get; set; }
 
-        public virtual void Effects()
+        public virtual void StatChangeEffects()
         {
 
+        }
+
+        public virtual void Effects()
+        {
+        }
+
+        public virtual void MoveOverride()
+        {
         }
 
         public abstract void Attack();

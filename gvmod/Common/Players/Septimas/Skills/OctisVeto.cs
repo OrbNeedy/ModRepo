@@ -12,7 +12,6 @@ namespace gvmod.Common.Players.Septimas.Skills
         int intervalCounter = 0;
         static int chainInterval = 30;
         int positionCounter = 0;
-        private Vector2 lastPlayerPos = new Vector2(0);
         public OctisVeto(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 3;
@@ -30,7 +29,14 @@ namespace gvmod.Common.Players.Septimas.Skills
 
         public override bool IsOffensive => true;
 
+        public override bool StayInPlace => true;
+
         public override bool GivesIFrames => false;
+
+        public override void StatChangeEffects()
+        {
+            Player.endurance += 1f;
+        }
 
         public override void Attack()
         {
@@ -45,28 +51,26 @@ namespace gvmod.Common.Players.Septimas.Skills
                 }
                 if (SpecialTimer == 290)
                 {
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, 0), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1);
-                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, 0), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, 1);
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, 1), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, -1);
+                    Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0, -1), ModContent.ProjectileType<ElectricPilar>(), (int)(180 * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 8, Player.whoAmI, 1);
                 }
                 intervalCounter++; 
             }
+        }
+
+        public override void MoveOverride()
+        {
+            VelocityMultiplier = new Vector2(0f, 0.00001f);
+            Player.slowFall = true;
         }
 
         public override void Update()
         {
             if (!BeingUsed)
             {
-                VelocityMultiplier = new Vector2(1f, 1f);
-                lastPlayerPos = Player.Center;
                 intervalCounter = 0;
                 positionCounter = 0;
                 octis = new ChainPositions(Player);
-            }
-            else
-            {
-                VelocityMultiplier *= 0f;
-                Player.Center = lastPlayerPos;
-                Player.slowFall = true;
             }
             if (CooldownTimer < SpecialCooldownTime)
             {
@@ -92,7 +96,6 @@ namespace gvmod.Common.Players.Septimas.Skills
                     Adept.IsUsingSpecialAbility = false;
                 }
             }
-            Player.velocity *= VelocityMultiplier;
         }
     }
 }

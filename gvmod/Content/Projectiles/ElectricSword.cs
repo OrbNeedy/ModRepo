@@ -1,11 +1,9 @@
 ﻿using gvmod.Common.Players;
-using Humanizer;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-using static Humanizer.On;
 
 namespace gvmod.Content.Projectiles
 {
@@ -13,6 +11,9 @@ namespace gvmod.Content.Projectiles
     {
         private int phase;
         private int counter;
+        private Vector2 rotationCenter;
+        private Vector2 offset;
+        private Vector2 target;
 
         public override void SetDefaults()
         {
@@ -25,7 +26,7 @@ namespace gvmod.Content.Projectiles
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 2;
+            Projectile.timeLeft = 3;
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.ownerHitCheck = false;
         }
@@ -41,6 +42,11 @@ namespace gvmod.Content.Projectiles
                     break;
                 case 2:
                     Projectile.timeLeft = 600;
+                    break;
+                case 4:
+                    Projectile.timeLeft = 540;
+                    rotationCenter = Projectile.Center;
+                    offset = new Vector2(1, 0).RotatedBy(1.570796 * Projectile.ai[2]) * 96;
                     break;
             }
 
@@ -69,7 +75,6 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
-            counter++;
             Player player = Main.player[Projectile.owner];
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             switch (Projectile.ai[0])
@@ -81,10 +86,7 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
                 default:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
-                    {
-                        Projectile.penetrate = -1;
-                    }
+                    Projectile.penetrate = -1;
                     break;
             }
 
@@ -122,6 +124,26 @@ namespace gvmod.Content.Projectiles
                 case 3:
                     GvMove(player);
                     break;
+                case 4:
+                    Projectile.velocity *= 0.86f;
+                    if (counter >= 60)
+                    {
+                        Projectile.Center = rotationCenter + offset;
+                        offset = offset.RotatedBy(0.09162979);
+                        Projectile.velocity = rotationCenter.DirectionTo(Projectile.Center)*0.01f;
+                        if (counter == 180)
+                        {
+                            target = rotationCenter.DirectionTo(Main.MouseWorld);
+                        }
+                        if (counter > 180)
+                        {
+                            rotationCenter += target * 12;
+                        }
+                    } else
+                    {
+                        offset = Projectile.Center - rotationCenter;
+                    }
+                    break;
                 default:
                     if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary)
                     {
@@ -129,12 +151,12 @@ namespace gvmod.Content.Projectiles
                     }
                     break;
             }
+            counter++;
         }
 
         private void GvMove(Player player)
         {
             float value = Map(counter, 30, 45, 0, (float)Math.PI, true);
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             Vector2 direction = (Main.MouseWorld - Projectile.Center);
             direction.Normalize();
             Projectile.Center = player.Center + new Vector2(56 * player.direction, 0);
@@ -235,9 +257,9 @@ namespace gvmod.Content.Projectiles
             swordHitboxBounds.X = (int)Projectile.position.X - swordHitboxBounds.Width / 2;
             swordHitboxBounds.Y = (int)Projectile.position.Y - swordHitboxBounds.Height / 2;
 
-            Vector2 tip = Projectile.Right.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
-            Vector2 root = Projectile.TopLeft.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
-            Vector2 root2 = Projectile.BottomLeft.RotatedBy(Projectile.velocity.ToRotation(), Projectile.Center);
+            Vector2 tip = Projectile.Right.RotatedBy(Projectile.rotation, Projectile.Center);
+            Vector2 root = Projectile.TopLeft.RotatedBy(Projectile.rotation, Projectile.Center);
+            Vector2 root2 = Projectile.BottomLeft.RotatedBy(Projectile.rotation, Projectile.Center);
 
             if (swordHitboxBounds.Intersects(targetHitbox)
                 && (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, tip, widthMultiplier * Projectile.scale, ref collisionPoint)

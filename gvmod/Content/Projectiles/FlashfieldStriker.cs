@@ -8,11 +8,14 @@ namespace gvmod.Content.Projectiles
 {
     public class FlashfieldStriker : ModProjectile
     {
+        private bool keepOn;
         private int timer;
         private Vector2 positionOffset;
         private Vector2 position;
         private Vector2 target;
 
+        // MP Issues
+        // 1: Won't appear when using flashfield if another player is already using flashfield
         public override void SetDefaults()
         {
             Projectile.Size = new Vector2(352);
@@ -29,7 +32,7 @@ namespace gvmod.Content.Projectiles
             Projectile.friendly = true;
             Projectile.aiStyle = -1;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 2;
+            Projectile.timeLeft = 3;
             Projectile.ownerHitCheck = false;
             Projectile.alpha = 128;
         }
@@ -37,12 +40,13 @@ namespace gvmod.Content.Projectiles
         public override void OnSpawn(IEntitySource source)
         {
             base.OnSpawn(source);
+            keepOn = true;
             target = position = Main.player[Projectile.owner].Center;
             if (Projectile.ai[0] == 3) positionOffset = new Vector2(0, 1);
             else positionOffset = Vector2.Zero;
 
             // ai0 defines how it behaves
-            // 0: Regular flashfield behaviour, being on as long as the player holds the primary key, follows it
+            // 0: Regular flashfield behaviour, being on as long as the player holds the primary key and follows it
             // 1: Altered from 0, it does the same, but only when the player holds the special key
             // 2: It is sent to the mouse position after a while
             // 3: It is assigned a rotation in ai1, then separates while rotating, and finally moves towards the center
@@ -65,32 +69,40 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
-
-            Projectile.Center = position + positionOffset;
-
-            switch (Projectile.ai[0])
+            if (Projectile.ai[2] > 0) Projectile.scale = Projectile.ai[2];
+            Projectile.timeLeft = 3;
+            if (Projectile.owner == Main.myPlayer)
             {
-                case 0:
-                    Projectile.Center = player.Center;
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    break;
-                case 1:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    break;
-                case 2:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    MovementAI(90);
-                    break;
-                case 3:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    TripleMovementAI(player);
-                    break;
+                Projectile.netUpdate = true;
+                Player player = Main.player[Projectile.owner];
+                AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+                Projectile.Center = position + positionOffset;
+
+                if (Projectile.ai[0] == 0)
+                {
+                    keepOn = adept.IsUsingPrimaryAbility && adept.CanUsePrimary;
+                }
+                else
+                {
+                    keepOn = adept.IsUsingSpecialAbility;
+                }
+
+                if (!keepOn) Projectile.Kill();
+
+                switch (Projectile.ai[0])
+                {
+                    case 0:
+                        Projectile.Center = player.Center;
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        MovementAI(90);
+                        break;
+                    case 3:
+                        TripleMovementAI(player);
+                        break;
+                }
             }
         }
 
@@ -113,16 +125,15 @@ namespace gvmod.Content.Projectiles
 
         private void TripleMovementAI(Player player)
         {
-            Main.NewText("Offset: " + positionOffset);
             if (timer < 180)
             {
                 positionOffset = positionOffset.RotatedBy(0.0418879f);
             }
             if (timer >= 30)
             {
-                if (timer < 60)
+                if (timer < 90)
                 {
-                    positionOffset *= 1.2f;
+                    positionOffset += Projectile.Center.DirectionFrom(player.Center) * 5;
                 }
                 if (timer == 210) target = Projectile.Center.DirectionTo(player.Center) * 20000;
             } else
@@ -138,7 +149,7 @@ namespace gvmod.Content.Projectiles
             timer++;
         }
 
-        //Thanks for the code Blushiemagic
+        // Blushiemagic
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Vector2 ellipsePosition = new Vector2(projHitbox.Left, projHitbox.Top);
@@ -166,6 +177,22 @@ namespace gvmod.Content.Projectiles
             float a = ellipseDimentions.X / 2f;
             float b = ellipseDimentions.Y / 2f;
             return (x * x) / (a * a) + (y * y) / (b * b) <= 1;
+        }
+
+        // direwolf420
+        private Projectile GetNetProjectile(int owner, int identity, int type, out int index)
+        {
+            for (short i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile proj = Main.projectile[i];
+                if (proj.active && proj.owner == owner && proj.identity == identity && proj.type == type)
+                {
+                    index = i;
+                    return proj;
+                }
+            }
+            index = Main.maxProjectiles;
+            return null;
         }
     }
 }

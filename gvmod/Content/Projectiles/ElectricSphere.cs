@@ -1,6 +1,5 @@
 ﻿using gvmod.Common.Players;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -9,11 +8,15 @@ namespace gvmod.Content.Projectiles
 {
     internal class ElectricSphere : ModProjectile
     {
+        private bool keepOn;
         private int timer;
         private Vector2 centerOfRotation;
         private Vector2 target;
         private Vector2 positionOffset;
 
+        // MP Issues
+        // 1: Won't appear when using flashfield if another player is already using flashfield
+        // 2: Won't move from another player's perspective, either to rotate or to follow it's owner
         public override void SetDefaults()
         {
             Projectile.Size = new Vector2(42);
@@ -39,9 +42,10 @@ namespace gvmod.Content.Projectiles
             Player player = Main.player[Projectile.owner];
             target = centerOfRotation = player.Center;
             positionOffset = new Vector2(0, 172);
+            keepOn = true;
             timer = 0;
 
-            // ai0 decides how it will act
+            // ai0 decides how it behaves
             // 0 (GV1 Astrasphere): Regular type interaction, rotate around the center of rotation and follow it
             // 1 (GV3 Flashfield): Variation of 0, which stays while the player is using the primary ability
             // 2 (AM3 Flashfield): Same as 1, but has a separation of 0.8 times regular
@@ -81,52 +85,57 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+            Projectile.timeLeft = 3;
 
-            float rotation = 0.06108652f;
-
-            positionOffset = positionOffset.RotatedBy(rotation);
-            Projectile.Center = centerOfRotation + positionOffset;
-            switch (Projectile.ai[0])
+            if (Projectile.owner == Main.myPlayer)
             {
-                case 0:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    break;
-                case 1:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    break;
-                case 2:
-                    if (adept.IsUsingPrimaryAbility && adept.CanUsePrimary) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    break;
-                case 3:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    SimpleMovementAI(90);
-                    break;
-                case 4:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    SimpleMovementAI(150, 90);
-                    break;
-                case 5:
-                    if (adept.IsUsingSpecialAbility) Projectile.timeLeft = 2;
-                    else Projectile.timeLeft = 0;
-                    SimpleMovementAI(150);
-                    break;
-            }
+                Player player = Main.player[Projectile.owner];
+                AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
 
-            // If ai2 is not negative, it is the index of the center projectile
-            if (Projectile.ai[2] >= 0)
-            {
-                Projectile mainProjectile = Main.projectile[(int)Projectile.ai[2]];
-                if (mainProjectile.active && mainProjectile.ModProjectile is FlashfieldStriker && mainProjectile.owner == Projectile.owner)
+                float rotation = 0.06108652f;
+
+                positionOffset = positionOffset.RotatedBy(rotation);
+                Projectile.Center = centerOfRotation + positionOffset;
+
+                if (Projectile.ai[0] == 1 || Projectile.ai[0] == 2)
                 {
-                    centerOfRotation = mainProjectile.Center;
-                } 
+                    keepOn = adept.IsUsingPrimaryAbility && adept.CanUsePrimary;
+                }
+                else
+                {
+                    keepOn = adept.IsUsingSpecialAbility;
+                }
+
+                if (!keepOn) Projectile.Kill();
+
+                switch (Projectile.ai[0])
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        SimpleMovementAI(90);
+                        break;
+                    case 4:
+                        SimpleMovementAI(150, 90);
+                        break;
+                    case 5:
+                        SimpleMovementAI(150);
+                        break;
+                }
+
+                // If ai2 is not negative, it is the index of the center projectile
+                if (Projectile.ai[2] >= 0)
+                {
+                    Projectile mainProjectile = Main.projectile[(int)Projectile.ai[2]];
+                    if (mainProjectile.active && mainProjectile.ModProjectile is FlashfieldStriker && mainProjectile.owner == Projectile.owner)
+                    {
+                        centerOfRotation = mainProjectile.Center;
+                    }
+                }
             }
         }
 

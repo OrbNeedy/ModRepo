@@ -4,15 +4,17 @@ namespace gvmod.Common.Configs.CustomDataTypes
 {
     public class Tag
     {
-        public int NpcIndex { get; set; }
+        public int Index { get; set; }
+        public bool IsPlayer { get; set; }
         public int Level { get; set; }
         public int Timer { get; set; }
         public bool Active { get; set; }
         public int ShockIframes { get; set; }
 
-        public Tag(int npcIndex)
+        public Tag(int Index, bool IsPlayer=false)
         {
-            NpcIndex = npcIndex;
+            this.Index = Index;
+            this.IsPlayer = IsPlayer;
             Level = 1;
             Timer = 0;
             ShockIframes = 0;
@@ -22,10 +24,17 @@ namespace gvmod.Common.Configs.CustomDataTypes
         public void Update()
         {
             Timer++;
-            NPC theNpcInQuestion = Main.npc[NpcIndex];
-            if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || Timer >= 600)
+
+            if (IsPlayer)
             {
-                Active = false;
+
+            }else
+            {
+                NPC theNpcInQuestion = Main.npc[Index];
+                if (!theNpcInQuestion.active || theNpcInQuestion.life <= 0 || Timer >= 600)
+                {
+                    Active = false;
+                }
             }
             
             if (ShockIframes > 0)

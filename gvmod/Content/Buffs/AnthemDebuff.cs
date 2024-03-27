@@ -20,7 +20,7 @@ namespace gvmod.Content.Buffs
         {
             if (player.HasBuff<AnthemBuff>())
             {
-                player.DelBuff(player.FindBuffIndex(ModContent.BuffType<AnthemBuff>()));
+                player.ClearBuff(ModContent.BuffType<AnthemBuff>());
             }
         }
 

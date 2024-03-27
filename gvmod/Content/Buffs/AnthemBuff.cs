@@ -18,6 +18,7 @@ namespace gvmod.Content.Buffs
         {
             if (player.buffTime[buffIndex] <= 1)
             {
+                Main.NewText("Adding Anthem Debuff");
                 player.AddBuff(ModContent.BuffType<AnthemDebuff>(), 18000);
             }
 

@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using gvmod.Content.Projectiles;
+using Terraria.Audio;
 
 namespace gvmod.Common.Players
 {
@@ -406,7 +407,7 @@ namespace gvmod.Common.Players
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
-            if (muse.HasAMuseItem && muse.AnthemLevel <= 0 && !Player.HasBuff<AnthemDebuff>())
+            if (muse.HasAMuseItem && muse.AnthemLevel <= 0 && !Player.HasBuff<AnthemDebuff>() && !Player.HasBuff<AnthemBuff>())
             {
                 int fullHealth = (Player.statLifeMax + Player.statLifeMax2);
                 Player.Heal(fullHealth);
@@ -553,8 +554,13 @@ namespace gvmod.Common.Players
                 TimeSinceSecondary++;
                 SecondaryInCooldown = true;
             }
-            if (TimeSinceSecondary >= Septima.SecondaryCooldownTime)
+            if (TimeSinceSecondary >= Septima.SecondaryCooldownTime && SecondaryInCooldown)
             {
+                SoundEngine.PlaySound(SoundID.MaxMana);
+                for (int i = 0; i < 10; i++)
+                {
+                    Dust.NewDust(Player.Center, 32, 48, DustID.ManaRegeneration);
+                }
                 SecondaryInCooldown = false;
             }
             if (AbilityPower < MaxAbilityPower)

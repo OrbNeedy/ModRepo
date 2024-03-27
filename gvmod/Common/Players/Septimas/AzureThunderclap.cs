@@ -10,6 +10,7 @@ using gvmod.Common.GlobalNPCs;
 using System;
 using gvmod.Content;
 using Terraria.DataStructures;
+using gvmod.Content.Buffs;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -339,6 +340,15 @@ namespace gvmod.Common.Players.Septimas
             int xPos = 20 - timer;
             Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center + new Vector2(20 * xPos, 0), new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(200 * Math.Pow(Adept.SpecialDamageLevelMult, 1.5)), 14, Player.whoAmI, 2);
             Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center - new Vector2(20 * xPos, 0), new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(200 * Math.Pow(Adept.SpecialDamageLevelMult, 1.5)), 14, Player.whoAmI, 2);
+        }
+
+        public override void MiscEffects()
+        {
+            if (Player.HasBuff(BuffID.Electrified))
+            {
+                Player.ClearBuff(BuffID.Electrified);
+                Player.AddBuff(ModContent.BuffType<GoodElectrified>(), 180);
+            }
         }
 
         public override void MiscMoveOverride()

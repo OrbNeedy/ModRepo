@@ -10,6 +10,7 @@ using gvmod.Common.GlobalNPCs;
 using System;
 using gvmod.Content;
 using Terraria.DataStructures;
+using gvmod.Content.Buffs;
 
 namespace gvmod.Common.Players.Septimas
 {
@@ -50,6 +51,8 @@ namespace gvmod.Common.Players.Septimas
         public override Color MainColor => new Color(44, 205, 195);
         public override Color DarkColor => new Color(12, 179, 173);
 
+        // Value of less than 0 penetrates prevasion, value of less than -1.5 overheat on hit.
+        // Value of more than 1 increases SP.
         public override Dictionary<int, float> ProjectileInteractions => new Dictionary<int, float>
         {
             [ProjectileID.MagnetSphereBolt] = 1,
@@ -193,9 +196,6 @@ namespace gvmod.Common.Players.Septimas
                 case 3:
                     if (SecondaryTimer == 1 && Adept.SecondaryInUse)
                     {
-                        Main.NewText("Direction = " + Player.Center.DirectionTo(Main.MouseWorld));
-                        Main.NewText("Own direction = " + (Main.MouseWorld - Player.Center));
-                        Main.NewText("Distance = " + Player.Center.Distance(Main.MouseWorld));
                         Vector2 direction = Player.Center.DirectionTo(Main.MouseWorld);
                         int segments = (int)(Player.Center.Distance(Main.MouseWorld)/5);
                         for (int i = 0; i < segments; i++)
@@ -250,7 +250,7 @@ namespace gvmod.Common.Players.Septimas
                         switch (interactions)
                         {
                             case < 0:
-                                if (interactions == -1.5f)
+                                if (interactions <= -1.5f)
                                 {
                                     Adept.overheat(60);
                                 }
@@ -359,6 +359,15 @@ namespace gvmod.Common.Players.Septimas
             if (timer == 1)
             {
                 Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center - new Vector2(184, 0), new Vector2(0), ModContent.ProjectileType<Thunder>(), (int)(150 * Math.Pow(Adept.SpecialDamageLevelMult, 2)), 14, Player.whoAmI, 1);
+            }
+        }
+
+        public override void MiscEffects()
+        {
+            if (Player.HasBuff(BuffID.Electrified))
+            {
+                Player.ClearBuff(BuffID.Electrified);
+                Player.AddBuff(ModContent.BuffType<GoodElectrified>(), 180);
             }
         }
 

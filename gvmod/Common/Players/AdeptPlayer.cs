@@ -559,7 +559,7 @@ namespace gvmod.Common.Players
                 SoundEngine.PlaySound(SoundID.MaxMana);
                 for (int i = 0; i < 10; i++)
                 {
-                    Dust.NewDust(Player.Center, 32, 48, DustID.ManaRegeneration);
+                    Dust.NewDust(Player.Center - new Vector2(1, 1.5f), 32, 48, DustID.ManaRegeneration);
                 }
                 SecondaryInCooldown = false;
             }

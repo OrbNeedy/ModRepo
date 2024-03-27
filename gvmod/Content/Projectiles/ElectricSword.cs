@@ -39,6 +39,9 @@ namespace gvmod.Content.Projectiles
             {
                 case 3:
                     Projectile.timeLeft = 100;
+                    rotationCenter = Projectile.Center;
+                    offset = rotationCenter.DirectionTo(Main.MouseWorld) * 64;
+                    offset = offset.RotatedBy(-1.727876 * Projectile.ai[2]);
                     break;
                 case 2:
                     Projectile.timeLeft = 600;
@@ -156,40 +159,36 @@ namespace gvmod.Content.Projectiles
 
         private void GvMove(Player player)
         {
-            float value = Map(counter, 30, 45, 0, (float)Math.PI, true);
-            Vector2 direction = (Main.MouseWorld - Projectile.Center);
-            direction.Normalize();
-            Projectile.Center = player.Center + new Vector2(56 * player.direction, 0);
+            Projectile.Center = rotationCenter + offset;
+            Projectile.velocity = rotationCenter.DirectionTo(Projectile.Center);
             switch (phase)
             {
                 case 1:
-                    Projectile.velocity.X = 0.015f * player.direction;
-                    Projectile.velocity.Y = -0.01f;
-                    if (counter >= 10)
+                    if (counter >= 20)
                     {
                         phase++;
                         counter = 0;
                     }
                     break;
                 case 2:
-                    Projectile.velocity.X = (float)Math.Sin(value*2) * 0.1f * player.direction;
-                    Projectile.velocity.Y = (float)Math.Cos(value*2) * 0.1f;
-                    if (counter == 20)
+                    offset = offset.RotatedBy(0.1919862f * Projectile.ai[2]);
+                    if (counter == 10)
                     {
-                        Projectile.NewProjectile(player.GetSource_FromThis(), Projectile.Center, direction * 16, ModContent.ProjectileType<SwordWave>(), (int)(Projectile.damage * 1.2f), 8, player.whoAmI);
+                        Projectile.NewProjectile(player.GetSource_FromThis(), Projectile.Center, 
+                            Projectile.velocity * 16, ModContent.ProjectileType<SwordWave>(), 
+                            (int)(Projectile.damage * 1.25f), 9, player.whoAmI);
                     }
-                    if (counter >= 40)
+                    if (counter >= 21)
                     {
                         phase++;
                         counter = 0;
                     }
                     break;
                 case 3:
-                    Projectile.velocity.X *= 0.1f;
-                    Projectile.velocity.Y *= 0.1f;
-                    if (counter >= 10)
+                    Projectile.alpha -= 12;
+                    if (counter >= 21)
                     {
-                        Projectile.timeLeft = 0;
+                        Projectile.timeLeft = -2;
                     }
                     break;
             }

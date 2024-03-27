@@ -7,7 +7,6 @@ namespace gvmod.Common.Players.Septimas.Skills
 {
     public class Sparkcaliburg : Special
     {
-        private Vector2 lastPlayerPos = new Vector2(0);
         private int baseDamage;
         private int sparkcaliburgIndex;
         private int sparkcaliburgIndex2;
@@ -22,7 +21,6 @@ namespace gvmod.Common.Players.Septimas.Skills
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            lastPlayerPos = player.Center;
             SpecialDuration = 60;
             baseDamage = 150;
         }
@@ -151,9 +149,20 @@ namespace gvmod.Common.Players.Septimas.Skills
                 case 3:
                     baseDamage = 425;
                     SpecialDuration = 90;
-                    if (!sparkcaliburgExists)
+                    if (SpecialTimer == 1)
                     {
-                        sparkcaliburgIndex = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, new Vector2(0f, 0.01f), ModContent.ProjectileType<ElectricSword>(), (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, Player.whoAmI, 0, 3);
+                        int direction;
+                        if (Player.Center.DirectionTo(Main.MouseWorld).X < 0)
+                        {
+                            direction = -1;
+                        } else
+                        {
+                            direction = 1;
+                        }
+                        Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, 
+                            Vector2.Zero, ModContent.ProjectileType<ElectricSword>(), 
+                            (int)(baseDamage * Adept.SpecialDamageLevelMult * Adept.SpecialDamageEquipMult), 10, 
+                            Player.whoAmI, 0, 3, direction);
                     }
                     break;
             }

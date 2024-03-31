@@ -19,14 +19,14 @@ Projectiles: {
 	Beowulf.DisplayName: Beowulf
 	LolaPetProjectile.DisplayName: Lola
 	CapsuleSphere.DisplayName: Thunder Pulser
-	SwordWave.DisplayName: Sword Wave
+	SwordWave.DisplayName: Sword Waves
 	ElectricPilar.DisplayName: Electric Pilar
-	SmallRazor.DisplayName: Small Razor
-	BigRazor.DisplayName: Big Razor
+	SmallRazor.DisplayName: Razor Wheel
+	BigRazor.DisplayName: Razor Wheel
 	ElectricBullet.DisplayName: Electric Bullet
 	HomingElectricSphere.DisplayName: Homing Electric Sphere
-	EmptyChain.DisplayName: Empty Chain
-	ThunderLaser.DisplayName: Thunder Laser
+	EmptyChain.DisplayName: Semi Chain
+	ThunderLaser.DisplayName: Thunder
 }
 
 Items: {
@@ -137,12 +137,12 @@ Items: {
 	}
 
 	SumeragiTophat: {
-		Tooltip: Increases SP recover by {0}% and septima damage by {1}%.
+		Tooltip: Increases SP recovery by {0}% and septima damage by {1}%.
 		DisplayName: Sumeragi Tophat
 	}
 
 	SumeragiMask: {
-		Tooltip: Increases SP recover by {0}% and septima damage by {1}%.
+		Tooltip: Increases SP recovery by {0}% and septima damage by {1}%.
 		DisplayName: Sumeragi Mask
 	}
 
@@ -269,7 +269,7 @@ Items: {
 			'''
 			This is a glaive with enhanced properties, allowing the user 
 			to undergo an improved Armed Phenomenon transformation.
-			Also known as Binding Brand.
+			Also known as a Binding Brand.
 			'''
 		DisplayName: True Glaive
 	}
@@ -304,7 +304,7 @@ Items: {
 		Tooltip:
 			'''
 			The power of the muse inside resurrects the user once after
-			dying, with enhanced septima control.
+			dying, with enhanced septimal abilities.
 			'''
 		DisplayName: Mirror Shard
 	}
@@ -321,9 +321,8 @@ Items: {
 	Glaive: {
 		Tooltip:
 			'''
-			Modified Sumeragi technology that seals your septima and allows you to 
+			Modified Sumeragi technology that allows you to 
 			undergo an Armed Phenomenon transformation.
-			Your version doesn't permanently seal an adept's septima.
 			'''
 		DisplayName: Glaive
 	}
@@ -346,7 +345,7 @@ Items: {
 	FalconQuill: {
 		Tooltip:
 			'''
-			Allows you to make a contract with Sumeragi and undergo an Armed Phenomenon 
+			Allows you to take power from the muse and undergo an Armed Phenomenon 
 			transformation that priorizes constant offense.
 			'''
 		DisplayName: Falcon Quill
@@ -364,7 +363,7 @@ Items: {
 
 	PulsarFragment: {
 		DisplayName: Pulsar Fragment
-		Tooltip: Has the light of the brightest object in the universe.
+		Tooltip: A fragment of the brightest object.
 	}
 
 	SpiritualStone: {
@@ -384,13 +383,13 @@ Items: {
 
 	Divider: {
 		DisplayName: Divider
-		Tooltip: ""
+		Tooltip: A tool lost to time that ended up in the Lizhard's temple.
 	}
 }
 
 Buffs: {
 	LolaPetBuff: {
-		Description: She's calling you boss now, seems affectionate.
+		Description: How can a robot be so cute?
 		DisplayName: Lola
 	}
 
@@ -400,57 +399,57 @@ Buffs: {
 	}
 
 	SeptimalSurgeBuff: {
-		Description: Your septima is reaching it's limits.
-		DisplayName: Septimal Surge Buff
+		Description: You're using 100% of your septima.
+		DisplayName: Septimal Surge
 	}
 
 	SeptimalShieldBuff: {
 		Description: Your septima is making your body stronger.
-		DisplayName: Septimal Shield Buff
+		DisplayName: Septimal Shield
 	}
 
 	InfiniteSurgeBuff: {
 		Description: Your septima has surpassed it's bounds.
-		DisplayName: Infinite Surge Buff
+		DisplayName: Infinite Surge
 	}
 
 	GoodElectrified: {
 		Description: Thanks for the recharge.
-		DisplayName: Good Electrified
+		DisplayName: Electrified
 	}
 
 	Chained: {
-		Description: You have been pierced by a chain
+		Description: You have been pierced by a chain, prepare for a shock.
 		DisplayName: Chained
 	}
 
 	Chaff: {
-		Description: Your septima was separated forcefully from your body.
+		Description: Your septima was forcefully separated from your body.
 		DisplayName: Chaff
 	}
 
 	ArmedPhenomenon3: {
-		Description: Mods.gvmod.Buffs.ArmedPhenomenon3.Description
-		DisplayName: Armed Phenomenon3
+		Description: Empowered by the true glaive.
+		DisplayName: Armed Phenomenon
 	}
 
 	ArmedPhenomenon2B: {
-		Description: Mods.gvmod.Buffs.ArmedPhenomenon2B.Description
-		DisplayName: Armed Phenomenon2 B
+		Description: Empowered by the falcon quill.
+		DisplayName: Armed Phenomenon
 	}
 
 	ArmedPhenomenon2A: {
-		Description: Mods.gvmod.Buffs.ArmedPhenomenon2A.Description
-		DisplayName: Armed Phenomenon2 A
+		Description: Empowered by the grimoire.
+		DisplayName: Armed Phenomenon
 	}
 
 	ArmedPhenomenon: {
-		Description: Mods.gvmod.Buffs.ArmedPhenomenon.Description
+		Description: Empowered by the glaive.
 		DisplayName: Armed Phenomenon
 	}
 
 	AnthemBuff: {
-		Description: The song of the muse has resurrected you with newfound strength.
+		Description: The song of the muse has resurrected you with increased power.
 		DisplayName: Anthem Buff
 	}
 
@@ -465,13 +464,12 @@ Buffs: {
 
 	AnthemDebuff: {
 		DisplayName: Anthem Debuff
-		Description: Mods.gvmod.Buffs.AnthemDebuff.Description
+		Description: Your connection with the muse is too weak.
 	}
 }
 
 Keybinds: {
-	"Ability menu(Soon).DisplayName": Ability menu( Soon)
-	"Ability menu.DisplayName": Ability menu
+	"Ability menu.DisplayName": Show/hide ability menu
 	"Fourth special ability.DisplayName": Fourth special ability
 	"Third special ability.DisplayName": Third special ability
 	"Second special ability.DisplayName": Second special ability

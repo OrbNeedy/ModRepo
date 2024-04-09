@@ -1,4 +1,5 @@
-﻿using Terraria.ModLoader;
+﻿using System;
+using Terraria.ModLoader;
 
 namespace gvmod.Common.Players
 {
@@ -18,7 +19,7 @@ namespace gvmod.Common.Players
 
         public override void NaturalLifeRegen(ref float regen)
         {
-            if (PowerShortage) regen *= -1;
+            if (PowerShortage) regen = -Math.Abs(regen);
         }
 
         public override void UpdateLifeRegen()

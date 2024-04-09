@@ -9,8 +9,6 @@ namespace gvmod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Voltaic Electrocution");
-            // Description.SetDefault("Shocked by Voltaic Chains.\nThat's gonna leave a mark.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
@@ -20,10 +18,6 @@ namespace gvmod.Content.Buffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.lifeRegen -= 600;
-        }
-
-        public override void Update(Player player, ref int buffIndex)
-        {
         }
     }
 }

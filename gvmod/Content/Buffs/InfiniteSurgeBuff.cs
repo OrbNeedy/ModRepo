@@ -21,7 +21,7 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<InfiniteSurgePlayer>().InfiniteSurge = true;
+            player.GetModPlayer<SeptimaBuffPlayer>().InfiniteSurge = true;
         }
     }
 }

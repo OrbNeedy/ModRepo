@@ -1,57 +1,51 @@
-﻿using Terraria;
+﻿using gvmod.Content.Buffs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria;
 
 namespace gvmod.Common.Players.Septimas.Skills
 {
-    internal class GalvanicPatch : Special
+    public class SeptimalBurst : Special
     {
-        public GalvanicPatch(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
+        public SeptimalBurst(Player player, AdeptPlayer adept, string type) : base(player, adept, type)
         {
             ApUsage = 1;
             SpecialCooldownTime = 600;
             CooldownTimer = SpecialCooldownTime;
             BeingUsed = false;
             SpecialTimer = 1;
-            SpecialDuration = 30;
+            SpecialDuration = 60;
         }
 
-        public override int UnlockLevel => 3;
+        public override int UnlockLevel => 10;
 
         public override bool IsOffensive => false;
 
-        public override bool StayInPlace => false;
+        public override bool StayInPlace => true;
 
         public override bool GivesIFrames => true;
 
-        public override string Name => "Galvanic Patch";
+        public override string Name => "Septimal Burst";
 
         public override void Effects()
         {
             if (BeingUsed)
             {
-                Dust.NewDust(Player.Center, 10, 10, DustID.GreenTorch);
+                Dust.NewDust(Player.Center, 10, 10, DustID.PurpleTorch);
             }
         }
 
         public override void Attack()
         {
-            float maxLife = Player.statLifeMax + Player.statLifeMax2;
-            float denominator = SpecialDuration;
-            float ammount = maxLife / (4 * denominator);
-            if (ammount <= 0)
-            {
-                ammount = 1;
-            }
-            if (Player.GetModPlayer<SeptimaBuffPlayer>().AlchemicalField)
-            {
-                ammount *= 2;
-            }
             if (BeingUsed)
             {
-                Main.NewText("Healing: " + ammount);
-                Main.NewText("Max health: " + maxLife);
-                Main.NewText("Denominator: " + denominator);
-                Player.Heal((int)ammount);
+                Player.endurance += 1f;
+                Player.AddBuff(ModContent.BuffType<SeptimalBurstBuff>(), 1800);
             }
         }
 

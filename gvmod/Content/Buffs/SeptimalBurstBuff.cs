@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace gvmod.Content.Buffs
 {
-    public class SeptimalShieldBuff : ModBuff
+    public class SeptimalBurstBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -21,7 +21,8 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<SeptimaBuffPlayer>().SeptimalShield = true;
+            AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
+            adept.SPRegenModifier *= 1.5f;
         }
     }
 }

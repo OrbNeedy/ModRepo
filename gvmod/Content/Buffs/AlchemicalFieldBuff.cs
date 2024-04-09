@@ -26,7 +26,7 @@ namespace gvmod.Content.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField = true;
+            player.GetModPlayer<SeptimaBuffPlayer>().AlchemicalField = true;
         }
     }
 }

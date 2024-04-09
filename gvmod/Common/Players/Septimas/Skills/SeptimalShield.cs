@@ -31,7 +31,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         {
             if (BeingUsed)
             {
-                Dust.NewDust(Player.Center, 10, 10, DustID.BlueTorch);
+                Dust.NewDust(Player.Center, 10, 10, DustID.IceTorch);
             }
         }
 

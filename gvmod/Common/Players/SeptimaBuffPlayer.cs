@@ -3,19 +3,26 @@ using Terraria.ModLoader;
 
 namespace gvmod.Common.Players
 {
-    public class InfiniteSurgePlayer : ModPlayer
+    public class SeptimaBuffPlayer : ModPlayer
     {
         public bool InfiniteSurge { get; set; }
         public float lastSPValue { get; set; }
+        public bool SeptimalShield { get; set; }
+        public bool AlchemicalField { get; set; }
+        public bool SeptimalBurst { get; set; }
 
         public override void Initialize()
         {
             InfiniteSurge = false;
             lastSPValue = 1;
+            SeptimalShield = false;
+            AlchemicalField = false;
         }
 
         public override void ResetEffects()
         {
+            SeptimalShield = false;
+            AlchemicalField = false;
             InfiniteSurge = false;
         }
 
@@ -38,6 +45,15 @@ namespace gvmod.Common.Players
                 lastSPValue = adept.SeptimalPower;
             }
             base.PreUpdate();
+        }
+
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            if (SeptimalShield)
+            {
+                modifiers.FinalDamage *= 0.5f;
+            }
+            base.ModifyHurt(ref modifiers);
         }
     }
 }

@@ -27,6 +27,7 @@ Projectiles: {
 	HomingElectricSphere.DisplayName: Homing Electric Sphere
 	EmptyChain.DisplayName: Semi Chain
 	ThunderLaser.DisplayName: Thunder
+	Cyclone.DisplayName: Cyclone
 }
 
 Items: {
@@ -465,6 +466,11 @@ Buffs: {
 	AnthemDebuff: {
 		DisplayName: Anthem Debuff
 		Description: Your connection with the muse is too weak.
+	}
+
+	SeptimalBurstBuff: {
+		DisplayName: Septimal Burst Buff
+		Description: Mods.gvmod.Buffs.SeptimalBurstBuff.Description
 	}
 }
 

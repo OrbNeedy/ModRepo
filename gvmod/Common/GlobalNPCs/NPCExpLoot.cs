@@ -8,7 +8,7 @@ namespace gvmod.Common.GlobalNPCs
     {
         public override void OnKill(NPC npc)
         {
-            if (Main.player[npc.lastInteraction].GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField)
+            if (Main.player[npc.lastInteraction].GetModPlayer<SeptimaBuffPlayer>().AlchemicalField)
             {
                 npc.value *= 2;
             }
@@ -34,7 +34,7 @@ namespace gvmod.Common.GlobalNPCs
                 if (Main.hardMode) amount *= 2f;
                 if (lastplayer != null)
                 {
-                    if (Main.player[npc.lastInteraction].GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField) amount *= 2;
+                    if (Main.player[npc.lastInteraction].GetModPlayer<SeptimaBuffPlayer>().AlchemicalField) amount *= 2;
                     lastplayer.Experience += (int)amount;
                 }
             }

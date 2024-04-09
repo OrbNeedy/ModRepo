@@ -89,6 +89,7 @@ namespace gvmod.Common.Players.Septimas
             Abilities.Add(new None(Player, Adept, "T"));
             Abilities.Add(new Astrasphere(Player, Adept, "T"));
             Abilities.Add(new GalvanicPatch(Player, Adept, "T"));
+            Abilities.Add(new SeptimalBurst(Player, Adept, "T"));
             Abilities.Add(new Sparkcaliburg(Player, Adept, "T"));
             Abilities.Add(new SplitSecond(Player, Adept, "T"));
             Abilities.Add(new GalvanicRenewal(Player, Adept, "T"));

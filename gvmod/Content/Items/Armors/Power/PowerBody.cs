@@ -51,7 +51,7 @@ namespace gvmod.Content.Items.Armors.Power
         {
             AdeptPlayer adept = player.GetModPlayer<AdeptPlayer>();
             player.setBonus = "Increases most stats while not in overheat, while in overheat, life \n" +
-                "regen becomes harmful.";
+                "regen becomes harmful.\nIncreases SP usage by 100%.";
             if (adept.IsOverheated)
             {
                 player.GetModPlayer<ReversePowerPlayer>().PowerShortage = true; 
@@ -66,6 +66,7 @@ namespace gvmod.Content.Items.Armors.Power
                 adept.PrimaryDamageEquipMult += 0.2f;
                 adept.SecondaryDamageEquipMult += 0.2f;
                 adept.SpecialDamageEquipMult += 0.2f;
+                adept.SPUsageModifier += 1f;
                 player.GetDamage<SeptimaDamageClass>() += 0.3f;
             }
         }

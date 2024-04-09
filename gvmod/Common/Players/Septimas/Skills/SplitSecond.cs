@@ -52,7 +52,7 @@ namespace gvmod.Common.Players.Septimas.Skills
         {
             if (BeingUsed)
             {
-                Dust.NewDust(Player.Center, 10, 10, DustID.GreenTorch, newColor: Adept.Septima.ClearColor);
+                Dust.NewDust(Player.Center, 10, 10, DustID.IceTorch);
             }
         }
 

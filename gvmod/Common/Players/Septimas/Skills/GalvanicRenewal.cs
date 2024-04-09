@@ -42,7 +42,7 @@ namespace gvmod.Common.Players.Septimas.Skills
             {
                 ammount = 1;
             }
-            if (Player.GetModPlayer<AlchemicalFieldPlayer>().AlchemicalField)
+            if (Player.GetModPlayer<SeptimaBuffPlayer>().AlchemicalField)
             {
                 ammount *= 2;
             }

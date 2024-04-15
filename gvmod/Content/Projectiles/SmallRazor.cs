@@ -12,6 +12,7 @@ namespace gvmod.Content.Projectiles
             Projectile.height = 20;
             Projectile.scale = 1f;
             Projectile.light = 0.5f;
+            Main.projFrames[Projectile.type] = 3;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 36;
@@ -28,11 +29,20 @@ namespace gvmod.Content.Projectiles
             Projectile.ownerHitCheck = false;
         }
 
+        public override void AI()
+        {
+            if (++Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                    Projectile.frame = 0;
+            }
+        }
         public override bool PreDraw(ref Color lightColor)
         {
             if (Projectile.spriteDirection == -1)
             {
-                Projectile.rotation += MathHelper.Pi;
+                Projectile.rotation += MathHelper.TwoPi;
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
             return base.PreDraw(ref lightColor);

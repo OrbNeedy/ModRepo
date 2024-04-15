@@ -21,6 +21,7 @@ namespace gvmod.Content.Projectiles
             Projectile.Size = new Vector2(352);
             Projectile.light = 1f;
             Projectile.scale = 1f;
+            Main.projFrames[Projectile.type] = 4;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 1;
@@ -40,6 +41,7 @@ namespace gvmod.Content.Projectiles
         public override void OnSpawn(IEntitySource source)
         {
             base.OnSpawn(source);
+            Projectile.frame = Main.rand.Next(0, 5);
             keepOn = true;
             target = position = Main.player[Projectile.owner].Center;
             if (Projectile.ai[0] == 3) positionOffset = new Vector2(0, 1);
@@ -69,6 +71,12 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
+            if (++Projectile.frameCounter >= 2)
+            {
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                    Projectile.frame = 0;
+            }
             if (Projectile.ai[2] > 0) Projectile.scale = Projectile.ai[2];
             Projectile.timeLeft = 3;
             if (Projectile.owner == Main.myPlayer)

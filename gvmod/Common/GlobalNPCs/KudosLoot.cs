@@ -30,6 +30,7 @@ namespace gvmod.Common.GlobalNPCs
                     kudosToBeWon *= 2;
                 }
                 adept.Kudos += kudosToBeWon;
+                adept.KudosTimer = 0;
             }
         }
     }

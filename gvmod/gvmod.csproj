@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Remove="Content\Buffs\AnthemDebuff.png" />
     <None Remove="Content\Buffs\SeptimalBurstBuff.png" />
+    <None Remove="Content\Pets\LolaPet_Ultra.png" />
     <None Remove="Content\Projectiles\Cyclone.png" />
     <None Remove="Content\Projectiles\EmptyChain.png" />
     <None Remove="Content\Projectiles\SmallRazor.png" />

@@ -489,15 +489,10 @@ namespace gvmod.Common.Players
         {
             AdeptMuse muse = Player.GetModPlayer<AdeptMuse>();
             List<NPC> npcs = GetNPCsInRadius(1600);
-            int initialBossTimer = BossKudosGainTimer;
             KudosTimer++;
             foreach (NPC npc in npcs)
             {
-                if (!npc.friendly && !npc.immortal)
-                {
-                    KudosTimer = 0;
-                }
-                if (npc.boss)
+                if (npc.boss && !npc.friendly && !npc.immortal)
                 {
                     BossKudosGainTimer++;
                     if (BossKudosGainTimer >= 6)
@@ -505,18 +500,19 @@ namespace gvmod.Common.Players
                         Kudos++;
                         BossKudosGainTimer = 0;
                     }
+                    BossKudosGainTimer++;
                     break;
                 }
+                BossKudosGainTimer = -1;
             }
 
-            if (initialBossTimer <= -1 && BossKudosGainTimer >= 0)
+            if (KudosTimer >= 960 && BossKudosGainTimer <= -1)
             {
                 Kudos = 0;
             }
 
-            if (muse.AnthemLevel > 0 || KudosTimer >= 960)
+            if (muse.AnthemLevel > 0)
             {
-                BossKudosGainTimer = -1;
                 Kudos = 0;
             }
         }

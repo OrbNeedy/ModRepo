@@ -26,6 +26,7 @@ namespace gvmod.Content.Projectiles
             Projectile.height = 30;
             Projectile.scale = 1f;
             Projectile.light = 0.20f;
+            Main.projFrames[Projectile.type] = 3;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 0;
@@ -52,20 +53,31 @@ namespace gvmod.Content.Projectiles
         {
             if (movementStep == 0)
             {
-                if (Projectile.Center.Distance(basePosition) > 10)
+                if (Projectile.Center.Distance(basePosition) > 12)
                 {
-                    Projectile.velocity = Projectile.Center.DirectionTo(basePosition) * 8;
+                    Projectile.velocity = Projectile.Center.DirectionTo(basePosition) * 12;
                 } else {
                     Projectile.velocity = Vector2.Zero;
+                    Projectile.Center = basePosition;
                     movementStep = 1;
+                    // Change the frame to start opening the drone
+                    Projectile.frame = 1;
                     firstRotationNegative = Main.rand.NextBool(1, 2);
                 }
             }
-            
+
             if (movementStep == 1)
             {
-                if (shootTimer >= 190) movementStep = 2;
-                shootTimer++;
+                if (shootTimer >= 190)
+                {
+                    movementStep = 2;
+                    // Start closing the drone at the end of the phase
+                    Projectile.frame = 1;
+                    shootTimer = 0;
+                }
+
+                if (shootTimer == 12) Projectile.frame = 2; // Fully open the drone after 12 frames in this phase
+
                 if (shootTimer <= 80)
                 {
                     if (shootTimer >= 20 && shootTimer % 10 == 0)
@@ -100,12 +112,16 @@ namespace gvmod.Content.Projectiles
                         }
                     }
                 }
+
+                shootTimer++;
             }
 
             if (movementStep == 2)
             {
-                Projectile.velocity = Projectile.Center.DirectionTo(Main.player[Projectile.owner].Center) * 8;
+                if (shootTimer == 12) Projectile.frame = 0;
+                Projectile.velocity = Projectile.Center.DirectionTo(Main.player[Projectile.owner].Center) * 12;
                 if (Projectile.Center.Distance(Main.player[Projectile.owner].Center) <= 16) Projectile.Kill();
+                shootTimer++;
             }
         }
     }

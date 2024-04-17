@@ -22,6 +22,11 @@ namespace gvmod.Common.GlobalNPCs
         public List<int> VasukiTags { get; set; }
         public int VasukiTimer { get; set; }
 
+        private int wouldBeFrame = 0;
+        private int wouldBeMaxFrames = 10;
+        private bool type2Frame = false;
+        private int frameChangeTimer = 0;
+
         public override bool InstancePerEntity => true;
 
         public override void SetDefaults(NPC npc)
@@ -33,6 +38,23 @@ namespace gvmod.Common.GlobalNPCs
 
         public override void AI(NPC npc)
         {
+            if (frameChangeTimer%2 == 0 && frameChangeTimer != 0)
+            {
+                type2Frame = !type2Frame;
+            }
+
+            if (frameChangeTimer >= 4)
+            {
+                wouldBeFrame = Main.rand.Next(0, wouldBeMaxFrames/2)*2;
+                if (wouldBeFrame >= wouldBeMaxFrames)
+                {
+                    wouldBeFrame = 0;
+                }
+                frameChangeTimer = 0;
+            }
+
+            frameChangeTimer++;
+
             if (VasukiTimer > 0) VasukiTimer--;
             if (VasukiTimer == 0 && VasukiShoot)
             {
@@ -63,13 +85,19 @@ namespace gvmod.Common.GlobalNPCs
         {
             if (Shocked)
             {
-                var position = npc.Center - Main.screenPosition + shock.Size() / 2;
-                position = new Vector2((int)position.X, (int)position.Y);
+                Texture2D texture = shock.Value;
+                var position = npc.Center - Main.screenPosition;
+                int frameHeight = texture.Height / wouldBeMaxFrames;
+                position = new Vector2((int)position.X + texture.Width/2, (int)position.Y + (texture.Height - frameHeight/2));
+                int realFrame = wouldBeFrame;
+                if (type2Frame) realFrame++;
+                Rectangle sourceRect = new(0, frameHeight*realFrame, texture.Width, frameHeight);
+
                 spriteBatch.Draw(
                     shock.Value,
                     position,
-                    null,
-                    Color.White * 0.8f,
+                    sourceRect,
+                    Color.White * 0.2f,
                     0f,
                     shock.Size(),
                     1f,

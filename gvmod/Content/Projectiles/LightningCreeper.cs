@@ -14,17 +14,20 @@ namespace gvmod.Content.Projectiles
 
         public override void SetDefaults()
         {
+            Projectile.Size = new Vector2(64, 12);
+            Projectile.scale = 1f;
             Projectile.light = 1f;
+            Main.projFrames[Projectile.type] = 2;
+
             Projectile.damage = 35;
             Projectile.knockBack = 10;
-            Projectile.Size = new Vector2(64, 12);
-            Projectile.aiStyle = -1;
-            Projectile.friendly = true;
             Projectile.penetrate = -1;
-            Projectile.tileCollide = false;
-            Projectile.scale = 1f;
-            Projectile.timeLeft = 300;
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
+
+            Projectile.aiStyle = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 300;
+            Projectile.friendly = true;
             Projectile.ownerHitCheck = false;
         }
 
@@ -38,7 +41,15 @@ namespace gvmod.Content.Projectiles
             {
                 Projectile.velocity *= -1f;
                 Projectile.scale = 1.5f; // Size = new Vector2(64, 24);
+                Projectile.Center += new Vector2(0, -12);
                 Projectile.damage *= 2;
+            }
+
+            if (++Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                    Projectile.frame = 0;
             }
         }
 
@@ -51,14 +62,18 @@ namespace gvmod.Content.Projectiles
         {
             if (Projectile.timeLeft <= 150)
             {
+                Texture2D texture = big.Value;
+                int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+
+                Rectangle sourceRect = new(0, frameHeight * Projectile.frame, texture.Width, frameHeight);
                 var position = Projectile.TopRight - Main.screenPosition;
                 Main.EntitySpriteDraw(
-                    big.Value,
+                    texture,
                     position,
-                    null,
+                    sourceRect,
                     Color.White,
                     0f,
-                    big.Size(),
+                    big.Size() * new Vector2(0.5f, 0.25f),
                     1f,
                     SpriteEffects.None,
                     0

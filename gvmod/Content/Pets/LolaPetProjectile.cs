@@ -299,7 +299,7 @@ namespace gvmod.Content.Pets
         {
             int kudos = player.GetModPlayer<AdeptPlayer>().Kudos;
             frameTimer++;
-            if (frameTimer >= 50)
+            if (frameTimer >= 45)
             {
                 wouldBeFrame++;
                 if (wouldBeFrame >= wouldBeMaxFrames) wouldBeFrame = 0;

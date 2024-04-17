@@ -506,6 +506,11 @@ namespace gvmod.Common.Players
                 BossKudosGainTimer = -1;
             }
 
+            if (Player.dead)
+            {
+                Kudos = 0;
+            }
+
             if (KudosTimer >= 960 && BossKudosGainTimer <= -1)
             {
                 Kudos = 0;

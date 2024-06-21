@@ -26,11 +26,9 @@ namespace gvmod.Common.GlobalPlayers
         {
             if (drawInfo.shadow == 0f)
             {
-                frameChangeTimer++;
-                if (frameChangeTimer >= 6)
+                if (++frameChangeTimer >= 6)
                 {
-                    wouldBeFrame++;
-                    if (wouldBeFrame >= wouldBeMaxFrames)
+                    if (++wouldBeFrame >= wouldBeMaxFrames)
                     {
                         wouldBeFrame = 0;
                     }

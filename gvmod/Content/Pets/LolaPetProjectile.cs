@@ -2,7 +2,6 @@
 using gvmod.Content.Buffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ReLogic.Content;
 using System;
 using Terraria;
@@ -113,24 +112,11 @@ namespace gvmod.Content.Pets
 
                 Vector2 wingDrawPos = new Vector2
                 (
-                    wingPosition.X - Main.screenPosition.X + (wing.Width * 0.5f) * dir,
+                    wingPosition.X - Main.screenPosition.X + (wing.Width * 0.5f),
                     wingPosition.Y - Main.screenPosition.Y + (wing.Height * 0.5f)
                 );
 
-                Vector2 secondWingDrawPos = new Vector2
-                (
-                    wingPosition.X - Main.screenPosition.X + (wing.Width * 0.5f) * dir,
-                    wingPosition.Y - Main.screenPosition.Y + (wing.Height * 0.5f)
-                );
-
-                if (dir == 1)
-                {
-                    secondWingDrawPos.X += 30;
-                } else
-                {
-                    wingDrawPos.X += 15;
-                    secondWingDrawPos.X -= 15;
-                }
+                if (dir == -1) wingDrawPos.X -= 155;
 
                 // Main Body draw
                 Texture2D texture = ultraBody.Value;
@@ -146,7 +132,7 @@ namespace gvmod.Content.Pets
 
                 Main.EntitySpriteDraw(
                     wing,
-                    secondWingDrawPos,
+                    wingDrawPos,
                     sourceRectangle,
                     Lighting.GetColor(Projectile.Center.ToTileCoordinates(), Color.White) * alpha,
                     Projectile.rotation,
@@ -158,7 +144,7 @@ namespace gvmod.Content.Pets
 
                 Main.EntitySpriteDraw(
                     glowmask,
-                    secondWingDrawPos,
+                    wingDrawPos,
                     new Rectangle(0, glowmaskHeight * wouldBeFrame, glowmask.Width, glowmaskHeight),
                     Color.White * alpha,
                     Projectile.rotation,
@@ -171,30 +157,6 @@ namespace gvmod.Content.Pets
                 Main.EntitySpriteDraw(texture,
                     Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
                     sourceRectangle2, drawColor, Projectile.rotation, origin2, Projectile.scale, flipping, 0);
-
-                Main.EntitySpriteDraw(
-                    wing,
-                    wingDrawPos,
-                    sourceRectangle,
-                    Lighting.GetColor(Projectile.Center.ToTileCoordinates(), Color.White) * alpha,
-                    Projectile.rotation,
-                    wing.Size() * 0.5f,
-                    1f,
-                    flipping,
-                    0
-                );
-
-                Main.EntitySpriteDraw(
-                    glowmask,
-                    wingDrawPos,
-                    new Rectangle(0, glowmaskHeight * wouldBeFrame, glowmask.Width, glowmaskHeight),
-                    Color.White * alpha,
-                    Projectile.rotation,
-                    glowmask.Size() * 0.5f,
-                    1f,
-                    flipping,
-                    0
-                );
 
                 return;
             }
@@ -273,11 +235,11 @@ namespace gvmod.Content.Pets
             float velDistanceChange = 2f;
 
             int dir = player.direction;
-            
-            Vector2 desiredCenterRelative = new Vector2(dir * -50, -50f);
 
-            desiredCenterRelative.Y += (float)Math.Sin(Main.GameUpdateCount / 150f * MathHelper.TwoPi) * 3f;
-            desiredCenterRelative.X += (float)Math.Sin(Main.GameUpdateCount / 300f * MathHelper.TwoPi) * 6f;
+            Vector2 desiredCenterRelative = new Vector2(dir * -80, -50f);
+
+            desiredCenterRelative.Y += (float)Math.Sin(Main.GameUpdateCount / 150f * MathHelper.TwoPi) * 1.5f;
+            desiredCenterRelative.X += (float)Math.Sin(Main.GameUpdateCount / 300f * MathHelper.TwoPi) * 1.5f;
 
             Vector2 desiredCenter = Projectile.position + desiredCenterRelative;
             Vector2 betweenDirection = desiredCenter - wingPosition;
@@ -291,7 +253,7 @@ namespace gvmod.Content.Pets
 
             if (betweenDirection != Vector2.Zero)
             {
-                wingPosition += betweenDirection * 0.5f;
+                wingPosition += betweenDirection * 0.8f;
             }
         }
 
@@ -313,15 +275,16 @@ namespace gvmod.Content.Pets
                 {
                     Main.NewText("Activating ultra mode", new Color(255, 131, 64));
                     ultraMode = true;
+                    Projectile.rotation = 0;
                 }
                 
                 // Decrease transparency while not in Ultra mode, increase it while in Ultra mode
                 if (!ultraMode)
                 {
-                    Projectile.alpha += 6;
+                    Projectile.alpha += 10;
                 } else
                 {
-                    Projectile.alpha -= 6;
+                    Projectile.alpha -= 10;
                 }
             } else
             {
@@ -335,11 +298,11 @@ namespace gvmod.Content.Pets
                 // Decrease transparency while in Ultra mode, increase it while not in Ultra mode
                 if (!ultraMode)
                 {
-                    Projectile.alpha -= 6;
+                    Projectile.alpha -= 10;
                 }
                 else
                 {
-                    Projectile.alpha += 6;
+                    Projectile.alpha += 10;
                 }
             }
 
@@ -354,7 +317,7 @@ namespace gvmod.Content.Pets
                 Projectile.timeLeft = 60;
             } else
             {
-                Projectile.alpha += 5;
+                Projectile.alpha -= 12;
             }
         }
 

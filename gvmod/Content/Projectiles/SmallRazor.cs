@@ -23,7 +23,6 @@ namespace gvmod.Content.Projectiles
 
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.tileCollide = true;
             Projectile.timeLeft = 150;
             Projectile.ownerHitCheck = false;
@@ -33,9 +32,11 @@ namespace gvmod.Content.Projectiles
         {
             if (++Projectile.frameCounter >= 4)
             {
-                Projectile.frameCounter = 0;
                 if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                {
                     Projectile.frame = 0;
+                }
+                Projectile.frameCounter = 0;
             }
         }
         public override bool PreDraw(ref Color lightColor)

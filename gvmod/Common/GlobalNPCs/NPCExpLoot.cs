@@ -1,6 +1,8 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using gvmod.Common.Players;
+using Microsoft.Xna.Framework;
+using System;
 
 namespace gvmod.Common.GlobalNPCs
 {
@@ -22,21 +24,39 @@ namespace gvmod.Common.GlobalNPCs
                 AdeptPlayer lastplayer = Main.player[npc.lastInteraction]?.GetModPlayer<AdeptPlayer>();
                 float amount;
 
-                amount = 1 + (npc.rarity * 5) + (((npc.lifeMax * 2) + npc.damage) * (1 + (npc.defense * 0.75f)));
+                if (lastplayer == null)
+                {
+                    return;
+                }
+
+                amount = (npc.rarity * 5) + (((npc.lifeMax * 2) + npc.damage) * (1 + (npc.defense * 0.75f)));
                 if (hit.Damage < npc.lifeMax)
                 {
                     amount *= hit.Damage / npc.lifeMax;
+                    if (amount <= 0) amount = 1;
                 }
 
-                if (npc.boss && npc.realLife == -1) amount *= 3f;
-                if (Main.expertMode) amount *= 1.5f;
-                if (Main.masterMode) amount *= 2f;
-                if (Main.hardMode) amount *= 2f;
-                if (lastplayer != null)
+                if (npc.boss && npc.realLife == -1)
                 {
-                    if (Main.player[npc.lastInteraction].GetModPlayer<SeptimaBuffPlayer>().AlchemicalField) amount *= 2;
-                    lastplayer.Experience += (int)amount;
+                    amount *= 3f;
                 }
+                if (Main.expertMode)
+                {
+                    amount *= 2f;
+                }
+                if (Main.masterMode)
+                {
+                    amount *= 3f;
+                }
+                if (Main.hardMode)
+                {
+                    amount *= 2f;
+                }
+                if (Main.player[npc.lastInteraction].GetModPlayer<SeptimaBuffPlayer>().AlchemicalField)
+                {
+                    amount *= 2;
+                }
+                lastplayer.Experience += (int)Math.Ceiling(amount);
             }
         }
     }

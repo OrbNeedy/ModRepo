@@ -21,6 +21,7 @@ namespace gvmod.Content.Projectiles
             Projectile.height = 14;
             Projectile.scale = 1f;
             Projectile.light = 0.25f;
+            Main.projFrames[Projectile.type] = 3;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 30;
@@ -54,7 +55,6 @@ namespace gvmod.Content.Projectiles
             switch (Projectile.ai[0])
             {
                 case 2:
-
                     break;
                 case 4:
                     break;
@@ -67,6 +67,15 @@ namespace gvmod.Content.Projectiles
 
         public override void AI()
         {
+            if (++Projectile.frameCounter >= 10)
+            {
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                {
+                    Projectile.frame = 0;
+                }
+                Projectile.frameCounter = 0;
+            }
+
             NPC target = FindClosestNPC(200);
 
             if (target != null)
@@ -75,46 +84,18 @@ namespace gvmod.Content.Projectiles
                 {
                     case 1:
                         // Mizuchi homing
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                        {
-                            Projectile.velocity.X += 0.4f;
-                        }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                        {
-                            Projectile.velocity.X -= 0.4f;
-                        }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.4f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.4f;
-                        }
+                        Projectile.velocity += Projectile.Center.DirectionTo(target.Center)*0.5f;
                         break;
                     case 3:
                         // Improved Mizuchi homing and vasuki effect
                         if (!target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
                         {
-                            if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                            {
-                                Projectile.velocity.X += 0.7f;
-                            }
-                            else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                            {
-                                Projectile.velocity.X -= 0.7f;
-                            }
-                            if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                            {
-                                Projectile.velocity.Y += 0.7f;
-                            }
-                            else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                            {
-                                Projectile.velocity.Y -= 0.7f;
-                            }
+                            Projectile.velocity += Projectile.Center.DirectionTo(target.Center) * 0.7f;
                         }
                         break;
                 }
+                Projectile.velocity.X = MathHelper.Clamp(Projectile.velocity.X, -16, 16);
+                Projectile.velocity.Y = MathHelper.Clamp(Projectile.velocity.Y, -16, 16);
             }
             base.AI();
         }

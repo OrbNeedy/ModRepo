@@ -1,12 +1,3 @@
-Gunvolt Mod aims to create an experience based on the Gunvolt series.
+A mod based on the Azure Striker Gunvolt games
 
-Septimas
-A power every player has, each character is given a septima at random when creating (Soon: Septima change in-game for existing characters).
-You can get:
-Azure Striker: A septima that allows the usage of a flashfield, which will damage enemies constantly, but be careful, you will overheat underwater. Flashfield also allows the user to float down safely while it's in use. Azure striker comes with a powerful thunder attack that attacks enemies vertically.
-Azure Thunderclap: The same as Azure Striker, but stronger overall, this one comes with the ability to shot electric bolts on both sides, which returns more powerful after some time, it has the same weakness to water, and when you overheat, your movement is reduced dramatically, so watch out.
-
-Every time you use a septima, you use up some sp, and if it reaches 0, you won't be able to use it until you cool down.
-Check mod controls, it's important.
-
-Not fully multiplayer compatible.
+I will no longer work on this mod, anyone is free to use whatever they want from it

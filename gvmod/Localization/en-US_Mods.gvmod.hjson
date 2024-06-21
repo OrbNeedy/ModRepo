@@ -485,3 +485,4 @@ Keybinds: {
 }
 
 Tiles.SpiritualStone.MapEntry: Spiritual Stone
+DamageClasses.SeptimaDamageClass.DisplayName: Septima Damage Class

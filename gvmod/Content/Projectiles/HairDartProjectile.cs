@@ -77,43 +77,17 @@ namespace gvmod.Content.Projectiles
                 {
                     case 1:
                         // Mizuchi homing
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
-                        {
-                            Projectile.velocity.X += 0.4f;
-                        }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                        {
-                            Projectile.velocity.X -= 0.4f;
-                        }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.4f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.4f;
-                        }
+                        Projectile.velocity += Projectile.Center.DirectionTo(target.Center) * 0.5f;
                         break;
                     case 3:
-                        // Improved Mizuchi homing and vasuki effect
-                        if (Projectile.Center.X < target.Center.X && Projectile.velocity.X < 16)
+                        if (!target.GetGlobalNPC<TaggedNPC>().ContainsVasukiDart(Projectile.whoAmI))
                         {
-                            Projectile.velocity.X += 0.7f;
-                        }
-                        else if (Projectile.Center.X > target.Center.X && Projectile.velocity.X > -16)
-                        {
-                            Projectile.velocity.X -= 0.7f;
-                        }
-                        if (Projectile.Center.Y < target.Center.Y && Projectile.velocity.Y < 16)
-                        {
-                            Projectile.velocity.Y += 0.7f;
-                        }
-                        else if (Projectile.Center.Y > target.Center.Y && Projectile.velocity.Y > -16)
-                        {
-                            Projectile.velocity.Y -= 0.7f;
+                            Projectile.velocity += Projectile.Center.DirectionTo(target.Center) * 0.7f;
                         }
                         break;
                 }
+                Projectile.velocity.X = MathHelper.Clamp(Projectile.velocity.X, -16, 16);
+                Projectile.velocity.Y = MathHelper.Clamp(Projectile.velocity.Y, -16, 16);
             }
             
             base.AI();

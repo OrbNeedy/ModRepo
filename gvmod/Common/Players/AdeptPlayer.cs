@@ -516,7 +516,7 @@ namespace gvmod.Common.Players
                 Kudos = 0;
             }
 
-            if (muse.AnthemLevel > 0)
+            if (muse.AnthemLevel > 0 || muse.AnthemBuff)
             {
                 Kudos = 0;
             }

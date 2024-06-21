@@ -18,6 +18,7 @@ namespace gvmod.Content.Projectiles
             Projectile.height = 14;
             Projectile.scale = 1f;
             Projectile.light = 0.7f;
+            Main.projFrames[Projectile.type] = 3;
 
             Projectile.DamageType = ModContent.GetInstance<SeptimaDamageClass>();
             Projectile.damage = 45;
@@ -29,6 +30,18 @@ namespace gvmod.Content.Projectiles
             Projectile.tileCollide = true;
             Projectile.timeLeft = 150;
             Projectile.ownerHitCheck = false;
+        }
+
+        public override void AI()
+        {
+            if (++Projectile.frameCounter >= 20)
+            {
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
+                {
+                    Projectile.frame = 0;
+                }
+                Projectile.frameCounter = 0;
+            }
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
